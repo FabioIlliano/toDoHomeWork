@@ -1,16 +1,21 @@
-package Model;
+package model;
 
 public class main {
     public static void main(String[] args) {
-        Utente Admin = new Utente("Admin", "1234");
+        Utente admin = new Utente("Admin", "1234");
 
-        if (!Admin.Login())
+        if (!admin.login())
         {
             System.out.println("Credenziali errate!");
             return;
         }
-        Bacheca NuovaBacheca = Admin.CreaBacheca();
-        System.out.println(NuovaBacheca.toString());
+        admin.creaBacheca();
+        admin.creaBacheca();
+        admin.creaBacheca();
+        //si possono migliorare questi metodi facendo inserire dall'utente ma funzionano
+        admin.printBacheca(TitoloBacheca.TEMPO_LIBERO.toString());
+        admin.eliminaBacheca(TitoloBacheca.TEMPO_LIBERO.toString());
+        admin.printBacheca(TitoloBacheca.TEMPO_LIBERO.toString());
 
         /*ToDO Cucina = new ToDO("Pasta e patate", "Devo cucinare pasta e patate", "www.pastepatan.potatos", false, 11, 12, "Giallo");
         System.out.println(Cucina.toString());
@@ -21,6 +26,5 @@ public class main {
         System.out.println(Cucina.Stato);*/
 
     }
-
 
 }

@@ -1,45 +1,47 @@
-package Model;
+package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ToDO {
-    String Titolo;
-    String Descrizione;
-    String URL;
-    boolean Stato;
-    ArrayList<ToDO> ChecklistAttività;
-    static String[] Utenti; //Essendo statica i dati all interno saranno gli stessi per TUTTE le istanze create
+    private String titolo;
+    private String descrizione;
+    private String url;
+    private boolean stato;
+    private ArrayList<Attivita> checklistAttivita;
+    private static ArrayList<Utente> utenti; //Essendo statica i dati all interno saranno gli stessi per TUTTE le istanze create
     //Non so bene che tipo mettere
-    int DataScadenza;
-    int Immagine;
-    String ColoreSfondo;
+    private Date dataScadenza; //esiste questa classe ma non so come si usi
+    private int immagine; //da capire il tipo
+    private String coloreSfondo;
 
-    ToDO(String Titolo, String Descrizione, String URL, boolean Stato, int DataScadenza, int Immagine, String ColoreSfondo)
+    public ToDO(String titolo, String descrizione, String url, Date dataScadenza, int immagine, String coloreSfondo)
     {
-        this.Titolo = Titolo;
-        this.Descrizione = Descrizione;
-        this.URL = URL;
-        this.Stato = Stato;
-        this.DataScadenza = DataScadenza;
-        this.Immagine = Immagine;
-        this.ColoreSfondo = ColoreSfondo;
-        this.ChecklistAttività = new ArrayList<>();
+        this.titolo = titolo;
+        this.descrizione = descrizione;
+        this.url = url;
+        stato = false;
+        this.dataScadenza = dataScadenza;
+        this.immagine = immagine;
+        this.coloreSfondo = coloreSfondo;
+        this.checklistAttivita = new ArrayList<>();
     }
+    //ricordiamoci che molte cose sono opzionali
 
     @Override
     public String toString()
     {
-        return "Titolo: " + Titolo + "\n" +
-                "Descrizione: " + Descrizione + "\n" +
-                "URL: " + URL + "\n" +
-                "Stato: " + Stato + "\n" +
-                "DataScadenza: " + DataScadenza + "\n" +
-                "Immagine: " + Immagine + "\n" +
-                "ColoreSfondo: " + ColoreSfondo;
+        return "Titolo: " + titolo + "\n" +
+                "Descrizione: " + descrizione + "\n" +
+                "URL: " + url + "\n" +
+                "Stato: " + stato + "\n" +
+                "DataScadenza: " + dataScadenza + "\n" +
+                "Immagine: " + immagine + "\n" +
+                "ColoreSfondo: " + coloreSfondo;
     }
 
     public void ModificaStato()
     {
-        this.Stato = !Stato;
+        this.stato = !stato;
     }
 }

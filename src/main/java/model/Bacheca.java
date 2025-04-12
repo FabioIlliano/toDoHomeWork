@@ -1,35 +1,43 @@
-package Model;
+package model;
 
 import java.util.ArrayList;
 
 public class Bacheca {
-    public TitoloBacheca Titolo;
-    public String Descrizione;
-    ArrayList<ToDO> ListaToDo;
+    private TitoloBacheca titolo;
+    private String descrizione;
+    private ArrayList<ToDO> listaToDo;
 
-    Bacheca(TitoloBacheca Titolo, String Descrizione)
+    public Bacheca(TitoloBacheca titolo, String descrizione)
     {
-        this.Titolo = Titolo;
-        this.Descrizione = Descrizione;
-        this.ListaToDo = new ArrayList<>();
+        this.titolo = titolo;
+        this.descrizione = descrizione;
+        listaToDo = new ArrayList<ToDO>();
     }
 
     public void aggiungiToDo(ToDO nuovoToDo)
     {
-        ListaToDo.add(nuovoToDo);
+        listaToDo.add(nuovoToDo);
     }
 
     public void mostraTutti()
     {
-        for (ToDO t : ListaToDo) {
+        for (ToDO t : listaToDo) {
             System.out.println(t);
         }
+    }
+
+    public TitoloBacheca getTitolo(){
+        return titolo;
+    }
+
+    public String getDescrizione(){
+        return descrizione;
     }
 
     @Override
     public String toString()
     {
-        return "Il titolo della bacheca è: " + Titolo + "\n" +
-                "Descrizione: " + Descrizione + "\n";
+        return "Il titolo della bacheca è: " + titolo + "\n" +
+                "Descrizione: " + descrizione + "\n";
     }
 }
