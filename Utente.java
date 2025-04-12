@@ -49,7 +49,6 @@ public class Utente
             {
                 case 1:
                     Titolo = Titolo.UNIVERSITA;
-                    break;
                 case 2:
                     Titolo = Titolo.LAVORO;
                     break;
