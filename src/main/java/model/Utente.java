@@ -87,6 +87,7 @@ public class Utente
         return true;
     }
 
+    /*
     //metodo che stampa la bacheca in base al nome
     public void printBacheca (String titolo){
         for (int i=0;i< bachecheUtente.size();i++){
@@ -98,6 +99,7 @@ public class Utente
         }
         System.out.println("La bacheca "+titolo+" non è presente nel sistema");
     }
+     */
 
     public void eliminaBacheca (String titolo){
         Bacheca bachecaDaEliminare = null;
@@ -130,22 +132,16 @@ public class Utente
 
     }
 
-    /*l'arraylist delle bacheche è private,
-      ma in bacheche ci sono metodi tipo "ModificaDescrizione" che non saprei come utilizzare
-      senza potermi riferire direttamente alla bacheca specifica nel main, quindi sono costretto
-      a passare per questa classe*/
-    public void modificaDescrizioneBacheca (String titolo)
-    {
+
+    public Bacheca getBacheca(String titolo){
+        //titolo = titolo.toUpperCase();
         for(Bacheca b : bachecheUtente)
         {
-            if(b.getTitolo().toString().equals(titolo))
+            if(b.getTitolo().toString().equalsIgnoreCase(titolo))
             {
-                b.ModificaDescrizione();
-                return;
+                return b;
             }
         }
-        final String ROSSO = "\u001B[31m";
-        final String RESET = "\u001B[0m";
-        System.out.println(ROSSO + "Bacheca non trovata!" + RESET);
+        return null;
     }
 }

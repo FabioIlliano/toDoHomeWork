@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
 
-public class ToDO {
+public class ToDo {
     private String titolo;
     private String descrizione;
     private String url;
@@ -15,7 +15,7 @@ public class ToDO {
     private int immagine; //da capire il tipo
     private String coloreSfondo;
 
-    public ToDO(String titolo, String descrizione, String url, String dataScadenza, int immagine, String coloreSfondo)
+    public ToDo(String titolo, String descrizione, String url, String dataScadenza, int immagine, String coloreSfondo)
     {
         this.titolo = titolo;
         this.descrizione = descrizione;
@@ -28,20 +28,32 @@ public class ToDO {
     }
     //ricordiamoci che molte cose sono opzionali
 
-    @Override
-    public String toString()
-    {
-        return "Titolo: " + titolo + "\n" +
-                "Descrizione: " + descrizione + "\n" +
-                "URL: " + url + "\n" +
-                "Stato: " + stato + "\n" +
-                "DataScadenza: " + dataScadenza + "\n" +
-                "Immagine: " + immagine + "\n" +
-                "ColoreSfondo: " + coloreSfondo;
+    public String getTitolo(){
+        return titolo;
     }
 
     public void ModificaStato()
     {
         this.stato = !stato;
     }
+
+    @Override
+    public String toString()
+    {
+        String s;
+        if (stato)
+            s = "completato";
+        else
+            s = "non completato";
+
+        return "Titolo: " + titolo + "\n" +
+                "Descrizione: " + descrizione + "\n" +
+                "URL: " + url + "\n" +
+                "Stato: " + s + "\n" +
+                "DataScadenza: " + dataScadenza + "\n" +
+                "Immagine: " + immagine + "\n" +
+                "ColoreSfondo: " + coloreSfondo;
+    }
+
+
 }

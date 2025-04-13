@@ -6,16 +6,16 @@ import java.util.Scanner;
 public class Bacheca {
     private TitoloBacheca titolo;
     private String descrizione;
-    private ArrayList<ToDO> listaToDo;
+    private ArrayList<ToDo> listaToDo;
 
     public Bacheca(TitoloBacheca titolo, String descrizione)
     {
         this.titolo = titolo;
         this.descrizione = descrizione;
-        listaToDo = new ArrayList<ToDO>();
+        listaToDo = new ArrayList<ToDo>();
     }
 
-    public void ModificaDescrizione()
+    public void modificaDescrizione(String titolo)
     {
         Scanner in = new Scanner(System.in);
         System.out.println("Inserisci la nuova descrizione");
@@ -25,38 +25,49 @@ public class Bacheca {
         this.descrizione = NuovaDescrizione;
     }
 
-    public void CreaToDo()
+    public void creaToDo()
     {
         Scanner in = new Scanner(System.in);
-        String Titolo;
-        String Descrizione;
-        String URL;
-        String DataScadenza;
-        int Immagine;
-        String ColoreSfondo;
+        String titolo;
+        String descrizione;
+        String url;
+        String dataScadenza;
+        int immagine;
+        String coloreSfondo;
 
         System.out.print("Inserisci il titolo del nuovo ToDo: ");
-        Titolo = in.nextLine();
+        titolo = in.nextLine();
         System.out.print("Inserisci la descrizione: ");
-        Descrizione = in.nextLine();
+        descrizione = in.nextLine();
         System.out.print("Inserisci un URL: ");
-        URL = in.nextLine();
+        url = in.nextLine();
         System.out.print("Inserisci la data di scadenza (YYYY-MM-DD): ");
-        DataScadenza = in.nextLine();
+        dataScadenza = in.nextLine();
         System.out.print("Inserisci un immagine (per il momento degli int a caso): ");
-        Immagine = in.nextInt();
+        immagine = in.nextInt();
         in.nextLine();
         System.out.print("Inserisci il colore sfondo: ");
-        ColoreSfondo = in.nextLine();
-        ToDO NuovoToDo = new ToDO(Titolo, Descrizione, URL, DataScadenza, Immagine, ColoreSfondo);
-        listaToDo.add(NuovoToDo);
+        coloreSfondo = in.nextLine();
+        ToDo nuovoToDo = new ToDo(titolo, descrizione, url, dataScadenza, immagine, coloreSfondo);
+        listaToDo.add(nuovoToDo);
     }
 
     public void mostraTutti()
     {
-        for (ToDO t : listaToDo) {
+        for (ToDo t : listaToDo) {
             System.out.println(t);
         }
+    }
+
+    public ToDo getToDo(String titolo){
+        for(ToDo todo : listaToDo)
+        {
+            if(todo.getTitolo().equalsIgnoreCase(titolo))
+            {
+                return todo;
+            }
+        }
+        return null;
     }
 
     public TitoloBacheca getTitolo(){
