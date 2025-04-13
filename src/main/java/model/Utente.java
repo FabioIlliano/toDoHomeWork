@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-;
+
 public class Utente
 {
     String username;
@@ -30,9 +30,10 @@ public class Utente
         return username.equals(this.username) && password.equals(this.password);
     }
 
-    public boolean creaBacheca() {
-        //input
-        if (bachecheUtente.size() >= 3) {
+    public boolean creaBacheca()
+    {
+        if (bachecheUtente.size() >= 3)
+        {
             System.out.println("Hai già creato le tue bacheche!");
             return false;
         }
@@ -127,5 +128,24 @@ public class Utente
                 System.out.println("Effettuare una scelta");
         }while (scelta!=0 && scelta!= 1);
 
+    }
+
+    /*l'arraylist delle bacheche è private,
+      ma in bacheche ci sono metodi tipo "ModificaDescrizione" che non saprei come utilizzare
+      senza potermi riferire direttamente alla bacheca specifica nel main, quindi sono costretto
+      a passare per questa classe*/
+    public void modificaDescrizioneBacheca (String titolo)
+    {
+        for(Bacheca b : bachecheUtente)
+        {
+            if(b.getTitolo().toString().equals(titolo))
+            {
+                b.ModificaDescrizione();
+                return;
+            }
+        }
+        final String ROSSO = "\u001B[31m";
+        final String RESET = "\u001B[0m";
+        System.out.println(ROSSO + "Bacheca non trovata!" + RESET);
     }
 }

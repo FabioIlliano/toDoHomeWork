@@ -1,7 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
 
 public class ToDO {
     private String titolo;
@@ -10,18 +10,18 @@ public class ToDO {
     private boolean stato;
     private ArrayList<Attivita> checklistAttivita;
     private static ArrayList<Utente> utenti; //Essendo statica i dati all interno saranno gli stessi per TUTTE le istanze create
+    private LocalDate dataScadenza; //Per mettere anche l ora basterebbe usare il tipo LocalDateTime ma non c ho sbatti
     //Non so bene che tipo mettere
-    private Date dataScadenza; //esiste questa classe ma non so come si usi
     private int immagine; //da capire il tipo
     private String coloreSfondo;
 
-    public ToDO(String titolo, String descrizione, String url, Date dataScadenza, int immagine, String coloreSfondo)
+    public ToDO(String titolo, String descrizione, String url, String dataScadenza, int immagine, String coloreSfondo)
     {
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.url = url;
         stato = false;
-        this.dataScadenza = dataScadenza;
+        this.dataScadenza = LocalDate.parse(dataScadenza);;
         this.immagine = immagine;
         this.coloreSfondo = coloreSfondo;
         this.checklistAttivita = new ArrayList<>();

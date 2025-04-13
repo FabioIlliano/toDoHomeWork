@@ -17,13 +17,9 @@ public class main {
         admin.eliminaBacheca(TitoloBacheca.TEMPO_LIBERO.toString());
         admin.printBacheca(TitoloBacheca.TEMPO_LIBERO.toString());
 
-        /*ToDO Cucina = new ToDO("Pasta e patate", "Devo cucinare pasta e patate", "www.pastepatan.potatos", false, 11, 12, "Giallo");
-        System.out.println(Cucina.toString());
 
-        //modifica stato
-        Cucina.ModificaStato();
-
-        System.out.println(Cucina.Stato);*/
+        admin.modificaDescrizioneBacheca(TitoloBacheca.UNIVERSITA.toString());
+        admin.modificaDescrizioneBacheca("titolo errato");
 
     }
 
