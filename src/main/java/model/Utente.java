@@ -87,7 +87,7 @@ public class Utente
         return true;
     }
 
-    /*
+    /*a
     //metodo che stampa la bacheca in base al nome
     public void printBacheca (String titolo){
         for (int i=0;i< bachecheUtente.size();i++){
@@ -125,7 +125,7 @@ public class Utente
                 else
                     System.out.println("La bacheca non è stata eliminata correttamente");
             } else if (scelta==0)
-                System.out.println("Operazione annullata, la bacheca non è stata cancellata");
+                System.out.println("Operazione annullata, la bacheca non è stata eliminato");
             else
                 System.out.println("Effettuare una scelta");
         }while (scelta!=0 && scelta!= 1);
@@ -144,4 +144,9 @@ public class Utente
         }
         return null;
     }
+
+    public void spostaToDo (Bacheca bachecaNuova, ToDo todoSpostato){
+
+    }
+
 }

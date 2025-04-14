@@ -37,6 +37,34 @@ public class ToDo {
         this.stato = !stato;
     }
 
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setDataScadenza(String dataScadenza) {
+        this.dataScadenza = LocalDate.parse(dataScadenza);
+    }
+
+    public void setImmagine(int immagine) {
+        this.immagine = immagine;
+    }
+
+    public void setColoreSfondo(String coloreSfondo) {
+        this.coloreSfondo = coloreSfondo;
+    }
+
+    public LocalDate getDataScadenza() {
+        return dataScadenza;
+    }
+
     @Override
     public String toString()
     {
@@ -54,6 +82,4 @@ public class ToDo {
                 "Immagine: " + immagine + "\n" +
                 "ColoreSfondo: " + coloreSfondo;
     }
-
-
 }
