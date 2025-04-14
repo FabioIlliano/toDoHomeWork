@@ -82,4 +82,15 @@ public class ToDo {
                 "Immagine: " + immagine + "\n" +
                 "ColoreSfondo: " + coloreSfondo;
     }
+
+    public void AggiungiAttivita()
+    {
+        Scanner in = new Scanner(System.in);
+        String nome;
+
+        System.out.print("Inserisci il nome della nuova attività: ");
+        nome = in.nextLine();
+        Attivita nuovaattivita = new Attivita(nome);
+        checklistAttivita.add(nuovaattivita);
+    }
 }
