@@ -145,8 +145,11 @@ public class Utente
         return null;
     }
 
-    public void spostaToDo (Bacheca bachecaNuova, ToDo todoSpostato){
-
+    //bisogna verificare se funziona e magari renderla più efficiente
+    public void spostaToDo (Bacheca bachecaNuova, Bacheca bachecaVecchia, String nomeToDo){
+        ToDo toDoNuovo = bachecaVecchia.getToDo(nomeToDo);
+        bachecaVecchia.getListaToDo().remove(toDoNuovo);
+        bachecaNuova.aggiungiToDo(toDoNuovo);
     }
 
 }

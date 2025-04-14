@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
+import java.util.Scanner;
 
 public class ToDo {
     private String titolo;

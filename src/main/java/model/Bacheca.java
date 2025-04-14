@@ -120,6 +120,14 @@ public class Bacheca {
         return descrizione;
     }
 
+    public ArrayList<ToDo> getListaToDo() {
+        return listaToDo;
+    }
+
+    public void aggiungiToDo(ToDo todo){
+        listaToDo.add(todo);
+    }
+
     public void EliminaToDo()
     {
         ToDo todoDaEliminare = null;
@@ -170,4 +178,5 @@ public class Bacheca {
         return "Il titolo della bacheca è: " + titolo + "\n" +
                 "Descrizione: " + descrizione + "\n";
     }
+
 }
