@@ -179,4 +179,36 @@ public class Bacheca {
                 "Descrizione: " + descrizione + "\n";
     }
 
+    //non ci pensate veramente :P
+    public void stampabacheca()
+    {
+        int larghezza = ("Descrizione: " + descrizione).length();
+
+        for (ToDo todo : listaToDo) {
+            String riga = String.format("%d. %s", listaToDo.indexOf(todo) + 1, todo.getTitolo());
+            if (riga.length() > larghezza) larghezza = riga.length();
+        }
+
+        larghezza += 4; // padding
+
+        String bordoSuperiore = "╔" + "═".repeat(larghezza) + "╗";
+        String bordoInferiore = "╚" + "═".repeat(larghezza) + "╝";
+        String separatore = "╠" + "═".repeat(larghezza) + "╣";
+
+        System.out.println(bordoSuperiore);
+        System.out.printf("║ %-"+larghezza+"s║\n", "BACHECA: " + titolo);
+        System.out.printf("║ %-"+larghezza+"s║\n", "Descrizione: " + descrizione);
+        System.out.println(separatore);
+
+        if (listaToDo.isEmpty()) {
+            System.out.printf("║ %-"+larghezza+"s║\n", "(Nessun ToDo)");
+        } else {
+            for (int i = 0; i < listaToDo.size(); i++) {
+                String riga = String.format("%d. %s", i + 1, listaToDo.get(i).getTitolo());
+                System.out.printf("║ %-"+larghezza+"s║\n", riga);
+            }
+        }
+
+        System.out.println(bordoInferiore);
+    }
 }

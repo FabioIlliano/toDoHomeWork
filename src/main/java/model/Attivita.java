@@ -10,7 +10,8 @@ public class Attivita {
         stato = false;
     }
 
-    public void modificaStato(boolean stato){
-        this.stato = stato;
+    public void ModificaStato()
+    {
+        this.stato = !stato;
     }
 }

@@ -10,7 +10,7 @@ public class Utente
     String password;
     ArrayList<Bacheca> bachecheUtente= new ArrayList<Bacheca>();
 
-    Utente(String username, String password)
+    public Utente(String username, String password)
     {
         this.username = username;
         this.password = password;
@@ -152,4 +152,11 @@ public class Utente
         bachecaNuova.aggiungiToDo(toDoNuovo);
     }
 
+    public void mostraBacheche()
+    {
+        System.out.println("le tue bacheche sono: ");
+        for (Bacheca B : bachecheUtente) {
+            System.out.println(B.getTitolo());
+        }
+    }
 }
