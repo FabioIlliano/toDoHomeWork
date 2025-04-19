@@ -15,7 +15,7 @@ public class Bacheca {
         listaToDo = new ArrayList<ToDo>();
     }
 
-    public void modificaDescrizione(String titolo)
+    public void modificaDescrizione()
     {
         Scanner in = new Scanner(System.in);
         System.out.println("Inserisci la nuova descrizione");
@@ -97,7 +97,7 @@ public class Bacheca {
     public void mostraTutti()
     {
         for (ToDo t : listaToDo) {
-            System.out.println(t);
+            System.out.println(t.getTitolo());
         }
     }
 
@@ -128,12 +128,12 @@ public class Bacheca {
         listaToDo.add(todo);
     }
 
-    public void EliminaToDo()
+    public void eliminaToDo(String titolo)
     {
         ToDo todoDaEliminare = null;
         int i;
         for (i=0;i<listaToDo.size();i++)
-            if (titolo.equals(listaToDo.get(i).getTitolo().toString())){
+            if (titolo.equals(listaToDo.get(i).getTitolo())){
                 todoDaEliminare = listaToDo.get(i);
             }
         if (todoDaEliminare == null)

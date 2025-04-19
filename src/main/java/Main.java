@@ -1,13 +1,19 @@
 import model.Utente;
 
-public class main {
+import java.util.Scanner;
+
+public class Main {
     public static void main(String[] args)
     {
+        //AGGIUNGERE LA LISTA DEGLI UTENTI A CUI E' STATO CONDIVISO UN TODO
+        Utente Giuseppe = new Utente("Giuseppe", "1234");
         Utente admin = new Utente("admin","1234");
         final String ROSSO = "\u001B[31m";
         final String VERDE = "\033[32m";
         final String RESET = "\u001B[0m";
+        Scanner in = new Scanner(System.in);
         String r;
+        String s;
 
         System.out.println(" ____  _____ _   ___     _______ _   _ _   _ _____ ___  \n" +
                 "| __ )| ____| \\ | \\ \\   / / ____| \\ | | | | |_   _/ _ \\ \n" +
@@ -28,13 +34,44 @@ public class main {
         admin.creaBacheca();
         do
         {
-            admin.getBacheca("universita").creaToDo();
+            System.out.println("In quale bacheca vuoi creare il ToDo?");
+            r = in.nextLine();
+            admin.getBacheca(r).creaToDo();
             System.out.println("Vuoi creare un altro ToDo? Y/N:");
-            r = System.console().readLine();
+            r = in.nextLine();
 
         }while(r.equalsIgnoreCase("Y"));
 
-        admin.spostaToDo(admin.getBacheca("lavoro"), admin.getBacheca("universita"), "dimagrire");
+        //admin.getBacheca("universita").getToDo("Dimagrire").eliminaCondivisione(admin, "universita");
+        //admin.getBacheca("universita").mostraTutti();
+
+        System.out.println("Ora tocca Giuseppe: ");
+        Giuseppe.creaBacheca();
+        Giuseppe.creaBacheca();
+
+        System.out.println("admin da quale bacheca vuoi prendere il ToDo da condividere?");
+        r = in.nextLine();
+        System.out.println("Quale ToDo vuoi condividere?");
+        admin.getBacheca(r).mostraTutti();
+        s = in.nextLine();
+
+        System.out.println("Ok, questa è la bacheca di Giuseppe prima della condivisione");
+        Giuseppe.getBacheca(r).stampabacheca();
+
+        admin.getBacheca(r).getToDo(s).condividiToDo(Giuseppe, r);
+        System.out.println("Questa invece è la bacheca di Giuseppe dopo la condivisione");
+        Giuseppe.getBacheca(r).stampabacheca();
+
+        System.out.println("Ecco lo stato per entrambi gli utenti senza che nessuno lo completasse:\n(admin) " + admin.getBacheca(r).getToDo(s).getStato() + "\n(Giuseppe)" + Giuseppe.getBacheca(r).getToDo(s).getStato());
+        System.out.println("Adesso Giuseppe ha completato il ToDo");
+        Giuseppe.getBacheca(r).getToDo(s).ModificaStato();
+        System.out.println("STATO DEL TODO IN ADMIN: " + admin.getBacheca(r).getToDo(s).getStato() + "\nSTATO DEL TODO IN GIUSEPPE: " + Giuseppe.getBacheca(r).getToDo(s).getStato());
+
+
+
+
+
+        /*admin.spostaToDo(admin.getBacheca("lavoro"), admin.getBacheca("universita"), "dimagrire");
 
         System.out.println("Su quale bacheca vuoi lavorare?");
         admin.mostraBacheche();
@@ -45,7 +82,7 @@ public class main {
         }catch (NullPointerException e)
         {
             System.out.println(ROSSO + "QUESTA BACHECA NON ESISTE" + RESET);
-        }
+        }*/
 
         /*admin.getBacheca("universita").mostraTutti();
         System.out.println("PROVA 1\n\n");

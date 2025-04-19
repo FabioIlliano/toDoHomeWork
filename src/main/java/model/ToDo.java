@@ -33,6 +33,8 @@ public class ToDo {
         return titolo;
     }
 
+    public boolean getStato(){return stato;}
+
     public void ModificaStato()
     {
         this.stato = !stato;
@@ -84,7 +86,16 @@ public class ToDo {
                 "ColoreSfondo: " + coloreSfondo;
     }
 
-    public void AggiungiAttivita()
+    public void condividiToDo(Utente destinatario, String titoloBacheca)
+    {
+        destinatario.getBacheca(titoloBacheca).aggiungiToDo(this);
+    }
+
+    public void eliminaCondivisione(Utente destinatario, String titoloBacheca)
+    {
+        destinatario.getBacheca(titoloBacheca).eliminaToDo(this.getTitolo());
+    }
+    public void aggiungiAttivita()
     {
         Scanner in = new Scanner(System.in);
         String nome;
