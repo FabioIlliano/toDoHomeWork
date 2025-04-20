@@ -91,13 +91,20 @@ public class ToDo {
 
     public void condividiToDo(Utente destinatario, String titoloBacheca)
     {
-        destinatario.getBacheca(titoloBacheca).aggiungiToDo(this);
+        try{
+            destinatario.getBacheca(titoloBacheca).aggiungiToDo(this);
+            listaUtentiCondivisione.add(destinatario);
+        }catch (Exception e){
+            System.out.println("Condivisione non andata a buon fine");
+        }
+
     }
 
     public void eliminaCondivisione(Utente destinatario, String titoloBacheca)
     {
         try{
             destinatario.getBacheca(titoloBacheca).rimuoviToDo(this);
+            listaUtentiCondivisione.remove(destinatario);
         }catch (NullPointerException e){
             System.out.println("Non c'è nessun ToDo condiviso");
         }
@@ -107,7 +114,7 @@ public class ToDo {
 
     }
 
-    //in un certo senso ingola creaCheckList
+    //in un certo senso ingloba creaCheckList
     public void aggiungiAttivita()
     {
         if (checklistAttivita==null)

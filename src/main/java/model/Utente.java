@@ -147,9 +147,14 @@ public class Utente
 
     //bisogna verificare se funziona e magari renderla più efficiente
     public void spostaToDo (Bacheca bachecaNuova, Bacheca bachecaVecchia, String nomeToDo){
-        ToDo toDoNuovo = bachecaVecchia.getToDo(nomeToDo);
-        bachecaVecchia.getListaToDo().remove(toDoNuovo);
-        bachecaNuova.aggiungiToDo(toDoNuovo);
+        try{
+            ToDo toDoNuovo = bachecaVecchia.getToDo(nomeToDo);
+            bachecaVecchia.getListaToDo().remove(toDoNuovo);
+            bachecaNuova.aggiungiToDo(toDoNuovo);
+        }catch (Exception e){
+            System.out.println("Errore nello spostamento del todo");
+        }
+
     }
 
     public void mostraBacheche()
