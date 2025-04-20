@@ -128,6 +128,10 @@ public class Bacheca {
         listaToDo.add(todo);
     }
 
+    public void rimuoviToDo(ToDo todo){
+        listaToDo.remove(todo);
+    }
+
     public void eliminaToDo(String titolo)
     {
         ToDo todoDaEliminare = null;

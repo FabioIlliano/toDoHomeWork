@@ -31,7 +31,7 @@ public class Main {
         System.out.println(VERDE + "Login effettuato con successo!" + RESET);
 
         admin.creaBacheca();
-        admin.creaBacheca();
+        //admin.creaBacheca();
         do
         {
             System.out.println("In quale bacheca vuoi creare il ToDo?");
@@ -47,7 +47,7 @@ public class Main {
 
         System.out.println("Ora tocca Giuseppe: ");
         Giuseppe.creaBacheca();
-        Giuseppe.creaBacheca();
+        //Giuseppe.creaBacheca();
 
         System.out.println("admin da quale bacheca vuoi prendere il ToDo da condividere?");
         r = in.nextLine();
@@ -62,12 +62,40 @@ public class Main {
         System.out.println("Questa invece è la bacheca di Giuseppe dopo la condivisione");
         Giuseppe.getBacheca(r).stampabacheca();
 
-        System.out.println("Ecco lo stato per entrambi gli utenti senza che nessuno lo completasse:\n(admin) " + admin.getBacheca(r).getToDo(s).getStato() + "\n(Giuseppe)" + Giuseppe.getBacheca(r).getToDo(s).getStato());
-        System.out.println("Adesso Giuseppe ha completato il ToDo");
+        //System.out.println("Ecco lo stato per entrambi gli utenti senza che nessuno lo completasse:\n(admin) " + admin.getBacheca(r).getToDo(s).getStato() + "\n(Giuseppe)" + Giuseppe.getBacheca(r).getToDo(s).getStato());
+        System.out.println("ToDo in Giuseppe prima della modifica");
+        Giuseppe.getBacheca(r).mostraTutti();
+        System.out.println("ToDo in Admin prima della modifica");
+        admin.getBacheca(r).mostraTutti();
+
+        System.out.println("Adesso Giuseppe ha modificato il ToDo");
         Giuseppe.getBacheca(r).getToDo(s).ModificaStato();
-        System.out.println("STATO DEL TODO IN ADMIN: " + admin.getBacheca(r).getToDo(s).getStato() + "\nSTATO DEL TODO IN GIUSEPPE: " + Giuseppe.getBacheca(r).getToDo(s).getStato());
+        Giuseppe.getBacheca(r).getToDo(s).setDescrizione("lo fa giuseppe");
+        //System.out.println("STATO DEL TODO IN ADMIN: " + admin.getBacheca(r).getToDo(s).getStato() + "\nSTATO DEL TODO IN GIUSEPPE: " + Giuseppe.getBacheca(r).getToDo(s).getStato());
+
+        System.out.println("ToDo in Giuseppe dopo la modifica");
+        Giuseppe.getBacheca(r).mostraTutti();
+        String stringa = Giuseppe.getBacheca(r).getToDo(s).toString();
+        System.out.println(stringa);
+        System.out.println("ToDo in Admin dopo la modifica");
+        admin.getBacheca(r).mostraTutti();
+        String stringa1 = admin.getBacheca(r).getToDo(s).toString();
+        System.out.println(stringa1);
 
 
+
+
+        System.out.println("adesso leviamo la condivisione a giuseppe");
+        admin.getBacheca(r).getToDo(s).eliminaCondivisione(Giuseppe, r);
+
+        System.out.println("ToDo in Giuseppe dopo tolto condivisione");
+        Giuseppe.getBacheca(r).mostraTutti();
+        //String stringa2 = Giuseppe.getBacheca(r).getToDo(s).toString();
+        //System.out.println(stringa2);
+        System.out.println("ToDo in Admin dopo tolto condivisione");
+        admin.getBacheca(r).mostraTutti();
+        String stringa3 = admin.getBacheca(r).getToDo(s).toString();
+        System.out.println(stringa3);
 
 
 
