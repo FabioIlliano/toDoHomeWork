@@ -5,6 +5,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args)
     {
+        //nel main abbiamo provato i vari metodi, ci sono alcuni rimasugli delle prove effettuate
+
+
         //AGGIUNGERE LA LISTA DEGLI UTENTI A CUI E' STATO CONDIVISO UN TODO
         Utente Giuseppe = new Utente("Giuseppe", "1234");
         Utente admin = new Utente("admin","1234");
@@ -58,7 +61,7 @@ public class Main {
         System.out.println("Ok, questa è la bacheca di Giuseppe prima della condivisione");
         Giuseppe.getBacheca(r).stampabacheca();
 
-        admin.getBacheca(r).getToDo(s).condividiToDo(Giuseppe, r);
+        admin.getBacheca(r).getToDoTitolo(s).condividiToDo(Giuseppe, r);
         System.out.println("Questa invece è la bacheca di Giuseppe dopo la condivisione");
         Giuseppe.getBacheca(r).stampabacheca();
 
@@ -69,24 +72,24 @@ public class Main {
         admin.getBacheca(r).mostraTutti();
 
         System.out.println("Adesso Giuseppe ha modificato il ToDo");
-        Giuseppe.getBacheca(r).getToDo(s).ModificaStato();
-        Giuseppe.getBacheca(r).getToDo(s).setDescrizione("lo fa giuseppe");
+        Giuseppe.getBacheca(r).getToDoTitolo(s).ModificaStato();
+        Giuseppe.getBacheca(r).getToDoTitolo(s).setDescrizione("lo fa giuseppe");
         //System.out.println("STATO DEL TODO IN ADMIN: " + admin.getBacheca(r).getToDo(s).getStato() + "\nSTATO DEL TODO IN GIUSEPPE: " + Giuseppe.getBacheca(r).getToDo(s).getStato());
 
         System.out.println("ToDo in Giuseppe dopo la modifica");
         Giuseppe.getBacheca(r).mostraTutti();
-        String stringa = Giuseppe.getBacheca(r).getToDo(s).toString();
+        String stringa = Giuseppe.getBacheca(r).getToDoTitolo(s).toString();
         System.out.println(stringa);
         System.out.println("ToDo in Admin dopo la modifica");
         admin.getBacheca(r).mostraTutti();
-        String stringa1 = admin.getBacheca(r).getToDo(s).toString();
+        String stringa1 = admin.getBacheca(r).getToDoTitolo(s).toString();
         System.out.println(stringa1);
 
 
 
 
         System.out.println("adesso leviamo la condivisione a giuseppe");
-        admin.getBacheca(r).getToDo(s).eliminaCondivisione(Giuseppe, r);
+        admin.getBacheca(r).getToDoTitolo(s).eliminaCondivisione(Giuseppe, r);
 
         System.out.println("ToDo in Giuseppe dopo tolto condivisione");
         Giuseppe.getBacheca(r).mostraTutti();
@@ -94,7 +97,7 @@ public class Main {
         //System.out.println(stringa2);
         System.out.println("ToDo in Admin dopo tolto condivisione");
         admin.getBacheca(r).mostraTutti();
-        String stringa3 = admin.getBacheca(r).getToDo(s).toString();
+        String stringa3 = admin.getBacheca(r).getToDoTitolo(s).toString();
         System.out.println(stringa3);
 
 

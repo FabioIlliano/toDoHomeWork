@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Utente
@@ -46,7 +45,6 @@ public class Utente
         do {
             int i = 1;
             System.out.println("Scegli il titolo della bacheca tra:");
-            //Questo sotto non è nient'altro che un ciclo for scritto in maniera un pò più elegante
             for (TitoloBacheca titoli : TitoloBacheca.values()) {
                 System.out.println(i + ")" + titoli.toString());
                 i++;
@@ -76,7 +74,7 @@ public class Utente
                 System.out.println("Questa bacheca già esiste!");
 
         } while ( cond3|| cond0 || cond1);
-        //dovrebbe controllare sia che il titolo sia corretto sia che non esista una bacheca con quel titolo
+        //controlla sia che il titolo sia corretto sia che non esista una bacheca con quel titolo
 
         System.out.print("Inserisci descrizione della bacheca:\n");
         descrizione = in.nextLine();
@@ -87,8 +85,9 @@ public class Utente
         return true;
     }
 
-    /*a
-    //metodo che stampa la bacheca in base al nome
+    /*
+    metodo che stampa la bacheca in base al nome, usato in debug
+
     public void printBacheca (String titolo){
         for (int i=0;i< bachecheUtente.size();i++){
             if (titolo.equals(bachecheUtente.get(i).getTitolo().toString())){
@@ -99,7 +98,7 @@ public class Utente
         }
         System.out.println("La bacheca "+titolo+" non è presente nel sistema");
     }
-     */
+    */
 
     public void eliminaBacheca (String titolo){
         Bacheca bachecaDaEliminare = null;
@@ -145,10 +144,10 @@ public class Utente
         return null;
     }
 
-    //bisogna verificare se funziona e magari renderla più efficiente
+    //metodo che sposta un todo tra una bacheca e un altra
     public void spostaToDo (Bacheca bachecaNuova, Bacheca bachecaVecchia, String nomeToDo){
         try{
-            ToDo toDoNuovo = bachecaVecchia.getToDo(nomeToDo);
+            ToDo toDoNuovo = bachecaVecchia.getToDoTitolo(nomeToDo);
             bachecaVecchia.getListaToDo().remove(toDoNuovo);
             bachecaNuova.aggiungiToDo(toDoNuovo);
         }catch (Exception e){
@@ -157,6 +156,7 @@ public class Utente
 
     }
 
+    //metodo per debug
     public void mostraBacheche()
     {
         System.out.println("le tue bacheche sono: ");

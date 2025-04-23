@@ -10,12 +10,9 @@ public class ToDo {
     private String url;
     private boolean stato;
     private ArrayList<Attivita> checklistAttivita;
-    // a che serve? private static ArrayList<Utente> utenti; //Essendo statica i dati all interno saranno gli stessi per TUTTE le istanze create
-    private LocalDate dataScadenza; //Per mettere anche l ora basterebbe usare il tipo LocalDateTime ma non c ho sbatti
-    //Non so bene che tipo mettere
+    private LocalDate dataScadenza; //Per mettere anche l ora basterebbe usare il tipo LocalDateTime
     private int immagine; //da capire il tipo
     private String coloreSfondo;
-    //non so se va tenuta così
     private ArrayList<Utente> listaUtentiCondivisione;
 
     public ToDo(String titolo, String descrizione, String url, String dataScadenza, int immagine, String coloreSfondo)
@@ -30,8 +27,10 @@ public class ToDo {
         //this.checklistAttivita = new ArrayList<>(); questa non ci va perchè creare l'arraylist di attività è opzionale
         listaUtentiCondivisione = new ArrayList<>();
     }
-    //ricordiamoci che molte cose sono opzionali
 
+    //molte cose sono opzionali
+
+    //setter per modificare i dati del todo
     public String getTitolo(){
         return titolo;
     }
@@ -71,6 +70,7 @@ public class ToDo {
         return dataScadenza;
     }
 
+    //stampa per debug
     @Override
     public String toString()
     {
@@ -89,6 +89,7 @@ public class ToDo {
                 "ColoreSfondo: " + coloreSfondo;
     }
 
+    //metodo che condivide un todo ad un altro utente
     public void condividiToDo(Utente destinatario, String titoloBacheca)
     {
         try{
@@ -100,6 +101,7 @@ public class ToDo {
 
     }
 
+    //metodo che elimina la condivisione da un altro utente
     public void eliminaCondivisione(Utente destinatario, String titoloBacheca)
     {
         try{
@@ -114,7 +116,7 @@ public class ToDo {
 
     }
 
-    //in un certo senso ingloba creaCheckList
+    //metodo che crea e aggiunge attività all'arraylist di attività
     public void aggiungiAttivita()
     {
         if (checklistAttivita==null)

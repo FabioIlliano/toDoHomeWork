@@ -52,47 +52,6 @@ public class Bacheca {
         listaToDo.add(nuovoToDo);
     }
 
-   /* private void inserisciODatiToDo(ToDo todo) {
-        Scanner in = new Scanner(System.in);
-
-        System.out.print("Inserisci il titolo: ");
-        String titolo = in.nextLine();
-        System.out.print("Inserisci la descrizione: ");
-        String descrizione = in.nextLine();
-        System.out.print("Inserisci un URL: ");
-        String url = in.nextLine();
-        System.out.print("Inserisci la data di scadenza (YYYY-MM-DD): ");
-        String dataScadenza = in.nextLine();
-        System.out.print("Inserisci un'immagine (int): ");
-        int immagine = in.nextInt();
-        in.nextLine(); // consuma newline
-        System.out.print("Inserisci il colore sfondo: ");
-        String coloreSfondo = in.nextLine();
-
-        // Se è un nuovo ToDo
-        if (todo == null) {
-            ToDo nuovoToDo = new ToDo(titolo, descrizione, url, dataScadenza, immagine, coloreSfondo);
-            listaToDo.add(nuovoToDo);
-        } else {
-            // Modifica
-            todo.setTitolo(titolo);
-            todo.setDescrizione(descrizione);
-            todo.setUrl(url);
-            todo.setDataScadenza(dataScadenza);
-            todo.setImmagine(immagine);
-            todo.setColoreSfondo(coloreSfondo);
-        }
-    }
-
-    public void modificaToDo(String titolo) {
-        ToDo t = getToDo(titolo);
-        if (t != null) {
-            inserisciODatiToDo(t);
-            System.out.println("ToDo modificato.");
-        } else {
-            System.out.println("ToDo non trovato.");
-        }
-    }*/
 
     public void mostraTutti()
     {
@@ -101,7 +60,7 @@ public class Bacheca {
         }
     }
 
-    public ToDo getToDo(String titolo){
+    public ToDo getToDoTitolo(String titolo){
         for(ToDo todo : listaToDo)
         {
             if(todo.getTitolo().equalsIgnoreCase(titolo))
@@ -111,6 +70,20 @@ public class Bacheca {
         }
         return null;
     }
+
+    public ArrayList<ToDo> getToDoScadenzaOggi(){
+        LocalDate dataoggi = LocalDate.now();
+        ArrayList<ToDo> listaScad = new ArrayList<>();
+        for(ToDo todo : listaToDo)
+        {
+            if(todo.getDataScadenza().isEqual(dataoggi))
+            {
+                listaScad.add(todo);
+            }
+        }
+        return listaScad;
+    }
+
 
     public TitoloBacheca getTitolo(){
         return titolo;
@@ -164,18 +137,20 @@ public class Bacheca {
 
     }
 
+    //metodo che ordina i todo in base al titolo
     public void ordinaToDoTitolo()
     {
         listaToDo.sort(Comparator.comparing(todo -> todo.getTitolo().toLowerCase()));
     }
 
+    //metodo che ordina i todo per la data di scadenza
     public void ordinaToDoDataScad()
     {
         listaToDo.sort(Comparator.comparing(toDo -> toDo.getDataScadenza()));
     }
 
 
-
+    //metodo utile per debug per stampa
     @Override
     public String toString()
     {
@@ -183,7 +158,7 @@ public class Bacheca {
                 "Descrizione: " + descrizione + "\n";
     }
 
-    //non ci pensate veramente :P
+    //metodo per stampa in fase di debug
     public void stampabacheca()
     {
         int larghezza = ("Descrizione: " + descrizione).length();
