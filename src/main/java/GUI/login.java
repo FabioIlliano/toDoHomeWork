@@ -22,7 +22,7 @@ public class login {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-
+        frame.setSize(800, 600);
 
     }
 
@@ -40,6 +40,5 @@ public class login {
 
 
     }
-
 
 }
