@@ -21,12 +21,25 @@ public class Utente
         String password;
         Scanner in = new Scanner(System.in);
 
+
         System.out.print("Username: ");
         username = in.nextLine();
         System.out.print("Password: ");
         password = in.nextLine();
 
         return username.equals(this.username) && password.equals(this.password);
+    }
+
+    public boolean loginGUI(String username, String password)
+    {
+        return username.equals(this.username) && password.equals(this.password);
+    }
+
+    public boolean contaBacheche(){
+        if (bachecheUtente.size()>=3)
+            return false;
+        else
+            return true;
     }
 
     public boolean creaBacheca()
@@ -83,6 +96,21 @@ public class Utente
         bachecheUtente.add(bacheca);
 
         return true;
+    }
+
+    public void creaBachechaGUI (TitoloBacheca titolo, String descrizione) throws Exception{
+        if (!contaBacheche())
+            throw new Exception("BACHECHE GIA CREATE!!");
+
+        TitoloBacheca t = titolo;
+        String d = descrizione;
+        boolean cond0 = bachecheUtente.size() > 0 && titolo!=null && titolo.equals(bachecheUtente.get(0).getTitolo());
+        boolean cond1 = bachecheUtente.size() > 1 && titolo!=null && titolo.equals(bachecheUtente.get(1).getTitolo());
+        if (cond0 || cond1)
+            throw new Exception("NOME BACHECHA GIA UTILIZZATO!!");
+
+        Bacheca bacheca = new Bacheca(t, d);
+        bachecheUtente.add(bacheca);
     }
 
     /*
