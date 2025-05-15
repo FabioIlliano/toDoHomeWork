@@ -3,6 +3,7 @@ package GUI;
 import Controller.Controller;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,14 +20,24 @@ public class Home {
     private Controller controller;
 
     public Home(JFrame frame, Controller controller) {
+        if (controller.checkBacheca())
+        {
+            panel1.setBackground(Color.red);
+            panel2.setBackground(Color.red);
+            panel3.setBackground(Color.red);
+        }
+
         this.frame = new JFrame("Home");
         this.controller = controller;
         this.frame.setContentPane(HomePanel);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
-        this.frame.setVisible(true);
         this.frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
         this.initListeners();
+        this.frame.setVisible(true);
+
+
     }
 
     public void initListeners (){
@@ -42,6 +53,14 @@ public class Home {
                     JOptionPane.showMessageDialog(frame, "BACHECHE GIA CREATE!!");
             }
         });
-    }
 
+        buttonL.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BachecaGUI bachecaGUI = new BachecaGUI(frame, controller);
+                frame.setVisible(false);
+                bachecaGUI.frame.setVisible(true);
+            }
+        });
+    }
 }

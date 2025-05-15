@@ -6,10 +6,10 @@
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
     <properties>
-      <background color="-16318705"/>
+      <background color="-13947600"/>
       <enabled value="true"/>
       <font name="Elephant"/>
-      <foreground color="-16318705"/>
+      <foreground color="-13947600"/>
     </properties>
     <border type="none"/>
     <children>

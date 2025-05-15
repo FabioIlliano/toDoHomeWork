@@ -2,6 +2,8 @@ package Controller;
 
 import model.*;
 
+import javax.swing.*;
+
 public class Controller {
     private ToDo todo;
     private Bacheca bacheca;
@@ -29,6 +31,7 @@ public class Controller {
 
     public void creaBacheca (TitoloBacheca t, String d) throws Exception{
         if (!checkBacheca())
+
             return; //andrebbe gestito
         utente.creaBachechaGUI(t, d);
     }
