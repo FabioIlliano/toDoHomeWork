@@ -11,15 +11,16 @@ public class BachecaGUI {
     public JFrame frame;
 
     private JPanel mainpanel;
-    private JButton button1;
+    private JButton descrizioneButton;
     private JButton creaToDoButton;
     private JScrollPane todoScrollPanel;
     private JPanel buttonpanel;
     private JPanel todopanel;
     private Controller controller;
+    String titolo;
 
     public BachecaGUI(JFrame frame, Controller controller) {
-        this.frame = new JFrame("patatina");
+        this.frame = new JFrame(controller.getTitoloBacheca());
         this.controller = controller;
         this.frame.setContentPane(mainpanel);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,17 +37,28 @@ public class BachecaGUI {
         creaToDoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                JButton btn = new JButton("ToDo");
-                btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
+                titolo = JOptionPane.showInputDialog("Inserisci il titolo del ToDo");
+                //modificare immagine nel JOptionPane
+                if (titolo.trim().isEmpty()) {
+                    //stringa vuota
+                    JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!");
+                }
+                else
+                {
+                    JButton btn = new JButton(titolo);
+                    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
 
-                btn.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(frame, "Hai cliccato su: todo");
-                    // oppure apri una nuova finestra
-                });
+                    btn.addActionListener(e -> {
+                        JOptionPane.showMessageDialog(frame, "Hai cliccato su: todo");
+                        // oppure apri una nuova finestra
+                    });
 
-                todopanel.add(btn);           // aggiunta al pannello scrollabile
-                todopanel.revalidate();       // aggiorna il layout
-                todopanel.repaint();
+                    todopanel.add(btn);           // aggiunta al pannello scrollabile
+                    todopanel.revalidate();       // aggiorna il layout
+                    todopanel.repaint();
+                }
+
+
             }
         });
     }

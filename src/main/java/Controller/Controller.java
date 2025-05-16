@@ -2,13 +2,12 @@ package Controller;
 
 import model.*;
 
-import javax.swing.*;
-
 public class Controller {
     private ToDo todo;
     private Bacheca bacheca;
     private Utente utente;
     private Attivita attivita;
+    private String titoloBacheca;
 
     public Controller(){
 
@@ -25,15 +24,34 @@ public class Controller {
         return utente.loginGUI(username, password);
     }
 
-    public boolean checkBacheca (){
+    public boolean checkBacheche(){
         return utente.contaBacheche();
     }
 
     public void creaBacheca (TitoloBacheca t, String d) throws Exception{
-        if (!checkBacheca())
+        if (!checkBacheche())
 
             return; //andrebbe gestito
         utente.creaBachechaGUI(t, d);
     }
 
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public String getTitoloBacheca() {
+        return titoloBacheca;
+    }
+
+    public void setTitoloBacheca(String titoloBacheca) {
+        this.titoloBacheca = titoloBacheca;
+    }
+
+    public boolean checkBacheca (String nomeBacheca){
+        if (utente.getBacheca(nomeBacheca) == null)
+            return false;
+        else
+            return true;
+    }
 }

@@ -26,7 +26,7 @@ public class login {
         frame.pack();
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
-        frame.setAlwaysOnTop(true);
+        //frame.setAlwaysOnTop(true);
         frame.setVisible(true);
     }
 

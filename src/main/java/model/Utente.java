@@ -102,14 +102,12 @@ public class Utente
         if (!contaBacheche())
             throw new Exception("BACHECHE GIA CREATE!!");
 
-        TitoloBacheca t = titolo;
-        String d = descrizione;
         boolean cond0 = bachecheUtente.size() > 0 && titolo!=null && titolo.equals(bachecheUtente.get(0).getTitolo());
         boolean cond1 = bachecheUtente.size() > 1 && titolo!=null && titolo.equals(bachecheUtente.get(1).getTitolo());
         if (cond0 || cond1)
             throw new Exception("NOME BACHECHA GIA UTILIZZATO!!");
 
-        Bacheca bacheca = new Bacheca(t, d);
+        Bacheca bacheca = new Bacheca(titolo, descrizione);
         bachecheUtente.add(bacheca);
     }
 

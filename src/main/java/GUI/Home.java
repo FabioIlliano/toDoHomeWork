@@ -19,8 +19,11 @@ public class Home {
     private JButton buttonNuovaBacheca;
     private Controller controller;
 
+
+
     public Home(JFrame frame, Controller controller) {
-        if (controller.checkBacheca())
+
+        if (controller.checkBacheche())
         {
             panel1.setBackground(Color.red);
             panel2.setBackground(Color.red);
@@ -44,7 +47,7 @@ public class Home {
         buttonNuovaBacheca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (controller.checkBacheca()){
+                if (controller.checkBacheche()){
                     CreaBacheca creaBacheca = new CreaBacheca(frame, controller);
                     frame.setVisible(false);
                     creaBacheca.frame.setVisible(true);
@@ -54,13 +57,23 @@ public class Home {
             }
         });
 
-        buttonL.addActionListener(new ActionListener() {
-            @Override
+        ActionListener bachecaListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                BachecaGUI bachecaGUI = new BachecaGUI(frame, controller);
-                frame.setVisible(false);
-                bachecaGUI.frame.setVisible(true);
+                JButton pulsante = (JButton) e.getSource();
+                if (controller.checkBacheca(pulsante.getText())){
+                    controller.setTitoloBacheca(pulsante.getText());
+                    BachecaGUI bachecaGUI = new BachecaGUI(frame, controller);
+                    frame.setVisible(false);
+                    bachecaGUI.frame.setVisible(true);
+                }
+                else
+                    JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+
             }
-        });
+        };
+
+        buttonL.addActionListener(bachecaListener);
+        buttonTL.addActionListener(bachecaListener);
+        buttonU.addActionListener(bachecaListener);
     }
 }
