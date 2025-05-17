@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 public class login {
 
-    static JFrame frame;
+    static private JFrame frame;
     private JPanel MainPanel;
     private JLabel usernameJL;
     private JTextField txtusername;
@@ -42,7 +42,7 @@ public class login {
                     if (controller.login(username, psw)){
                         Home home = new Home(frame, controller);
                         frame.setVisible(false);
-                        home.frame.setVisible(true);
+                        home.getFrame().setVisible(true);
                     }
                     else{
                         JOptionPane.showMessageDialog(frame, "CREDENZIALI ERRATE!!");
@@ -63,4 +63,7 @@ public class login {
 
     }
 
+    public static JFrame getFrame() {
+        return frame;
+    }
 }

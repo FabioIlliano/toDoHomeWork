@@ -5,6 +5,7 @@ import Controller.Controller;
 import javax.swing.*;
 
 public class CreaToDo {
+    private JFrame frame;
     private JPanel mainPanel;
     private JLabel titoloJL;
     private JTextField textField1;
@@ -19,7 +20,6 @@ public class CreaToDo {
     private JPanel dataScadPanel;
     private JPanel descPanel;
     private JTextField cTextField;
-    private JFrame frame;
     private Controller controller;
 
     public CreaToDo(JFrame frame, Controller controller) {

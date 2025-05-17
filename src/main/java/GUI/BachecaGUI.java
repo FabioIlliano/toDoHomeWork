@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class BachecaGUI {
-    public JFrame frame;
+    private JFrame frame;
 
     private JPanel mainpanel;
     private JButton descrizioneButton;
@@ -16,6 +16,7 @@ public class BachecaGUI {
     private JScrollPane todoScrollPanel;
     private JPanel buttonpanel;
     private JPanel todopanel;
+    private JButton tornaIndietroButton;
     private Controller controller;
     String titolo;
 
@@ -31,35 +32,60 @@ public class BachecaGUI {
         this.frame.setVisible(true);
 
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
+
     }
 
     public void initListeners (){
         creaToDoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                titolo = JOptionPane.showInputDialog("Inserisci il titolo del ToDo");
+                titolo = JOptionPane.showInputDialog(frame, "Inserisci il titolo del ToDo");
                 //modificare immagine nel JOptionPane
-                if (titolo.trim().isEmpty()) {
-                    //stringa vuota
+                try{
+                    if (titolo == null)
+                        throw new Exception();
+                    if (titolo.trim().isEmpty()) {
+                        //stringa vuota
+                        throw new NullPointerException();
+                    }
+                    else
+                    {
+                        JButton btn = new JButton(titolo);
+                        btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
+
+                        btn.addActionListener(e -> {
+                            JOptionPane.showMessageDialog(frame, "Hai cliccato su: todo");
+                            // oppure apri una nuova finestra
+                        });
+
+                        todopanel.add(btn);           // aggiunta al pannello scrollabile
+                        todopanel.revalidate();       // aggiorna il layout
+                        todopanel.repaint();
+                    }
+                } catch (NullPointerException e) {
                     JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!");
-                }
-                else
-                {
-                    JButton btn = new JButton(titolo);
-                    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
+                } catch (Exception e){
 
-                    btn.addActionListener(e -> {
-                        JOptionPane.showMessageDialog(frame, "Hai cliccato su: todo");
-                        // oppure apri una nuova finestra
-                    });
-
-                    todopanel.add(btn);           // aggiunta al pannello scrollabile
-                    todopanel.revalidate();       // aggiorna il layout
-                    todopanel.repaint();
                 }
+
+
 
 
             }
         });
+
+        tornaIndietroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Home home = new Home(frame, controller);
+                frame.setVisible(false);
+                home.getFrame().setVisible(true);
+                frame.dispose();
+            }
+        });
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }

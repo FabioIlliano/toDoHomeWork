@@ -4,12 +4,11 @@ import Controller.Controller;
 import model.TitoloBacheca;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CreaBacheca {
-    public JFrame frame;
+    private JFrame frame;
     private JPanel creaBachecaPanel;
     private JPanel comboPanel;
     private JComboBox<TitoloBacheca> comboBox1;
@@ -20,6 +19,7 @@ public class CreaBacheca {
     private JLabel desclabel;
     private JTextArea textArea1;
     private JScrollPane scrollPane;
+    private JButton tornaIndietroButton;
     private Controller controller;
 
 
@@ -51,7 +51,7 @@ public class CreaBacheca {
                     frame.dispose(); // chiude la finestra attuale
                     Home home = new Home(frame, controller);
                     frame.setVisible(false);
-                    home.frame.setVisible(true);
+                    home.getFrame().setVisible(true);
                 }catch (NullPointerException exception) {
                     JOptionPane.showMessageDialog(frame, "SELEZIONA UN TITOLO!");
                 }
@@ -60,5 +60,18 @@ public class CreaBacheca {
                 }
             }
         });
+
+        tornaIndietroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Home home = new Home(frame, controller);
+                frame.setVisible(false);
+                home.getFrame().setVisible(true);
+            }
+        });
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }

@@ -157,6 +157,19 @@ public class Utente
 
     }
 
+    public boolean eliminaBachecaGUI(String titolo){
+        Bacheca bachecaDaEliminare = null;
+        int i;
+        for (i=0;i<bachecheUtente.size();i++)
+            if (titolo.equals(bachecheUtente.get(i).getTitolo().toString())){
+                bachecaDaEliminare = bachecheUtente.get(i);
+            }
+        if (bachecaDaEliminare==null)
+            return false;
+
+        return (bachecheUtente.remove(bachecaDaEliminare));
+    }
+
 
     public Bacheca getBacheca(String titolo){
         //titolo = titolo.toUpperCase();
