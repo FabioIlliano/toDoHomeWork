@@ -52,6 +52,23 @@ public class Bacheca {
         listaToDo.add(nuovoToDo);
     }
 
+    public void creaToDoGUI(String titoloToDo)
+    {
+        /*ho creato un nuovo costruttore del ToDo perche alcune cose
+        non sono obbligatorie*/
+        ToDo nuovoToDo = new ToDo(titoloToDo);
+        listaToDo.add(nuovoToDo);
+    }
+
+    //funzione per la GUI
+    public ArrayList<String> getListaTitoliToDo() {
+        ArrayList<String> titoli = new ArrayList<>();
+        for (ToDo t : listaToDo) {
+            titoli.add(t.getTitolo());
+        }
+        return titoli;
+    }
+
 
     public void mostraTutti()
     {

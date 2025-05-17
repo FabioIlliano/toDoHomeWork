@@ -42,7 +42,7 @@ public class Home {
         this.frame.setLocationRelativeTo(null);
         this.frame.pack();
         this.frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
+        this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         comboBox = new JComboBox<>();
         comboBox.addItem(TitoloBacheca.UNIVERSITA);

@@ -2,12 +2,15 @@ package Controller;
 
 import model.*;
 
+import java.util.ArrayList;
+
 public class Controller {
     private ToDo todo;
     private Bacheca bacheca;
     private Utente utente;
     private Attivita attivita;
     private String titoloBacheca;
+    private String titoloToDoCorrente;
 
     public Controller(){
 
@@ -33,6 +36,29 @@ public class Controller {
 
             return; //andrebbe gestito
         utente.creaBachechaGUI(t, d);
+    }
+
+    public void creaToDo(String titoloToDo)
+    {
+        utente.getBacheca(titoloBacheca).creaToDoGUI(titoloToDo);
+    }
+
+    public ArrayList<String> getListaToDo() {
+        if (utente != null && titoloBacheca != null) {
+            Bacheca b = utente.getBacheca(titoloBacheca);
+            if (b != null) {
+                return b.getListaTitoliToDo();
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    public String getTitoloToDoCorrente() {
+        return titoloToDoCorrente;
+    }
+
+    public void setTitoloToDoCorrente(String titoloToDoCorrente) {
+        this.titoloToDoCorrente = titoloToDoCorrente;
     }
 
 

@@ -28,6 +28,12 @@ public class ToDo {
         listaUtentiCondivisione = new ArrayList<>();
     }
 
+    //nuovo costruttore
+    public ToDo(String titolo)
+    {
+        this.titolo = titolo;
+    }
+
     //molte cose sono opzionali
 
     //setter per modificare i dati del todo

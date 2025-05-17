@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class BachecaGUI {
     private JFrame frame;
@@ -27,11 +28,11 @@ public class BachecaGUI {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
         this.frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
+        this.frame.setLocationRelativeTo(null);
         this.initListeners();
         this.frame.setVisible(true);
-
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
+        caricaToDoEsistenti();
 
     }
 
@@ -40,6 +41,7 @@ public class BachecaGUI {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 titolo = JOptionPane.showInputDialog(frame, "Inserisci il titolo del ToDo");
+                controller.creaToDo(titolo);
                 //modificare immagine nel JOptionPane
                 try{
                     if (titolo == null)
@@ -54,8 +56,12 @@ public class BachecaGUI {
                         btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
 
                         btn.addActionListener(e -> {
-                            JOptionPane.showMessageDialog(frame, "Hai cliccato su: todo");
-                            // oppure apri una nuova finestra
+                            controller.setTitoloToDoCorrente(titolo); // salva il titolo
+                            frame.dispose(); // chiude la finestra attuale
+                            CreaToDo creatodo = new CreaToDo(frame, controller);
+                            frame.setVisible(false);
+                            creatodo.getFrame().setVisible(true);
+
                         });
 
                         todopanel.add(btn);           // aggiunta al pannello scrollabile
@@ -67,10 +73,6 @@ public class BachecaGUI {
                 } catch (Exception e){
 
                 }
-
-
-
-
             }
         });
 
@@ -84,6 +86,31 @@ public class BachecaGUI {
             }
         });
     }
+
+    public void caricaToDoEsistenti() {
+        ArrayList<String> titoli = controller.getListaToDo();
+        todopanel.removeAll();  // pulisce il pannello prima di aggiungere
+
+        for (String titolo : titoli) {
+            JButton btn = new JButton(titolo);
+            btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            btn.addActionListener(e -> {
+                controller.setTitoloToDoCorrente(titolo); // salva il titolo
+                frame.dispose();
+                CreaToDo creaToDo = new CreaToDo(frame, controller);
+                frame.setVisible(false);
+                creaToDo.getFrame().setVisible(true);
+            });
+
+            todopanel.add(btn);
+        }
+
+        todopanel.revalidate();
+        todopanel.repaint();
+    }
+
+
 
     public JFrame getFrame() {
         return frame;

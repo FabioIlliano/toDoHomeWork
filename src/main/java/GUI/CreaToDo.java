@@ -1,8 +1,11 @@
 package GUI;
 
 import Controller.Controller;
+import model.TitoloBacheca;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CreaToDo {
     private JFrame frame;
@@ -20,6 +23,11 @@ public class CreaToDo {
     private JPanel dataScadPanel;
     private JPanel descPanel;
     private JTextField cTextField;
+    private JPanel buttonpanel;
+    private JPanel indietropanel;
+    private JPanel confermapanel;
+    private JButton indietroButton;
+    private JButton confermaButton;
     private Controller controller;
 
     public CreaToDo(JFrame frame, Controller controller) {
@@ -29,13 +37,34 @@ public class CreaToDo {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
         this.frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
+        this.frame.setLocationRelativeTo(null);
         this.initListeners();
         this.frame.setVisible(true);
-
+        this.textField1.setText(controller.getTitoloToDoCorrente());
     }
 
     public void initListeners() {
+        confermaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+            }
+        });
+
+
+        indietroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BachecaGUI bachecagui = new BachecaGUI(frame, controller);
+                frame.dispose();
+                frame.setVisible(false);
+                bachecagui.getFrame().setVisible(true);
+            }
+        });
+    }
+
+
+public JFrame getFrame() {
+        return frame;
     }
 }
