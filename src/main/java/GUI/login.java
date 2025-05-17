@@ -28,6 +28,7 @@ public class login {
         frame.setLocationRelativeTo(null);
         //frame.setAlwaysOnTop(true);
         frame.setVisible(true);
+        //frame.setResizable(false);
     }
 
     public login()

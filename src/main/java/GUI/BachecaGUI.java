@@ -18,8 +18,11 @@ public class BachecaGUI {
     private JPanel buttonpanel;
     private JPanel todopanel;
     private JButton tornaIndietroButton;
+    private JButton ordinaButton;
+    private JPanel ordinalabel;
     private Controller controller;
     String titolo;
+    private boolean ordinamentoAlfabetico;
 
     public BachecaGUI(JFrame frame, Controller controller) {
         this.frame = new JFrame(controller.getTitoloBacheca());
@@ -32,6 +35,7 @@ public class BachecaGUI {
         this.initListeners();
         this.frame.setVisible(true);
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
+        ordinamentoAlfabetico = true;
         caricaToDoEsistenti();
 
     }
@@ -41,7 +45,7 @@ public class BachecaGUI {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 titolo = JOptionPane.showInputDialog(frame, "Inserisci il titolo del ToDo");
-                controller.creaToDo(titolo);
+
                 //modificare immagine nel JOptionPane
                 try{
                     if (titolo == null)
@@ -52,6 +56,7 @@ public class BachecaGUI {
                     }
                     else
                     {
+                        controller.creaToDo(titolo);
                         JButton btn = new JButton(titolo);
                         btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
 
@@ -85,6 +90,27 @@ public class BachecaGUI {
                 frame.dispose();
             }
         });
+
+        ordinaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /*controller.ordinaToDoAlfabeticamente();
+                caricaToDoEsistenti();*/ // ricarica la lista aggiornata
+
+                if (ordinamentoAlfabetico) {
+                    controller.ordinaToDoAlfabeticamente();
+                    ordinaButton.setText("scadenza");
+                } else {
+                    //controller.ordinaToDoPerScadenza();
+                    JOptionPane.showMessageDialog(frame, "darebbe errore perche non hanno le date!");
+                    ordinaButton.setText("titolo");
+                }
+                ordinamentoAlfabetico = !ordinamentoAlfabetico;
+                caricaToDoEsistenti();
+            }
+
+        });
+
     }
 
     public void caricaToDoEsistenti() {

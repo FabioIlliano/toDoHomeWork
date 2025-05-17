@@ -43,6 +43,36 @@ public class Controller {
         utente.getBacheca(titoloBacheca).creaToDoGUI(titoloToDo);
     }
 
+    public void eliminaToDo(String t)
+    {
+        getUtente().getBacheca(getTitoloBacheca()).eliminaToDoGUI(t);
+    }
+
+    public void cambiaTitoloToDo(String t)
+    {
+        getUtente().getBacheca(getTitoloBacheca()).getToDoTitolo(getTitoloToDoCorrente()).setTitolo(t);
+    }
+
+    public void ordinaToDoAlfabeticamente() {
+        if (utente != null && titoloBacheca != null) {
+            Bacheca b = utente.getBacheca(titoloBacheca);
+            if (b != null) {
+                b.ordinaToDoTitolo();
+            }
+        }
+    }
+
+    public void ordinaToDoPerScadenza() {
+        if (utente != null && titoloBacheca != null) {
+            Bacheca b = utente.getBacheca(titoloBacheca);
+            if (b != null) {
+                b.ordinaToDoDataScad();
+            }
+        }
+    }
+
+
+
     public ArrayList<String> getListaToDo() {
         if (utente != null && titoloBacheca != null) {
             Bacheca b = utente.getBacheca(titoloBacheca);
@@ -57,10 +87,9 @@ public class Controller {
         return titoloToDoCorrente;
     }
 
-    public void setTitoloToDoCorrente(String titoloToDoCorrente) {
-        this.titoloToDoCorrente = titoloToDoCorrente;
+    public void setTitoloToDoCorrente(String t) {
+        this.titoloToDoCorrente = t;
     }
-
 
     public Utente getUtente() {
         return utente;

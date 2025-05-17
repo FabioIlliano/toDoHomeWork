@@ -69,6 +69,22 @@ public class Bacheca {
         return titoli;
     }
 
+    //funzione per la GUI
+    public void eliminaToDoGUI(String titoloToDo) {
+        ToDo todoDaEliminare = null;
+
+        for (ToDo t : listaToDo) {
+            if (titoloToDo.equals(t.getTitolo())) {
+                todoDaEliminare = t;
+                break; // Interrompi appena trovato
+            }
+        }
+
+        if (todoDaEliminare != null) {
+            listaToDo.remove(todoDaEliminare);
+        }
+    }
+
 
     public void mostraTutti()
     {

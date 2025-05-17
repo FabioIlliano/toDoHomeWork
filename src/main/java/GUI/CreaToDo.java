@@ -1,7 +1,6 @@
 package GUI;
 
 import Controller.Controller;
-import model.TitoloBacheca;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,9 +23,9 @@ public class CreaToDo {
     private JPanel descPanel;
     private JTextField cTextField;
     private JPanel buttonpanel;
-    private JPanel indietropanel;
+    private JPanel eliminapanel;
     private JPanel confermapanel;
-    private JButton indietroButton;
+    private JButton eliminaButton;
     private JButton confermaButton;
     private Controller controller;
 
@@ -47,14 +46,26 @@ public class CreaToDo {
         confermaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (textField1.getText().trim().isEmpty())
+                {
+                    JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!");
+                }
+                else {
+                    controller.cambiaTitoloToDo(textField1.getText());
+                    BachecaGUI bachecagui = new BachecaGUI(frame, controller);
+                    frame.dispose();
+                    frame.setVisible(false);
+                    bachecagui.getFrame().setVisible(true);
+                }
             }
         });
 
-
-        indietroButton.addActionListener(new ActionListener() {
+        eliminaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                controller.cambiaTitoloToDo(textField1.getText());
+                controller.eliminaToDo(textField1.getText());
                 BachecaGUI bachecagui = new BachecaGUI(frame, controller);
                 frame.dispose();
                 frame.setVisible(false);
