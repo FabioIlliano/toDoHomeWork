@@ -11,6 +11,8 @@ public class Controller {
     private Attivita attivita;
     private String titoloBacheca;
     private String titoloToDoCorrente;
+    private String descrizioneBacheca;
+
 
     public Controller(){
 
@@ -43,6 +45,8 @@ public class Controller {
         utente.getBacheca(titoloBacheca).creaToDoGUI(titoloToDo);
     }
 
+
+
     public void eliminaToDo(String t)
     {
         getUtente().getBacheca(getTitoloBacheca()).eliminaToDoGUI(t);
@@ -52,6 +56,7 @@ public class Controller {
     {
         getUtente().getBacheca(getTitoloBacheca()).getToDoTitolo(getTitoloToDoCorrente()).setTitolo(t);
     }
+
 
     public void ordinaToDoAlfabeticamente() {
         if (utente != null && titoloBacheca != null) {
@@ -99,8 +104,16 @@ public class Controller {
         return titoloBacheca;
     }
 
+    public String getDescrizioneBacheca() {
+        return descrizioneBacheca;
+    }
+
     public void setTitoloBacheca(String titoloBacheca) {
         this.titoloBacheca = titoloBacheca;
+    }
+
+    public void setDescrizioneBacheca(String descrizioneBacheca) {
+        this.descrizioneBacheca = descrizioneBacheca;
     }
 
     public boolean checkBacheca (String nomeBacheca){

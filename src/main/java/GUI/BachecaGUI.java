@@ -20,6 +20,7 @@ public class BachecaGUI {
     private JButton tornaIndietroButton;
     private JButton ordinaButton;
     private JPanel ordinalabel;
+    private JTextField descrizionetext;
     private Controller controller;
     String titolo;
     private boolean ordinamentoAlfabetico;
@@ -78,6 +79,13 @@ public class BachecaGUI {
                 } catch (Exception e){
 
                 }
+            }
+        });
+
+        descrizioneButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                descrizionetext.setText(controller.getDescrizioneBacheca());
             }
         });
 

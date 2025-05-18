@@ -27,6 +27,8 @@ public class CreaToDo {
     private JPanel confermapanel;
     private JButton eliminaButton;
     private JButton confermaButton;
+    private JPanel indietropanel;
+    private JButton indietroButton;
     private Controller controller;
 
     public CreaToDo(JFrame frame, Controller controller) {
@@ -58,6 +60,15 @@ public class CreaToDo {
                     bachecagui.getFrame().setVisible(true);
                 }
             }
+            public void actionPerf(ActionEvent e) {
+                    controller.cambiaTitoloToDo(textField1.getText());
+                    BachecaGUI bachecagui = new BachecaGUI(frame, controller);
+                    frame.dispose();
+                    frame.setVisible(false);
+                    bachecagui.getFrame().setVisible(true);
+
+            }
+
         });
 
         eliminaButton.addActionListener(new ActionListener() {
@@ -70,6 +81,15 @@ public class CreaToDo {
                 frame.dispose();
                 frame.setVisible(false);
                 bachecagui.getFrame().setVisible(true);
+            }
+        });
+
+        indietroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BachecaGUI b = new BachecaGUI(frame, controller);
+                frame.setVisible(false);
+                b.getFrame().setVisible(true);
             }
         });
     }
