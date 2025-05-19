@@ -16,7 +16,7 @@ public class BachecaGUI {
     private JButton creaToDoButton;
     private JScrollPane todoScrollPanel;
     private JPanel buttonpanel;
-    private JPanel todopanel;
+    private JPanel todopanel; //è sbagliato, andava fatto nel panel scrollabile non in un altro panel
     private JButton tornaIndietroButton;
     private JButton ordinaButton;
     private JPanel ordinalabel;
@@ -82,12 +82,6 @@ public class BachecaGUI {
             }
         });
 
-        descrizioneButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                descrizionetext.setText(controller.getDescrizioneBacheca());
-            }
-        });
 
         tornaIndietroButton.addActionListener(new ActionListener() {
             @Override
@@ -126,6 +120,7 @@ public class BachecaGUI {
         todopanel.removeAll();  // pulisce il pannello prima di aggiungere
 
         for (String titolo : titoli) {
+            //righe duplicate si può creare un metodo
             JButton btn = new JButton(titolo);
             btn.setAlignmentX(Component.LEFT_ALIGNMENT);
 

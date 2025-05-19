@@ -126,6 +126,10 @@ public class Bacheca {
         return descrizione;
     }
 
+    public void setDescrizione(String descrizione){
+        this.descrizione = descrizione;
+    }
+
     public ArrayList<ToDo> getListaToDo() {
         return listaToDo;
     }

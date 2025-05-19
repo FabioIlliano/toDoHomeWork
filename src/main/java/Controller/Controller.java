@@ -104,9 +104,9 @@ public class Controller {
         return titoloBacheca;
     }
 
-    public String getDescrizioneBacheca() {
+    /*public String getDescrizioneBacheca() {
         return descrizioneBacheca;
-    }
+    }*/
 
     public void setTitoloBacheca(String titoloBacheca) {
         this.titoloBacheca = titoloBacheca;
@@ -121,5 +121,16 @@ public class Controller {
             return false;
         else
             return true;
+    }
+
+    public String getDescrizioneBacheca(String t){
+        return utente.getBacheca(t).getDescrizione();
+    }
+
+    public boolean noBacheca(){
+        if (utente.getBacheca(TitoloBacheca.LAVORO.toString())==null && utente.getBacheca(TitoloBacheca.TEMPO_LIBERO.toString())==null && utente.getBacheca(TitoloBacheca.UNIVERSITA.toString())==null )
+            return true;
+        else
+            return false;
     }
 }

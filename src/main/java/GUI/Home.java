@@ -9,20 +9,41 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Home {
-    private JFrame frame; //va fatto private
+    private JFrame frame;
+
     private JPanel HomePanel;
     private JPanel panel1;
     private JPanel panel3;
     private JPanel panel2;
-    private JButton buttonL;
-    private JButton buttonTL;
+    private JPanel buttonPanel;
+    private JPanel panelElimina;
+
     private JButton buttonU;
+    private JScrollPane scrollU;
+    private JButton buttonEditU;
+
+    private JButton buttonL;
+    private JScrollPane scrollL;
+    private JButton buttonEditL;
+
+    private JButton buttonTL;
+    private JScrollPane scrollTL;
+    private JButton buttonEditTL;
+
     private JButton buttonNuovaBacheca;
     private JButton buttonEliminaBacheca;
-    private JPanel buttonPanel;
+
+    private JTextArea descrizioneU;
+    private JTextArea descrizioneL;
+    private JTextArea descrizioneTL;
+
     private Controller controller;
+
     private JComboBox<TitoloBacheca> comboBox;
-    private JPanel panelElimina;
+
+
+
+
 
 
 
@@ -50,11 +71,13 @@ public class Home {
         comboBox.addItem(TitoloBacheca.TEMPO_LIBERO);
         panelElimina = new JPanel();
         this.initListeners();
+        this.initDescrizioni();
     }
 
     public void initListeners (){
         this.initButtonNuovaBacheca();
         this.initELiminaBacheca();
+        this.initEditButtonsListeners();
     }
 
     public void initButtonNuovaBacheca(){
@@ -72,6 +95,7 @@ public class Home {
         });
 
         ActionListener bachecaListener = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JButton pulsante = (JButton) e.getSource();
                 if (controller.checkBacheca(pulsante.getText())){
@@ -95,29 +119,131 @@ public class Home {
         buttonEliminaBacheca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelElimina.removeAll();
-                panelElimina.add(new JLabel("Seleziona la bacheca da eliminare"));
-                panelElimina.add(comboBox);
-                int result = JOptionPane.showConfirmDialog(frame, panelElimina, "Scegli la bacheca", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION){
-                    if (!controller.checkBacheca(comboBox.getSelectedItem().toString())){
-                        JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!");
-                        return;
-                    }
-                    int r = JOptionPane.showConfirmDialog(frame, "Sei sicuro di voler eliminare la bacheca",
-                            "Eliminare una bacheca comporta l'eliminazione di tutti i suoi ToDo e questa azione non è reversibile.", JOptionPane.OK_CANCEL_OPTION);
-                    if (r == JOptionPane.OK_OPTION){
-                        boolean b = controller.getUtente().eliminaBachecaGUI(comboBox.getSelectedItem().toString());
-                        if (b)
-                            JOptionPane.showMessageDialog(frame, "BACHECA ELIMINATA!");
-                        else
-                            JOptionPane.showMessageDialog(frame, "BACHECA NON ELIMINATA CORRETTAMENTE!");
+                if (!controller.noBacheca()){
+                    panelElimina.removeAll();
+                    panelElimina.add(new JLabel("Seleziona la bacheca da eliminare"));
+                    panelElimina.add(comboBox);
+                    int result = JOptionPane.showConfirmDialog(frame, panelElimina, "Scegli la bacheca", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION){
+                        if (!controller.checkBacheca(comboBox.getSelectedItem().toString())){
+                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!");
+                            return;
+                        }
+                        int r = JOptionPane.showConfirmDialog(frame, "Sei sicuro di voler eliminare la bacheca",
+                                "Eliminare una bacheca comporta l'eliminazione di tutti i suoi ToDo e questa azione non è reversibile.", JOptionPane.OK_CANCEL_OPTION);
+                        if (r == JOptionPane.OK_OPTION){
+                            String s = comboBox.getSelectedItem().toString();
+                            boolean b = controller.getUtente().eliminaBachecaGUI(s);
+                            if (b){
+                                JOptionPane.showMessageDialog(frame, "BACHECA ELIMINATA!");
+                                if (s.equals("UNIVERSITA"))
+                                    descrizioneU.setText("");
+                                if(s.equals("LAVORO"))
+                                    descrizioneL.setText("");
+                                if(s.equals(("TEMPO_LIBERO")))
+                                    descrizioneTL.setText("");
+                            }
+                            else
+                                JOptionPane.showMessageDialog(frame, "BACHECA NON ELIMINATA CORRETTAMENTE!");
+                        }
                     }
                 }
+                else
+                    JOptionPane.showMessageDialog(frame, "BACHECHE INESISTENTI!!");
+
             }
         });
 
     }
+
+    public void initDescrizioni (){
+        if (controller.checkBacheca(TitoloBacheca.UNIVERSITA.toString())){
+            String s = controller.getDescrizioneBacheca(TitoloBacheca.UNIVERSITA.toString());
+            descrizioneU.setText(s);
+        }
+        if (controller.checkBacheca(TitoloBacheca.TEMPO_LIBERO.toString())){
+            String s = controller.getDescrizioneBacheca(TitoloBacheca.TEMPO_LIBERO.toString());
+            descrizioneTL.setText(s);
+        }
+        if (controller.checkBacheca(TitoloBacheca.LAVORO.toString())){
+            String s = controller.getDescrizioneBacheca(TitoloBacheca.LAVORO.toString());
+            descrizioneL.setText(s);
+        }
+    }
+
+    public void initEditButtonsListeners(){
+        ActionListener editListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton pulsante = (JButton) e.getSource();
+                String tipo = pulsante.getToolTipText();
+
+                switch (tipo){
+                    case "UNIVERSITA":
+                        if (controller.checkBacheca("UNIVERSITA")){
+                            if (descrizioneU.isEditable()){
+                                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
+                                descrizioneU.setEditable(false);
+                                String s = descrizioneU.getText();
+                                controller.getUtente().getBacheca("UNIVERSITA").setDescrizione(s);
+                            }
+                            else{
+                                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
+                                descrizioneU.setEditable(true);
+                                descrizioneU.requestFocus();
+                            }
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        break;
+                    case "LAVORO":
+                        if (controller.checkBacheca("LAVORO")){
+                            if (descrizioneL.isEditable()){
+                                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
+                                descrizioneL.setEditable(false);
+                                String s = descrizioneL.getText();
+                                controller.getUtente().getBacheca("LAVORO").setDescrizione(s);
+                            }
+                            else{
+                                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
+                                descrizioneL.setEditable(true);
+                                descrizioneL.requestFocus();
+                            }
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        break;
+                    case "TEMPO_LIBERO":
+                        if (controller.checkBacheca("TEMPO_LIBERO")){
+                            if (descrizioneTL.isEditable()){
+                                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
+                                descrizioneTL.setEditable(false);
+                                String s = descrizioneTL.getText();
+                                controller.getUtente().getBacheca("TEMPO_LIBERO").setDescrizione(s);
+                            }
+                            else{
+                                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
+                                descrizioneTL.setEditable(true);
+                                descrizioneTL.requestFocus();
+                            }
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                }
+
+            }
+        };
+
+        buttonEditU.addActionListener(editListener);
+        buttonEditL.addActionListener(editListener);
+        buttonEditTL.addActionListener(editListener);
+    }
+
+
 
     public JFrame getFrame() {
         return frame;
