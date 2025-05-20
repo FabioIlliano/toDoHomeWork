@@ -61,9 +61,9 @@ public class Main {
         System.out.println("Ok, questa è la bacheca di Giuseppe prima della condivisione");
         Giuseppe.getBacheca(r).stampabacheca();
 
-      /* admin.getBacheca(r).getToDoTitolo(s).condividiToDo(Giuseppe, r);
+        admin.getBacheca(r).getToDoTitolo(s).condividiToDo(Giuseppe, r);
         System.out.println("Questa invece è la bacheca di Giuseppe dopo la condivisione");
-        Giuseppe.getBacheca(r).stampabacheca();*/
+        Giuseppe.getBacheca(r).stampabacheca();
 
         //System.out.println("Ecco lo stato per entrambi gli utenti senza che nessuno lo completasse:\n(admin) " + admin.getBacheca(r).getToDo(s).getStato() + "\n(Giuseppe)" + Giuseppe.getBacheca(r).getToDo(s).getStato());
         System.out.println("ToDo in Giuseppe prima della modifica");
@@ -88,8 +88,8 @@ public class Main {
 
 
 
-       /* System.out.println("adesso leviamo la condivisione a giuseppe");
-        admin.getBacheca(r).getToDoTitolo(s).eliminaCondivisione(Giuseppe, r);*/
+        System.out.println("adesso leviamo la condivisione a giuseppe");
+        admin.getBacheca(r).getToDoTitolo(s).eliminaCondivisione(Giuseppe, r);
 
         System.out.println("ToDo in Giuseppe dopo tolto condivisione");
         Giuseppe.getBacheca(r).mostraTutti();

@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -33,7 +34,7 @@ public class Bacheca {
         String url;
         String dataScadenza;
         int immagine;
-        String coloreSfondo;
+        Color coloreSfondo;
 
         System.out.print("Inserisci il titolo del nuovo ToDo: ");
         titolo = in.nextLine();
@@ -47,9 +48,9 @@ public class Bacheca {
         immagine = in.nextInt();
         in.nextLine();
         System.out.print("Inserisci il colore sfondo: ");
-        coloreSfondo = in.nextLine();
-        ToDo nuovoToDo = new ToDo(titolo, descrizione, url, dataScadenza, immagine, coloreSfondo);
-        listaToDo.add(nuovoToDo);
+        //coloreSfondo = (Color) in.nextLine();
+        //ToDo nuovoToDo = new ToDo(titolo, descrizione, url, dataScadenza, immagine);
+        //listaToDo.add(nuovoToDo);
     }
 
     public void creaToDoGUI(String titoloToDo)

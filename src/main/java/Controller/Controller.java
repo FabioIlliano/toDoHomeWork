@@ -2,6 +2,8 @@ package Controller;
 
 import model.*;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Controller {
@@ -49,12 +51,33 @@ public class Controller {
 
     public void eliminaToDo(String t)
     {
-        getUtente().getBacheca(getTitoloBacheca()).eliminaToDoGUI(t);
+        utente.getBacheca(getTitoloBacheca()).eliminaToDoGUI(t);
     }
 
     public void cambiaTitoloToDo(String t)
     {
-        getUtente().getBacheca(getTitoloBacheca()).getToDoTitolo(getTitoloToDoCorrente()).setTitolo(t);
+        utente.getBacheca(getTitoloBacheca()).getToDoTitolo(getTitoloToDoCorrente()).setTitolo(t);
+    }
+
+    public void cambiaDescToDo(String s){
+        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setDescrizione(s);
+    }
+
+    public void cambiaURLToDo(String s){
+        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setUrl(s);
+    }
+
+    public boolean cambiaDataScadToDo(String s){
+        try{
+            utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setDataScadenza(s);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void cambiaBgColorToDo(Color c){
+        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setColoreSfondo(c);
     }
 
 
@@ -75,8 +98,6 @@ public class Controller {
             }
         }
     }
-
-
 
     public ArrayList<String> getListaToDo() {
         if (utente != null && titoloBacheca != null) {
@@ -112,10 +133,6 @@ public class Controller {
         this.titoloBacheca = titoloBacheca;
     }
 
-    public void setDescrizioneBacheca(String descrizioneBacheca) {
-        this.descrizioneBacheca = descrizioneBacheca;
-    }
-
     public boolean checkBacheca (String nomeBacheca){
         if (utente.getBacheca(nomeBacheca) == null)
             return false;
@@ -133,4 +150,6 @@ public class Controller {
         else
             return false;
     }
+
+
 }
