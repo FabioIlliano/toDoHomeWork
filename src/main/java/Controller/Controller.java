@@ -80,6 +80,10 @@ public class Controller {
         utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setColoreSfondo(c);
     }
 
+    public void spostaToDo(TitoloBacheca nuova)
+    {
+        utente.spostaToDoGUI(titoloBacheca, nuova.toString(), titoloToDoCorrente);
+    }
 
     public void ordinaToDoAlfabeticamente() {
         if (utente != null && titoloBacheca != null) {

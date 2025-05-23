@@ -183,6 +183,16 @@ public class Utente
         return null;
     }
 
+    public void spostaToDoGUI(String vecchia, String nuova, String titoloToDo)
+    {
+        Bacheca v = getBacheca(vecchia);
+        Bacheca n = getBacheca(nuova);
+        ToDo toDo = v.getToDoTitolo(titoloToDo);
+
+        v.getListaToDo().remove(toDo);
+        n.aggiungiToDo(toDo);
+    }
+
     //metodo che sposta un todo tra una bacheca e un altra
     public void spostaToDo (Bacheca bachecaNuova, Bacheca bachecaVecchia, String nomeToDo){
         try{

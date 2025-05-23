@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.Controller;
+import model.TitoloBacheca;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,6 +44,8 @@ public class CreaToDo {
     private JLabel imgCompletatoJL;
     private JLabel fotoJL;
     private JButton bgColorButton;
+    private JLabel spostaJL;
+    private JComboBox spostaJCB;
     private Color c;
 
     private Controller controller;
@@ -58,6 +61,11 @@ public class CreaToDo {
         this.initListeners();
         this.frame.setVisible(true);
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
+        spostaJCB.addItem(TitoloBacheca.UNIVERSITA);
+        spostaJCB.addItem(TitoloBacheca.LAVORO);
+        spostaJCB.addItem(TitoloBacheca.TEMPO_LIBERO);
+
+        spostaJCB.setSelectedItem(TitoloBacheca.valueOf(controller.getTitoloBacheca()));
     }
 
     public void initListeners() {
@@ -77,10 +85,32 @@ public class CreaToDo {
                     frame.dispose();
                     frame.setVisible(false);
                     bachecagui.getFrame().setVisible(true);
+
+                    if (controller.getTitoloBacheca().equals(spostaJCB.getSelectedItem())) {
+                        JOptionPane.showMessageDialog(null, "Il todo e' gia in questa bacheca!");
+                    }
+                    else
+                    {
+                        controller.spostaToDo((TitoloBacheca) spostaJCB.getSelectedItem());
+                    }
                 }
             }
 
         });
+
+        /*spostaJCB.addActionListener(new ActionListener() {@Override
+        public void actionPerformed(ActionEvent e) {
+            TitoloBacheca nuovaBacheca = (TitoloBacheca) spostaJCB.getSelectedItem();
+
+            try {
+                controller.spostaToDo(nuovaBacheca);
+
+                JOptionPane.showMessageDialog(null, "ToDo spostato in: " + nuovaBacheca);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+                spostaJCB.setSelectedItem(controller.getTitoloBacheca()); // ripristina selezione vecchia
+            }
+        }});*/
 
         eliminaButton.addActionListener(new ActionListener() {
             @Override
@@ -104,6 +134,8 @@ public class CreaToDo {
             }
         });
 
+
+
         bgColorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -113,6 +145,7 @@ public class CreaToDo {
             }
         });
     }
+
 
 
 public JFrame getFrame() {

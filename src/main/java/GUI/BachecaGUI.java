@@ -38,7 +38,6 @@ public class BachecaGUI {
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
         ordinamentoAlfabetico = true;
         caricaToDoEsistenti();
-
     }
 
     public void initListeners (){
