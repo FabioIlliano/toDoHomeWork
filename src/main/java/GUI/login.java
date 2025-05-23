@@ -54,9 +54,6 @@ public class login {
                 }
 
 
-                //Home home = new Home(frame);
-                //frame.setVisible(false);
-                //home.frame.setVisible(true);
             }
 
         });

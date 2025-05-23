@@ -4,11 +4,13 @@ import model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 
 public class Controller {
     private ToDo todo;
-    private Bacheca bacheca;
     private Utente utente;
     private Attivita attivita;
     private String titoloBacheca;
@@ -69,6 +71,7 @@ public class Controller {
 
     public boolean cambiaDataScadToDo(String s){
         try{
+
             utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setDataScadenza(s);
             return true;
         } catch (Exception e) {
@@ -76,13 +79,24 @@ public class Controller {
         }
     }
 
+    public boolean checkData(String s){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dataScadenza = LocalDate.parse(s, formatter);
+        LocalDate dataOggi = LocalDate.now();
+        return !dataScadenza.isBefore(dataOggi);
+    }
+
     public void cambiaBgColorToDo(Color c){
         utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setColoreSfondo(c);
     }
 
-    public void spostaToDo(TitoloBacheca nuova)
+    public Color getColorBG(){
+        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getColoreSfondo();
+    }
+
+    public boolean spostaToDo(TitoloBacheca nuova)
     {
-        utente.spostaToDoGUI(titoloBacheca, nuova.toString(), titoloToDoCorrente);
+        return utente.spostaToDoGUI(titoloBacheca, nuova.toString(), titoloToDoCorrente);
     }
 
     public void ordinaToDoAlfabeticamente() {
@@ -113,6 +127,10 @@ public class Controller {
         return new ArrayList<>();
     }
 
+    public ArrayList<ToDo> getListaToDo2(){
+        return utente.getBacheca(titoloBacheca).getListaToDo();
+    }
+
     public String getTitoloToDoCorrente() {
         return titoloToDoCorrente;
     }
@@ -129,12 +147,45 @@ public class Controller {
         return titoloBacheca;
     }
 
-    /*public String getDescrizioneBacheca() {
-        return descrizioneBacheca;
-    }*/
+    public void setCompletoToDo(boolean b){
+        this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setStato(b);
+    }
+
+    public boolean getCompletoToDo(){
+        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).isStato();
+    }
+
+    public String getDataScadToDo(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate datascad = this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getDataScadenza();
+        if (datascad!=null)
+            return datascad.format(formatter);
+        else
+            return null;
+    }
+
+    public String getDescrizioneToDo(){
+        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getDescrizione();
+    }
+
+    public String getUrlToDo(){
+        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getUrl();
+    }
+
+    public Color getBGColorToDo(){
+        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getColoreSfondo();
+    }
 
     public void setTitoloBacheca(String titoloBacheca) {
         this.titoloBacheca = titoloBacheca;
+    }
+
+    public void setIMGToDo(Image img){
+        this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setImmagine(img);
+    }
+
+    public Image getIMGToDo(){
+        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getImmagine();
     }
 
     public boolean checkBacheca (String nomeBacheca){

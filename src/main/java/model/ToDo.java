@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
 import java.util.Scanner;
@@ -14,9 +15,10 @@ public class ToDo {
     private ArrayList<Utente> listaUtentiCondivisione;
     private LocalDate dataScadenza; //YYYY-MM-DD
     //Non so bene che tipo mettere
-    private int immagine; //da capire il tipo
+    private Image immagine; //da capire il tipo
     private Color coloreSfondo;
 
+    //costruttore inutile
     public ToDo(String titolo, String descrizione, String url, String dataScadenza, int immagine, Color coloreSfondo)
     {
         this.titolo = titolo;
@@ -24,11 +26,12 @@ public class ToDo {
         this.url = url;
         stato = false;
         this.dataScadenza = LocalDate.parse(dataScadenza);;
-        this.immagine = immagine;
+        //this.immagine = immagine;
         this.coloreSfondo = coloreSfondo;
         this.checklistAttivita = new ArrayList<>();
     }
     //ricordiamoci che molte cose sono opzionali
+
 
     //nuovo costruttore
     public ToDo(String titolo)
@@ -41,6 +44,30 @@ public class ToDo {
     }
 
     public boolean getStato(){return stato;}
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public boolean isStato() {
+        return stato;
+    }
+
+    public void setStato(boolean stato) {
+        this.stato = stato;
+    }
+
+    public Image getImmagine() {
+        return immagine;
+    }
+
+    public void setImmagine(Image img){
+        this.immagine = img;
+    }
 
     public void ModificaStato()
     {
@@ -61,16 +88,14 @@ public class ToDo {
 
     public void setDataScadenza(String dataScadenza) throws Exception{
         try{
-            this.dataScadenza = LocalDate.parse(dataScadenza);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            this.dataScadenza = LocalDate.parse(dataScadenza, formatter);
         } catch (Exception e) {
             throw new Exception(e);
         }
 
     }
 
-    public void setImmagine(int immagine) {
-        this.immagine = immagine;
-    }
 
     public Color getColoreSfondo() {
         return coloreSfondo;

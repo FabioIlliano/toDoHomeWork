@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.Controller;
+import model.ToDo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,7 @@ public class BachecaGUI {
         this.frame.setVisible(true);
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
         ordinamentoAlfabetico = true;
-        caricaToDoEsistenti();
+        caricaToDo2();
     }
 
     public void initListeners (){
@@ -61,7 +62,7 @@ public class BachecaGUI {
                         btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
 
                         btn.addActionListener(e -> {
-                            controller.setTitoloToDoCorrente(titolo); // salva il titolo
+                            controller.setTitoloToDoCorrente(btn.getText()); // salva il titolo
                             frame.dispose(); // chiude la finestra attuale
                             CreaToDo creatodo = new CreaToDo(frame, controller);
                             frame.setVisible(false);
@@ -107,24 +108,59 @@ public class BachecaGUI {
                     ordinaButton.setText("titolo");
                 }
                 ordinamentoAlfabetico = !ordinamentoAlfabetico;
-                caricaToDoEsistenti();
+                caricaToDo2();
             }
 
         });
 
     }
 
+    /* commentato perche altrimenti non carica il colore dei bottoni, o meglio lo carica male
     public void caricaToDoEsistenti() {
         ArrayList<String> titoli = controller.getListaToDo();
         todopanel.removeAll();  // pulisce il pannello prima di aggiungere
 
         for (String titolo : titoli) {
+            String titoloFinale = titolo;
             //righe duplicate si può creare un metodo
+            JButton btn = new JButton(titoloFinale);
+            btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            //btn.setBackground(controller.);
+
+            btn.addActionListener(e -> {
+                controller.setTitoloToDoCorrente(titoloFinale); // salva il titolo
+
+                frame.dispose();
+                CreaToDo creaToDo = new CreaToDo(frame, controller);
+                frame.setVisible(false);
+                creaToDo.getFrame().setVisible(true);
+            });
+
+            todopanel.add(btn);
+        }
+
+        todopanel.revalidate();
+        todopanel.repaint();
+    }
+     */
+
+    public void caricaToDo2(){
+        ArrayList<ToDo> listaToDo = controller.getListaToDo2();
+        todopanel.removeAll();
+
+
+        for (ToDo todo : listaToDo) {
+            String titolo = todo.getTitolo();
+
             JButton btn = new JButton(titolo);
             btn.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+            btn.setBackground(todo.getColoreSfondo());
+
             btn.addActionListener(e -> {
                 controller.setTitoloToDoCorrente(titolo); // salva il titolo
+
                 frame.dispose();
                 CreaToDo creaToDo = new CreaToDo(frame, controller);
                 frame.setVisible(false);
