@@ -96,26 +96,40 @@ public class Bacheca {
 
     public ToDo getToDoTitolo(String titolo){
         for(ToDo todo : listaToDo)
-        {
             if(todo.getTitolo().equalsIgnoreCase(titolo))
-            {
                 return todo;
-            }
-        }
         return null;
     }
 
     public ArrayList<ToDo> getToDoScadenzaOggi(){
         LocalDate dataoggi = LocalDate.now();
         ArrayList<ToDo> listaScad = new ArrayList<>();
+        if (listaToDo.isEmpty())
+            return null;
         for(ToDo todo : listaToDo)
-        {
             if(todo.getDataScadenza().isEqual(dataoggi))
-            {
                 listaScad.add(todo);
-            }
-        }
         return listaScad;
+    }
+
+    public ArrayList<ToDo> getToDoScadenzaFissata(LocalDate date){
+        ArrayList<ToDo> listaScad = new ArrayList<>();
+        if (listaToDo.isEmpty())
+            return null;
+        for(ToDo todo : listaToDo)
+            if(todo.getDataScadenza().isBefore(date))
+                listaScad.add(todo);
+        return listaScad;
+    }
+
+    public ArrayList<ToDo> cercaToDo(String titoloToDo){
+        ArrayList<ToDo> lista = new ArrayList<>();
+        if (listaToDo.isEmpty())
+            return null;
+        for(ToDo todo : listaToDo)
+            if(todo.getTitolo().equalsIgnoreCase(titoloToDo))
+                lista.add(todo);
+        return lista;
     }
 
 
@@ -184,7 +198,7 @@ public class Bacheca {
     //metodo che ordina i todo per la data di scadenza
     public void ordinaToDoDataScad()
     {
-        listaToDo.sort(Comparator.comparing(toDo -> toDo.getDataScadenza()));
+        listaToDo.sort(Comparator.comparing(ToDo::getDataScadenza, Comparator.nullsLast(Comparator.naturalOrder())));
     }
 
 

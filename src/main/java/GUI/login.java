@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The type Login.
+ */
 public class login {
 
     static private JFrame frame;
@@ -18,6 +21,11 @@ public class login {
     private Home home;
     private static Controller controller;
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         controller = new Controller();
         frame = new JFrame("GUIFORM");
@@ -31,6 +39,9 @@ public class login {
         //frame.setResizable(false);
     }
 
+    /**
+     * Instantiates a new Login.
+     */
     public login()
     {
         loginButton.addActionListener(new ActionListener() {
@@ -61,6 +72,11 @@ public class login {
 
     }
 
+    /**
+     * Gets frame.
+     *
+     * @return the frame
+     */
     public static JFrame getFrame() {
         return frame;
     }

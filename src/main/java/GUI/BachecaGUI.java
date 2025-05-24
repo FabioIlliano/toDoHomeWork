@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class BachecaGUI {
@@ -20,11 +22,15 @@ public class BachecaGUI {
     private JPanel todopanel; //è sbagliato, andava fatto nel panel scrollabile non in un altro panel
     private JButton tornaIndietroButton;
     private JButton ordinaButton;
-    private JPanel ordinalabel;
+    private JPanel ordinaPanel;
+    private JButton scadOggiButton;
+    private JLabel JL1;
+    private JButton scadFissaButton;
+    private JButton cercaToDoButton;
     private JTextField descrizionetext;
     private Controller controller;
     String titolo;
-    private boolean ordinamentoAlfabetico;
+
 
     public BachecaGUI(JFrame frame, Controller controller) {
         this.frame = new JFrame(controller.getTitoloBacheca());
@@ -37,8 +43,7 @@ public class BachecaGUI {
         this.initListeners();
         this.frame.setVisible(true);
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
-        ordinamentoAlfabetico = true;
-        caricaToDo2();
+        caricaToDo();
     }
 
     public void initListeners (){
@@ -99,54 +104,77 @@ public class BachecaGUI {
                 /*controller.ordinaToDoAlfabeticamente();
                 caricaToDoEsistenti();*/ // ricarica la lista aggiornata
 
-                if (ordinamentoAlfabetico) {
+                if (ordinaButton.getText().equals("ORDINA PER: TITOLO")) {
                     controller.ordinaToDoAlfabeticamente();
-                    ordinaButton.setText("scadenza");
+                    ordinaButton.setText("ORDINA PER: SCADENZA");
                 } else {
-                    //controller.ordinaToDoPerScadenza();
-                    JOptionPane.showMessageDialog(frame, "darebbe errore perche non hanno le date!");
-                    ordinaButton.setText("titolo");
+                    controller.ordinaToDoPerScadenza();
+                    ordinaButton.setText("ORDINA PER: TITOLO");
                 }
-                ordinamentoAlfabetico = !ordinamentoAlfabetico;
-                caricaToDo2();
+                caricaToDo();
             }
 
         });
 
+        scadOggiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<ToDo> listaToDoScadOggi = controller.getToDoScadenzaOggi();
+                if (listaToDoScadOggi!=null && !listaToDoScadOggi.isEmpty()){
+                    StringBuilder msg = new StringBuilder("ToDo in scadenza oggi: \n");
+                    for (ToDo todo : listaToDoScadOggi)
+                        msg.append(todo.getTitolo()).append("\n");
+                    JOptionPane.showMessageDialog(frame, msg);
+                }
+                else
+                    JOptionPane.showMessageDialog(frame, "Nessun ToDo in scadenza oggi");
+            }
+        });
+
+        scadFissaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String s = JOptionPane.showInputDialog(frame, "INSERISCI LA DATA ENTRO CUI DEVONO SCADERE I TODO. FORMATO dd-MM-yyyy");
+                if (s!=null){
+                    try{
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        LocalDate data = LocalDate.parse(s, formatter);
+                        String sData = data.format(formatter);
+                        ArrayList<ToDo> listaToDoScadFissa = controller.getToDoScadenzaFissa(data);
+                        if (listaToDoScadFissa!=null && !listaToDoScadFissa.isEmpty()){
+                            StringBuilder msg = new StringBuilder("ToDo in scadenza entro il "+sData+": \n");
+                            for (ToDo todo : listaToDoScadFissa)
+                                msg.append(todo.getTitolo()).append("\n");
+                            JOptionPane.showMessageDialog(frame, msg);
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "Nessun ToDo in scadenza entro "+sData);
+                    }catch (Exception exception){
+                        JOptionPane.showMessageDialog(frame, "FORMATO DATA NON VALIDO, FORMATO CORRETTO: dd-MM-yyyy");
+                    }
+                }
+
+
+            }
+        });
+
+        cercaToDoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String s = JOptionPane.showInputDialog(frame, "INSERISCI IL TITOLO DEL TODO DA CERCARE");
+                if (s!=null){
+                    if (controller.cercaToDo(s)!=null && !controller.cercaToDo(s).isEmpty())
+                        JOptionPane.showMessageDialog(frame, "IL TODO È PRESENTE NEL SISTEMA");
+                    else
+                        JOptionPane.showMessageDialog(frame, "IL TODO NON È PRESENTE NEL SISTEMA");
+                }
+            }
+        });
+
     }
 
-    /* commentato perche altrimenti non carica il colore dei bottoni, o meglio lo carica male
-    public void caricaToDoEsistenti() {
-        ArrayList<String> titoli = controller.getListaToDo();
-        todopanel.removeAll();  // pulisce il pannello prima di aggiungere
-
-        for (String titolo : titoli) {
-            String titoloFinale = titolo;
-            //righe duplicate si può creare un metodo
-            JButton btn = new JButton(titoloFinale);
-            btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            //btn.setBackground(controller.);
-
-            btn.addActionListener(e -> {
-                controller.setTitoloToDoCorrente(titoloFinale); // salva il titolo
-
-                frame.dispose();
-                CreaToDo creaToDo = new CreaToDo(frame, controller);
-                frame.setVisible(false);
-                creaToDo.getFrame().setVisible(true);
-            });
-
-            todopanel.add(btn);
-        }
-
-        todopanel.revalidate();
-        todopanel.repaint();
-    }
-     */
-
-    public void caricaToDo2(){
-        ArrayList<ToDo> listaToDo = controller.getListaToDo2();
+    public void caricaToDo(){
+        ArrayList<ToDo> listaToDo = controller.getListaToDo();
         todopanel.removeAll();
 
 

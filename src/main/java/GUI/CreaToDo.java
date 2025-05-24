@@ -11,6 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
+/**
+ * The type Crea to do.
+ */
 public class CreaToDo {
     private JFrame frame;
     private JPanel mainPanel;
@@ -52,6 +55,12 @@ public class CreaToDo {
 
     private Controller controller;
 
+    /**
+     * Instantiates a new Crea to do.
+     *
+     * @param frame      the frame
+     * @param controller the controller
+     */
     public CreaToDo(JFrame frame, Controller controller) {
         this.frame = new JFrame(controller.getTitoloToDoCorrente());
         this.controller = controller;
@@ -67,6 +76,9 @@ public class CreaToDo {
         //spostaJCB.setSelectedItem(TitoloBacheca.valueOf(controller.getTitoloBacheca()));
     }
 
+    /**
+     * Init listeners.
+     */
     public void initListeners() {
         confermaButton.addActionListener(new ActionListener() {
             @Override
@@ -79,7 +91,7 @@ public class CreaToDo {
                     if (!dataScadTextField.getText().isEmpty()){
                         boolean b = controller.cambiaDataScadToDo(dataScadTextField.getText());
                         if (!b)
-                            JOptionPane.showMessageDialog(frame, "FORMATO DATA NON VALIDO, FORMATO CORRETTO: DD-MM-YYYY");
+                            JOptionPane.showMessageDialog(frame, "FORMATO DATA NON VALIDO, FORMATO CORRETTO: dd-MM-yyyy");
                         else if (!controller.checkData(dataScadTextField.getText()))
                             JOptionPane.showMessageDialog(frame, "DATA PRECEDENTE AD OGGI!!");
                     }
@@ -209,6 +221,9 @@ public class CreaToDo {
         });
     }
 
+    /**
+     * Init text.
+     */
     public void initText(){
         c = controller.getBGColorToDo();
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
@@ -241,8 +256,12 @@ public class CreaToDo {
     }
 
 
-
-public JFrame getFrame() {
+    /**
+     * Gets frame.
+     *
+     * @return the frame
+     */
+    public JFrame getFrame() {
         return frame;
     }
 }
