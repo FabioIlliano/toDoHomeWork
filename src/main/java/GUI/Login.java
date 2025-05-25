@@ -7,9 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * The type Login.
+ * Login e' la schermata principale e permette all'utente di fare l'accesso con i propri dati.
  */
-public class login {
+public class Login {
 
     static private JFrame frame;
     private JPanel MainPanel;
@@ -22,14 +22,14 @@ public class login {
     private static Controller controller;
 
     /**
-     * The entry point of application.
+     * il punto d'inizio dell applicazione.
      *
-     * @param args the input arguments
+     * @param args gli input arguments
      */
     public static void main(String[] args) {
         controller = new Controller();
         frame = new JFrame("GUIFORM");
-        frame.setContentPane(new login().MainPanel);
+        frame.setContentPane(new Login().MainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setSize(800, 600);
@@ -40,9 +40,9 @@ public class login {
     }
 
     /**
-     * Instantiates a new Login.
+     * inizializza una nuova schermata di login.
      */
-    public login()
+    public Login()
     {
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -73,9 +73,9 @@ public class login {
     }
 
     /**
-     * Gets frame.
+     * restituisce il frame.
      *
-     * @return the frame
+     * @return il frame
      */
     public static JFrame getFrame() {
         return frame;

@@ -4,11 +4,20 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * The type Bacheca.
+ */
 public class Bacheca {
     private TitoloBacheca titolo;
     private String descrizione;
     private ArrayList<ToDo> listaToDo;
 
+    /**
+     * Instantiates a new Bacheca.
+     *
+     * @param titolo      the titolo
+     * @param descrizione the descrizione
+     */
     public Bacheca(TitoloBacheca titolo, String descrizione)
     {
         this.titolo = titolo;
@@ -16,6 +25,9 @@ public class Bacheca {
         listaToDo = new ArrayList<ToDo>();
     }
 
+    /**
+     * Modifica descrizione.
+     */
     public void modificaDescrizione()
     {
         Scanner in = new Scanner(System.in);
@@ -26,6 +38,9 @@ public class Bacheca {
         this.descrizione = NuovaDescrizione;
     }
 
+    /**
+     * Crea to do.
+     */
     public void creaToDo()
     {
         Scanner in = new Scanner(System.in);
@@ -53,6 +68,11 @@ public class Bacheca {
         //listaToDo.add(nuovoToDo);
     }
 
+    /**
+     * Crea to do gui.
+     *
+     * @param titoloToDo the titolo to do
+     */
     public void creaToDoGUI(String titoloToDo)
     {
         /*ho creato un nuovo costruttore del ToDo perche alcune cose
@@ -61,7 +81,12 @@ public class Bacheca {
         listaToDo.add(nuovoToDo);
     }
 
-    //funzione per la GUI
+    /**
+     * Gets lista titoli to do.
+     *
+     * @return the lista titoli to do
+     */
+//funzione per la GUI
     public ArrayList<String> getListaTitoliToDo() {
         ArrayList<String> titoli = new ArrayList<>();
         for (ToDo t : listaToDo) {
@@ -70,7 +95,12 @@ public class Bacheca {
         return titoli;
     }
 
-    //funzione per la GUI
+    /**
+     * Elimina to do gui.
+     *
+     * @param titoloToDo the titolo to do
+     */
+//funzione per la GUI
     public void eliminaToDoGUI(String titoloToDo) {
         ToDo todoDaEliminare = null;
 
@@ -87,6 +117,9 @@ public class Bacheca {
     }
 
 
+    /**
+     * Mostra tutti.
+     */
     public void mostraTutti()
     {
         for (ToDo t : listaToDo) {
@@ -94,6 +127,12 @@ public class Bacheca {
         }
     }
 
+    /**
+     * Get to do titolo to do.
+     *
+     * @param titolo the titolo
+     * @return the to do
+     */
     public ToDo getToDoTitolo(String titolo){
         for(ToDo todo : listaToDo)
             if(todo.getTitolo().equalsIgnoreCase(titolo))
@@ -101,27 +140,48 @@ public class Bacheca {
         return null;
     }
 
+    /**
+     * Get to do scadenza oggi array list.
+     *
+     * @return the array list
+     */
     public ArrayList<ToDo> getToDoScadenzaOggi(){
         LocalDate dataoggi = LocalDate.now();
         ArrayList<ToDo> listaScad = new ArrayList<>();
         if (listaToDo.isEmpty())
             return null;
         for(ToDo todo : listaToDo)
-            if(todo.getDataScadenza().isEqual(dataoggi))
+            if (todo.getDataScadenza()==null)
+                continue;
+            else if(todo.getDataScadenza().isEqual(dataoggi))
                 listaScad.add(todo);
         return listaScad;
     }
 
+    /**
+     * Get to do scadenza fissata array list.
+     *
+     * @param date the date
+     * @return the array list
+     */
     public ArrayList<ToDo> getToDoScadenzaFissata(LocalDate date){
         ArrayList<ToDo> listaScad = new ArrayList<>();
         if (listaToDo.isEmpty())
             return null;
         for(ToDo todo : listaToDo)
-            if(todo.getDataScadenza().isBefore(date))
+            if(todo.getDataScadenza()==null)
+                continue;
+            else if(todo.getDataScadenza().isBefore(date))
                 listaScad.add(todo);
         return listaScad;
     }
 
+    /**
+     * Cerca to do array list.
+     *
+     * @param titoloToDo the titolo to do
+     * @return the array list
+     */
     public ArrayList<ToDo> cercaToDo(String titoloToDo){
         ArrayList<ToDo> lista = new ArrayList<>();
         if (listaToDo.isEmpty())
@@ -133,30 +193,65 @@ public class Bacheca {
     }
 
 
+    /**
+     * Get titolo titolo bacheca.
+     *
+     * @return the titolo bacheca
+     */
     public TitoloBacheca getTitolo(){
         return titolo;
     }
 
+    /**
+     * Get descrizione string.
+     *
+     * @return the string
+     */
     public String getDescrizione(){
         return descrizione;
     }
 
+    /**
+     * Set descrizione.
+     *
+     * @param descrizione the descrizione
+     */
     public void setDescrizione(String descrizione){
         this.descrizione = descrizione;
     }
 
+    /**
+     * Gets lista to do.
+     *
+     * @return the lista to do
+     */
     public ArrayList<ToDo> getListaToDo() {
         return listaToDo;
     }
 
+    /**
+     * Aggiungi to do.
+     *
+     * @param todo the todo
+     */
     public void aggiungiToDo(ToDo todo){
         listaToDo.add(todo);
     }
 
+    /**
+     * Rimuovi to do.
+     *
+     * @param todo the todo
+     */
     public void rimuoviToDo(ToDo todo){
         listaToDo.remove(todo);
     }
 
+    /**
+     * Elimina to do.
+     *
+     * @param titolo the titolo
+     */
     public void eliminaToDo(String titolo)
     {
         ToDo todoDaEliminare = null;
@@ -189,13 +284,19 @@ public class Bacheca {
 
     }
 
-    //metodo che ordina i todo in base al titolo
+    /**
+     * Ordina to do titolo.
+     */
+//metodo che ordina i todo in base al titolo
     public void ordinaToDoTitolo()
     {
         listaToDo.sort(Comparator.comparing(todo -> todo.getTitolo().toLowerCase()));
     }
 
-    //metodo che ordina i todo per la data di scadenza
+    /**
+     * Ordina to do data scad.
+     */
+//metodo che ordina i todo per la data di scadenza
     public void ordinaToDoDataScad()
     {
         listaToDo.sort(Comparator.comparing(ToDo::getDataScadenza, Comparator.nullsLast(Comparator.naturalOrder())));
@@ -210,7 +311,10 @@ public class Bacheca {
                 "Descrizione: " + descrizione + "\n";
     }
 
-    //metodo per stampa in fase di debug
+    /**
+     * Stampabacheca.
+     */
+//metodo per stampa in fase di debug
     public void stampabacheca()
     {
         int larghezza = ("Descrizione: " + descrizione).length();

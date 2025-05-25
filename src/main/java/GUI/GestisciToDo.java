@@ -2,19 +2,18 @@ package GUI;
 
 import Controller.Controller;
 import model.TitoloBacheca;
+import model.Attivita;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
- * The type Crea to do.
+ * Gestisci ToDo permette di inserire e modificare tutti i vari dati presenti in un ToDo.
  */
-public class CreaToDo {
+public class GestisciToDo {
     private JFrame frame;
     private JPanel mainPanel;
 
@@ -49,6 +48,11 @@ public class CreaToDo {
     private JPanel btnPanel1;
     private JButton spostaToDobutton;
     private JButton scegliIMGButton;
+    private JScrollPane checklistJSP;
+    private JLabel checklistJL;
+    private JPanel checklistJP;
+    private JButton attivitaButton;
+    private JPanel attivitaPanel;
     private JComboBox spostaJCB;
     private JPanel panelSposta;
     private Color c;
@@ -56,12 +60,12 @@ public class CreaToDo {
     private Controller controller;
 
     /**
-     * Instantiates a new Crea to do.
+     * instanzia una nuova schermata di gestione dei ToDo.
      *
-     * @param frame      the frame
-     * @param controller the controller
+     * @param frame      il frame
+     * @param controller il controller
      */
-    public CreaToDo(JFrame frame, Controller controller) {
+    public GestisciToDo(JFrame frame, Controller controller) {
         this.frame = new JFrame(controller.getTitoloToDoCorrente());
         this.controller = controller;
         this.frame.setContentPane(mainPanel);
@@ -73,11 +77,13 @@ public class CreaToDo {
         this.initText();
         this.frame.setVisible(true);
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
+        this.attivitaPanel.setLayout(new BoxLayout(attivitaPanel, BoxLayout.Y_AXIS));
         //spostaJCB.setSelectedItem(TitoloBacheca.valueOf(controller.getTitoloBacheca()));
+        caricaAttivitaChecklist(); // <-- aggiorna la lista visivamente
     }
 
     /**
-     * Init listeners.
+     * Questo metodo contiene tutti i listener degli oggetti grafici presenti in GestisciToDo
      */
     public void initListeners() {
         confermaButton.addActionListener(new ActionListener() {
@@ -98,27 +104,11 @@ public class CreaToDo {
                     controller.cambiaBgColorToDo(c);
                     controller.cambiaURLToDo(urlTextField.getText());
                     initText();
-
-
-                    // non ha senso che col conferma torna indietro pittusto aggiorniamo i dati
                 }
             }
 
         });
 
-        /*spostaJCB.addActionListener(new ActionListener() {@Override
-        public void actionPerformed(ActionEvent e) {
-            TitoloBacheca nuovaBacheca = (TitoloBacheca) spostaJCB.getSelectedItem();
-
-            try {
-                controller.spostaToDo(nuovaBacheca);
-
-                JOptionPane.showMessageDialog(null, "ToDo spostato in: " + nuovaBacheca);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
-                spostaJCB.setSelectedItem(controller.getTitoloBacheca()); // ripristina selezione vecchia
-            }
-        }});*/
 
         scegliIMGButton.addActionListener(new ActionListener() {
             @Override
@@ -153,17 +143,17 @@ public class CreaToDo {
 
                 controller.cambiaTitoloToDo(titoloTextField.getText());
                 controller.eliminaToDo(titoloTextField.getText());
-                BachecaGUI bachecagui = new BachecaGUI(frame, controller);
+                GestisciBacheca gestisciBacheca = new GestisciBacheca(frame, controller);
                 frame.dispose();
                 frame.setVisible(false);
-                bachecagui.getFrame().setVisible(true);
+                gestisciBacheca.getFrame().setVisible(true);
             }
         });
 
         indietroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BachecaGUI b = new BachecaGUI(frame, controller);
+                GestisciBacheca b = new GestisciBacheca(frame, controller);
                 frame.setVisible(false);
                 b.getFrame().setVisible(true);
             }
@@ -209,8 +199,8 @@ public class CreaToDo {
                     boolean b = controller.spostaToDo(t);
                     if (b){
                         JOptionPane.showMessageDialog(frame, "TODO SPOSTATO");
-                        BachecaGUI bachecagui = new BachecaGUI(frame, controller);
-                        bachecagui.getFrame().setVisible(true);
+                        GestisciBacheca gestisciBacheca = new GestisciBacheca(frame, controller);
+                        gestisciBacheca.getFrame().setVisible(true);
                         frame.dispose();
                     }
                     else
@@ -219,12 +209,27 @@ public class CreaToDo {
                 }
             }
         });
+
+        attivitaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività:");
+                if (nomeAttivita != null && !nomeAttivita.trim().isEmpty()) {
+                    controller.creaAttivita(nomeAttivita);
+
+                    caricaAttivitaChecklist(); // <-- aggiorna la lista visivamente
+                }
+            }
+        });
+
     }
 
     /**
-     * Init text.
+     * inizializza tutti i campi del ToDo.
      */
     public void initText(){
+        checklistJP.setLayout(new BoxLayout(checklistJP, BoxLayout.Y_AXIS)); // <-- AGGIUNGI QUESTO
+
         c = controller.getBGColorToDo();
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
         this.descTextField.setText(controller.getDescrizioneToDo());
@@ -249,17 +254,57 @@ public class CreaToDo {
         else if (controller.getTitoloBacheca().equals(TitoloBacheca.LAVORO.toString())){
             spostaJCB.addItem(TitoloBacheca.UNIVERSITA);
             spostaJCB.addItem(TitoloBacheca.TEMPO_LIBERO);
-        }else{
+        } else {
             spostaJCB.addItem(TitoloBacheca.UNIVERSITA);
             spostaJCB.addItem(TitoloBacheca.LAVORO);
         }
     }
 
+    /**
+     * Carica tutte le attivita presenti in una Checklist.
+     */
+    private void caricaAttivitaChecklist() {
+
+        ArrayList<Attivita> a = controller.getListaAttivita();
+        attivitaPanel.removeAll();
+
+        if(a==null || a.isEmpty())
+        {
+            return;
+        }
+
+        for (Attivita attivita : a) {
+
+            JCheckBox checkBox = new JCheckBox(attivita.getNome());
+            checkBox.addItemListener(new ItemListener() {
+            @Override
+
+            public void itemStateChanged(ItemEvent e) {
+                if (checkBox.isSelected()) {
+                    controller.setStato(checkBox.getText());
+                    if (controller.checkChecklist())
+                        controller.setCompletoToDo(true);
+                } else {
+                    controller.setStato(checkBox.getText());
+                    if (!controller.checkChecklist())
+                        controller.setCompletoToDo(false);
+                }
+            }
+
+            });
+            //checkBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            attivitaPanel.add(checkBox);
+        }
+
+        attivitaPanel.revalidate();
+        attivitaPanel.repaint();
+    }
 
     /**
-     * Gets frame.
+     * restituisce il frame.
      *
-     * @return the frame
+     * @return il frame
      */
     public JFrame getFrame() {
         return frame;

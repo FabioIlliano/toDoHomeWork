@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * The type Controller.
+ * La classe controller fa comunicare la GUI con il model.
  */
 public class Controller {
     private ToDo todo;
@@ -20,7 +20,7 @@ public class Controller {
 
 
     /**
-     * Instantiates a new Controller.
+     * instanzia un controller.
      */
     public Controller(){
 
@@ -45,7 +45,7 @@ public class Controller {
     }
 
     /**
-     * Check bacheche boolean.
+     * Controlla se tutte le bacheche esistono.
      *
      * @return the boolean
      */
@@ -54,11 +54,11 @@ public class Controller {
     }
 
     /**
-     * Crea bacheca.
+     * Crea bacheca una nuova bacheca.
      *
-     * @param t the t
-     * @param d the d
-     * @throws Exception the exception
+     * @param t il titolo
+     * @param d la descrizione
+     * @throws Exception l eccezione
      */
     public void creaBacheca (TitoloBacheca t, String d) throws Exception{
         if (!checkBacheche())
@@ -68,9 +68,9 @@ public class Controller {
     }
 
     /**
-     * Crea to do.
+     * Crea un nuovo todo.
      *
-     * @param titoloToDo the titolo to do
+     * @param titoloToDo il titolo del todo
      */
     public void creaToDo(String titoloToDo)
     {
@@ -79,9 +79,9 @@ public class Controller {
 
 
     /**
-     * Elimina to do.
+     * Elimina il todo.
      *
-     * @param t the t
+     * @param t il titolo del todo
      */
     public void eliminaToDo(String t)
     {
@@ -89,9 +89,9 @@ public class Controller {
     }
 
     /**
-     * Cambia titolo to do.
+     * Cambia titolo del todo.
      *
-     * @param t the t
+     * @param t the titolo
      */
     public void cambiaTitoloToDo(String t)
     {
@@ -99,28 +99,28 @@ public class Controller {
     }
 
     /**
-     * Cambia desc to do.
+     * Cambia descrizione del todo.
      *
-     * @param s the s
+     * @param s la nuova descrizione
      */
     public void cambiaDescToDo(String s){
         utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setDescrizione(s);
     }
 
     /**
-     * Cambia url to do.
+     * Cambia url del todo.
      *
-     * @param s the s
+     * @param s la nuova descrizione
      */
     public void cambiaURLToDo(String s){
         utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setUrl(s);
     }
 
     /**
-     * Cambia data scad to do boolean.
+     * Cambia data scadenza del todo.
      *
-     * @param s the s
-     * @return the boolean
+     * @param s la data di scadenza del ToDo
+     * @return un booleano
      */
     public boolean cambiaDataScadToDo(String s){
         try{
@@ -133,10 +133,10 @@ public class Controller {
     }
 
     /**
-     * Check data boolean.
+     * Controlla la data di scadenza del ToDo.
      *
-     * @param s the s
-     * @return the boolean
+     * @param s la data del todo
+     * @return un booleano
      */
     public boolean checkData(String s){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -146,16 +146,16 @@ public class Controller {
     }
 
     /**
-     * Cambia bg color to do.
+     * Cambia il colore del todo.
      *
-     * @param c the c
+     * @param c il colore del todo
      */
     public void cambiaBgColorToDo(Color c){
         utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setColoreSfondo(c);
     }
 
     /**
-     * Get color bg color.
+     * prende il colore del todo
      *
      * @return the color
      */
@@ -164,10 +164,10 @@ public class Controller {
     }
 
     /**
-     * Sposta to do boolean.
+     * Sposta un todo tra una bacheca e l'altra
      *
-     * @param nuova the nuova
-     * @return the boolean
+     * @param nuova la nuova bacheca
+     * @return un booleano
      */
     public boolean spostaToDo(TitoloBacheca nuova)
     {
@@ -175,7 +175,7 @@ public class Controller {
     }
 
     /**
-     * Ordina to do alfabeticamente.
+     * Ordina todo alfabeticamente.
      */
     public void ordinaToDoAlfabeticamente() {
         //if (utente != null && titoloBacheca != null) {
@@ -187,7 +187,7 @@ public class Controller {
     }
 
     /**
-     * Ordina to do per scadenza.
+     * Ordina todo per scadenza.
      */
     public void ordinaToDoPerScadenza() {
         //if (utente != null && titoloBacheca != null) {
@@ -198,6 +198,11 @@ public class Controller {
         //}
     }
 
+    /**
+     * prende i todo che scadono nella data odierna
+     *
+     * @return l' arraylist
+     */
     public ArrayList<ToDo> getToDoScadenzaOggi(){
         if (utente.getBacheca(titoloBacheca).getListaToDo()!=null){
             Bacheca b = utente.getBacheca(titoloBacheca);
@@ -206,78 +211,84 @@ public class Controller {
         return null;
     }
 
+    /**
+     * prende i todo che scadono in una data scelta
+     *
+     * @param data la data
+     * @return l arraylist
+     */
     public ArrayList<ToDo> getToDoScadenzaFissa(LocalDate data){
         Bacheca b = utente.getBacheca(titoloBacheca);
         return b.getToDoScadenzaFissata(data);
     }
 
     /**
-     * Get lista to do 2 arraylist.
+     * prende la lista dei ToDo
      *
-     * @return the array list
+     * @return l arraylist
      */
     public ArrayList<ToDo> getListaToDo(){
         return utente.getBacheca(titoloBacheca).getListaToDo();
     }
 
     /**
-     * Gets titolo to do corrente.
+     * Gets titolo todo corrente.
      *
-     * @return the titolo to do corrente
+     * @return il titolo del todo corrente
      */
     public String getTitoloToDoCorrente() {
         return titoloToDoCorrente;
     }
 
     /**
-     * Sets titolo to do corrente.
+     * modifica il titolo del todo corrente.
      *
-     * @param t the t
+     * @param t il nuovo titolo
      */
     public void setTitoloToDoCorrente(String t) {
         this.titoloToDoCorrente = t;
     }
 
     /**
-     * Gets utente.
+     * prende l'utente.
      *
-     * @return the utente
+     * @return l'utente
      */
     public Utente getUtente() {
         return utente;
     }
 
     /**
-     * Gets titolo bacheca.
+     * prende il titolo della bacheca.
      *
-     * @return the titolo bacheca
+     * @return il titolo bacheca
      */
     public String getTitoloBacheca() {
         return titoloBacheca;
     }
 
     /**
-     * Set completo to do.
+     * modifica lo tato del ToDo
      *
-     * @param b the b
+     * @param b lo stato
      */
     public void setCompletoToDo(boolean b){
         this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setStato(b);
     }
 
     /**
-     * Get completo to do boolean.
+     * restituisce lo stato del todo
      *
-     * @return the boolean
+     * @return lo stato del todo booleano
      */
     public boolean getCompletoToDo(){
         return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).isStato();
     }
 
     /**
-     * Get data scad to do string.
+     * restituisce la data di scadenza del ToDo
      *
-     * @return the string
+     * @return la data di scadenza
      */
     public String getDataScadToDo(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -289,64 +300,64 @@ public class Controller {
     }
 
     /**
-     * Get descrizione to do string.
+     * restituisce la descrizione del ToDo.
      *
-     * @return the string
+     * @return una string ovvero la descrizione del ToDo
      */
     public String getDescrizioneToDo(){
         return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getDescrizione();
     }
 
     /**
-     * Get url to do string.
+     * restituisce l'URL.
      *
-     * @return the string
+     * @return una string ovvero l'URL del ToDo
      */
     public String getUrlToDo(){
         return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getUrl();
     }
 
     /**
-     * Get bg color to do color.
+     * restituisce il colore del ToDo
      *
-     * @return the color
+     * @return un color ovvero il colore del ToDo
      */
     public Color getBGColorToDo(){
         return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getColoreSfondo();
     }
 
     /**
-     * Sets titolo bacheca.
+     * Modifica il titolo della bacheca.
      *
-     * @param titoloBacheca the titolo bacheca
+     * @param titoloBacheca il titolo della bacheca
      */
     public void setTitoloBacheca(String titoloBacheca) {
         this.titoloBacheca = titoloBacheca;
     }
 
     /**
-     * Set img to do.
+     * Modifica l'immagine del ToDo.
      *
-     * @param img the img
+     * @param img l'immagine
      */
     public void setIMGToDo(Image img){
         this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setImmagine(img);
     }
 
     /**
-     * Get img to do image.
+     * restituisce l'immagine del ToDo.
      *
-     * @return the image
+     * @return l'immagine del ToDo
      */
     public Image getIMGToDo(){
         return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getImmagine();
     }
 
     /**
-     * Check bacheca boolean.
+     * Controlla se la bacheca esiste.
      *
-     * @param nomeBacheca the nome bacheca
-     * @return the boolean
+     * @param nomeBacheca il nome della bacheca
+     * @return un booleano
      */
     public boolean checkBacheca (String nomeBacheca){
         if (utente.getBacheca(nomeBacheca) == null)
@@ -356,23 +367,29 @@ public class Controller {
     }
 
     /**
-     * Get descrizione bacheca string.
+     * restituisce la descrizione della bacheca.
      *
-     * @param t the t
-     * @return the string
+     * @param t il titolo della bacheca
+     * @return una string
      */
     public String getDescrizioneBacheca(String t){
         return utente.getBacheca(t).getDescrizione();
     }
 
+    /**
+     * Cerca un todo in un array list.
+     *
+     * @param titoloToDo il titolo del ToDo da cercare
+     * @return l'arrayList formato da tutti i ToDo che hanno quel nome;
+     */
     public ArrayList<ToDo> cercaToDo(String titoloToDo){
         return utente.getBacheca(titoloBacheca).cercaToDo(titoloToDo);
     }
 
     /**
-     * No bacheca boolean.
+     * restituisce true se nessuna bacheca esiste
      *
-     * @return the boolean
+     * @return un booleaeno
      */
     public boolean noBacheca(){
         if (utente.getBacheca(TitoloBacheca.LAVORO.toString())==null && utente.getBacheca(TitoloBacheca.TEMPO_LIBERO.toString())==null && utente.getBacheca(TitoloBacheca.UNIVERSITA.toString())==null )
@@ -381,5 +398,39 @@ public class Controller {
             return false;
     }
 
+    /**
+     * Crea attivita.
+     *
+     * @param titoloAttivita il titolo dell'attivita
+     */
+    public void creaAttivita(String titoloAttivita)
+    {
+        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).aggiuntiAttivitaGUI(titoloAttivita);
+    }
+
+    /**
+     * restituisce la lista attivita.
+     *
+     * @return l'arraylist
+     */
+    public ArrayList<Attivita> getListaAttivita(){
+        return utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getChecklistAttivita();
+    }
+
+    /**
+     * Modifica lo stato di un attivita.
+     */
+    public void setStato(String nome){
+        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setStatoAttivita(nome);
+    }
+
+    /**
+     * restituisce true se tutti i ToDo sono completati.
+     *
+     * @return un boolean
+     */
+    public boolean checkChecklist(){
+        return utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).checkChecklist();
+    }
 
 }

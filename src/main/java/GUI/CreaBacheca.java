@@ -7,6 +7,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * la classe bacheca permette di creare una bacheca avente un nome predefinito tra
+ * UNIVERSITA
+ * LAVORO
+ * TEMPO_LIBERO
+ * e ogni bacheca puo' contenere dei ToDo.
+ */
 public class CreaBacheca {
     private JFrame frame;
     private JPanel creaBachecaPanel;
@@ -23,6 +30,12 @@ public class CreaBacheca {
     private Controller controller;
 
 
+    /**
+     * instanzia una nuova bacheca.
+     *
+     * @param jframe     il jframe
+     * @param controller il controller
+     */
     public CreaBacheca(JFrame jframe, Controller controller){
         this.frame = new JFrame("CreaBacheca");
         this.controller = controller;
@@ -40,6 +53,9 @@ public class CreaBacheca {
         initButtonListener();
     }
 
+    /**
+     * Questo metodo contiene tutti i listener degli oggetti grafici presenti in CreaBacheca
+     */
     public void initButtonListener(){
         buttonCreaBacheca.addActionListener(new ActionListener() {
             @Override
@@ -71,6 +87,11 @@ public class CreaBacheca {
         });
     }
 
+    /**
+     * restituisce il frame.
+     *
+     * @return il frame
+     */
     public JFrame getFrame() {
         return frame;
     }

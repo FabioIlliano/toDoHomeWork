@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Schermata principale, permette di visualizzare, creare ed eliminare le bacheche.
+ */
 public class Home {
     private JFrame frame;
 
@@ -42,11 +45,12 @@ public class Home {
     private JComboBox<TitoloBacheca> comboBox;
 
 
-
-
-
-
-
+    /**
+     * instanzia una nuova home
+     *
+     * @param frame      il frame
+     * @param controller il controller
+     */
     public Home(JFrame frame, Controller controller) {
 
         if (controller.checkBacheche())
@@ -74,12 +78,18 @@ public class Home {
         this.initDescrizioni();
     }
 
+    /**
+     * Init listeners.
+     */
     public void initListeners (){
         this.initButtonNuovaBacheca();
         this.initELiminaBacheca();
         this.initEditButtonsListeners();
     }
 
+    /**
+     * Init button nuova bacheca.
+     */
     public void initButtonNuovaBacheca(){
         buttonNuovaBacheca.addActionListener(new ActionListener() {
             @Override
@@ -100,9 +110,9 @@ public class Home {
                 JButton pulsante = (JButton) e.getSource();
                 if (controller.checkBacheca(pulsante.getText())){
                     controller.setTitoloBacheca(pulsante.getText());
-                    BachecaGUI bachecaGUI = new BachecaGUI(frame, controller);
+                    GestisciBacheca gestisciBacheca = new GestisciBacheca(frame, controller);
                     frame.setVisible(false);
-                    bachecaGUI.getFrame().setVisible(true);
+                    gestisciBacheca.getFrame().setVisible(true);
                 }
                 else
                     JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
@@ -115,6 +125,9 @@ public class Home {
         buttonU.addActionListener(bachecaListener);
     }
 
+    /**
+     * Init e limina bacheca.
+     */
     public void initELiminaBacheca(){
         buttonEliminaBacheca.addActionListener(new ActionListener() {
             @Override
@@ -156,6 +169,9 @@ public class Home {
 
     }
 
+    /**
+     * Init descrizioni.
+     */
     public void initDescrizioni (){
         if (controller.checkBacheca(TitoloBacheca.UNIVERSITA.toString())){
             String s = controller.getDescrizioneBacheca(TitoloBacheca.UNIVERSITA.toString());
@@ -171,6 +187,9 @@ public class Home {
         }
     }
 
+    /**
+     * Init edit buttons listeners.
+     */
     public void initEditButtonsListeners(){
         ActionListener editListener = new ActionListener() {
             @Override
@@ -244,7 +263,11 @@ public class Home {
     }
 
 
-
+    /**
+     * restituisce il frame.
+     *
+     * @return il frame
+     */
     public JFrame getFrame() {
         return frame;
     }

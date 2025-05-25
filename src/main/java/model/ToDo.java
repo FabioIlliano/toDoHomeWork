@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
 import java.util.Scanner;
 
+/**
+ * The type To do.
+ */
 public class ToDo {
     private String titolo;
     private String descrizione;
@@ -18,7 +21,17 @@ public class ToDo {
     private Image immagine; //da capire il tipo
     private Color coloreSfondo;
 
-    //costruttore inutile
+    /**
+     * Instantiates a new To do.
+     *
+     * @param titolo       the titolo
+     * @param descrizione  the descrizione
+     * @param url          the url
+     * @param dataScadenza the data scadenza
+     * @param immagine     the immagine
+     * @param coloreSfondo the colore sfondo
+     */
+//costruttore inutile
     public ToDo(String titolo, String descrizione, String url, String dataScadenza, int immagine, Color coloreSfondo)
     {
         this.titolo = titolo;
@@ -33,59 +46,128 @@ public class ToDo {
     //ricordiamoci che molte cose sono opzionali
 
 
-    //nuovo costruttore
+    /**
+     * Instantiates a new To do.
+     *
+     * @param titolo the titolo
+     */
+//nuovo costruttore
     public ToDo(String titolo)
     {
         this.titolo = titolo;
     }
 
+    /**
+     * Get titolo string.
+     *
+     * @return the string
+     */
     public String getTitolo(){
         return titolo;
     }
 
+    /**
+     * Get stato boolean.
+     *
+     * @return the boolean
+     */
     public boolean getStato(){return stato;}
 
+    /**
+     * Gets descrizione.
+     *
+     * @return the descrizione
+     */
     public String getDescrizione() {
         return descrizione;
     }
 
+    /**
+     * Gets url.
+     *
+     * @return the url
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Is stato boolean.
+     *
+     * @return the boolean
+     */
     public boolean isStato() {
         return stato;
     }
 
+    /**
+     * Sets stato.
+     *
+     * @param stato the stato
+     */
     public void setStato(boolean stato) {
         this.stato = stato;
     }
 
+    /**
+     * Gets immagine.
+     *
+     * @return the immagine
+     */
     public Image getImmagine() {
         return immagine;
     }
 
+    /**
+     * Set immagine.
+     *
+     * @param img the img
+     */
     public void setImmagine(Image img){
         this.immagine = img;
     }
 
+    /**
+     * Modifica stato.
+     */
     public void ModificaStato()
     {
         this.stato = !stato;
     }
 
+    /**
+     * Sets titolo.
+     *
+     * @param titolo the titolo
+     */
     public void setTitolo(String titolo) {
         this.titolo = titolo;
     }
 
+    /**
+     * Sets descrizione.
+     *
+     * @param descrizione the descrizione
+     */
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 
+    /**
+     * Sets url.
+     *
+     * @param url the url
+     */
     public void setUrl(String url) {
         this.url = url;
     }
 
+    /**
+     * Sets data scadenza.
+     *
+     * @param dataScadenza the data scadenza
+     * @throws Exception the exception
+     */
     public void setDataScadenza(String dataScadenza) throws Exception{
         try{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -97,14 +179,29 @@ public class ToDo {
     }
 
 
+    /**
+     * Gets colore sfondo.
+     *
+     * @return the colore sfondo
+     */
     public Color getColoreSfondo() {
         return coloreSfondo;
     }
 
+    /**
+     * Sets colore sfondo.
+     *
+     * @param coloreSfondo the colore sfondo
+     */
     public void setColoreSfondo(Color coloreSfondo) {
         this.coloreSfondo = coloreSfondo;
     }
 
+    /**
+     * Gets data scadenza.
+     *
+     * @return the data scadenza
+     */
     public LocalDate getDataScadenza() {
         return dataScadenza;
     }
@@ -127,7 +224,13 @@ public class ToDo {
                 "ColoreSfondo: " + coloreSfondo;
     }
 
-    //metodo che condivide un todo ad un altro utente
+    /**
+     * Condividi to do.
+     *
+     * @param destinatario  the destinatario
+     * @param titoloBacheca the titolo bacheca
+     */
+//metodo che condivide un todo ad un altro utente
     public void condividiToDo(Utente destinatario, String titoloBacheca)
     {
         try{
@@ -139,7 +242,13 @@ public class ToDo {
 
     }
 
-    //metodo che elimina la condivisione da un altro utente
+    /**
+     * Elimina condivisione.
+     *
+     * @param destinatario  the destinatario
+     * @param titoloBacheca the titolo bacheca
+     */
+//metodo che elimina la condivisione da un altro utente
     public void eliminaCondivisione(Utente destinatario, String titoloBacheca)
     {
         try{
@@ -154,7 +263,10 @@ public class ToDo {
 
     }
 
-    //metodo che crea e aggiunge attività all'arraylist di attività
+    /**
+     * Aggiungi attivita.
+     */
+//metodo che crea e aggiunge attività all'arraylist di attività
     public void aggiungiAttivita()
     {
         if (checklistAttivita==null)
@@ -167,5 +279,48 @@ public class ToDo {
         nome = in.nextLine();
         Attivita nuovaattivita = new Attivita(nome);
         checklistAttivita.add(nuovaattivita);
+    }
+
+    /**
+     * Aggiunti attivita gui.
+     *
+     * @param titolo the titolo
+     */
+    public void aggiuntiAttivitaGUI(String titolo)
+    {
+        if (checklistAttivita==null)
+            checklistAttivita = new ArrayList<>();
+
+        Attivita nuovaattivita = new Attivita(titolo);
+        checklistAttivita.add(nuovaattivita);
+    }
+
+    /**
+     * Gets checklist attivita.
+     *
+     * @return the checklist attivita
+     */
+    public ArrayList<Attivita> getChecklistAttivita() {
+        return checklistAttivita;
+    }
+
+    public boolean checkChecklist()
+    {
+        for (Attivita attivita : checklistAttivita)
+        {
+            if (!attivita.isStato())
+                return false;
+
+        }
+        return true;
+    }
+
+    public void setStatoAttivita(String nome)
+    {
+        for (Attivita attivita : checklistAttivita)
+        {
+            if (attivita.getNome().equals(nome))
+                attivita.modificaStato();
+        }
     }
 }

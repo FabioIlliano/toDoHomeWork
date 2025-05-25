@@ -3,18 +3,41 @@ package model;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The type Utente.
+ */
 public class Utente
 {
+    /**
+     * The Username.
+     */
     String username;
+    /**
+     * The Password.
+     */
     String password;
+    /**
+     * The Bacheche utente.
+     */
     ArrayList<Bacheca> bachecheUtente= new ArrayList<Bacheca>();
 
+    /**
+     * Instantiates a new Utente.
+     *
+     * @param username the username
+     * @param password the password
+     */
     public Utente(String username, String password)
     {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Login boolean.
+     *
+     * @return the boolean
+     */
     public boolean login()
     {
         String username;
@@ -30,11 +53,23 @@ public class Utente
         return username.equals(this.username) && password.equals(this.password);
     }
 
+    /**
+     * Login gui boolean.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the boolean
+     */
     public boolean loginGUI(String username, String password)
     {
         return username.equals(this.username) && password.equals(this.password);
     }
 
+    /**
+     * Conta bacheche boolean.
+     *
+     * @return the boolean
+     */
     public boolean contaBacheche(){
         if (bachecheUtente.size()>=3)
             return false;
@@ -42,6 +77,11 @@ public class Utente
             return true;
     }
 
+    /**
+     * Crea bacheca boolean.
+     *
+     * @return the boolean
+     */
     public boolean creaBacheca()
     {
         if (bachecheUtente.size() >= 3)
@@ -98,6 +138,13 @@ public class Utente
         return true;
     }
 
+    /**
+     * Crea bachecha gui.
+     *
+     * @param titolo      the titolo
+     * @param descrizione the descrizione
+     * @throws Exception the exception
+     */
     public void creaBachechaGUI (TitoloBacheca titolo, String descrizione) throws Exception{
         if (!contaBacheche())
             throw new Exception("BACHECHE GIA CREATE!!");
@@ -126,6 +173,11 @@ public class Utente
     }
     */
 
+    /**
+     * Elimina bacheca.
+     *
+     * @param titolo the titolo
+     */
     public void eliminaBacheca (String titolo){
         Bacheca bachecaDaEliminare = null;
         int i;
@@ -157,6 +209,12 @@ public class Utente
 
     }
 
+    /**
+     * Elimina bacheca gui boolean.
+     *
+     * @param titolo the titolo
+     * @return the boolean
+     */
     public boolean eliminaBachecaGUI(String titolo){
         Bacheca bachecaDaEliminare = null;
         int i;
@@ -171,6 +229,12 @@ public class Utente
     }
 
 
+    /**
+     * Get bacheca bacheca.
+     *
+     * @param titolo the titolo
+     * @return the bacheca
+     */
     public Bacheca getBacheca(String titolo){
         //titolo = titolo.toUpperCase();
         for(Bacheca b : bachecheUtente)
@@ -183,6 +247,14 @@ public class Utente
         return null;
     }
 
+    /**
+     * Sposta to do gui boolean.
+     *
+     * @param vecchia    the vecchia
+     * @param nuova      the nuova
+     * @param titoloToDo the titolo to do
+     * @return the boolean
+     */
     public boolean spostaToDoGUI(String vecchia, String nuova, String titoloToDo)
     {
         Bacheca v = getBacheca(vecchia);
@@ -197,7 +269,14 @@ public class Utente
             return false;
     }
 
-    //metodo che sposta un todo tra una bacheca e un altra
+    /**
+     * Sposta to do.
+     *
+     * @param bachecaNuova   the bacheca nuova
+     * @param bachecaVecchia the bacheca vecchia
+     * @param nomeToDo       the nome to do
+     */
+//metodo che sposta un todo tra una bacheca e un altra
     public void spostaToDo (Bacheca bachecaNuova, Bacheca bachecaVecchia, String nomeToDo){
         try{
             ToDo toDoNuovo = bachecaVecchia.getToDoTitolo(nomeToDo);
@@ -209,7 +288,10 @@ public class Utente
 
     }
 
-    //metodo per debug
+    /**
+     * Mostra bacheche.
+     */
+//metodo per debug
     public void mostraBacheche()
     {
         System.out.println("le tue bacheche sono: ");

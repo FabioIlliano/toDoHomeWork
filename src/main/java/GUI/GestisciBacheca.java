@@ -11,7 +11,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class BachecaGUI {
+/**
+ * Gestisci bacheca permette di creare e ordinare ToDo e modificare la descrizione
+ */
+public class GestisciBacheca {
     private JFrame frame;
 
     private JPanel mainpanel;
@@ -29,10 +32,14 @@ public class BachecaGUI {
     private JButton cercaToDoButton;
     private JTextField descrizionetext;
     private Controller controller;
-    String titolo;
 
-
-    public BachecaGUI(JFrame frame, Controller controller) {
+    /**
+     * instanzia una nuova schermata della gestione della bacheca.
+     *
+     * @param frame      il frame
+     * @param controller il controller
+     */
+    public GestisciBacheca(JFrame frame, Controller controller) {
         this.frame = new JFrame(controller.getTitoloBacheca());
         this.controller = controller;
         this.frame.setContentPane(mainpanel);
@@ -46,11 +53,14 @@ public class BachecaGUI {
         caricaToDo();
     }
 
+    /**
+     * Questo metodo contiene tutti i listener degli oggetti grafici presenti in GestisciBacheca
+     */
     public void initListeners (){
         creaToDoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                titolo = JOptionPane.showInputDialog(frame, "Inserisci il titolo del ToDo");
+                String titolo = JOptionPane.showInputDialog(frame, "Inserisci il titolo del ToDo");
 
                 //modificare immagine nel JOptionPane
                 try{
@@ -69,9 +79,9 @@ public class BachecaGUI {
                         btn.addActionListener(e -> {
                             controller.setTitoloToDoCorrente(btn.getText()); // salva il titolo
                             frame.dispose(); // chiude la finestra attuale
-                            CreaToDo creatodo = new CreaToDo(frame, controller);
+                            GestisciToDo gestisciToDo = new GestisciToDo(frame, controller);
                             frame.setVisible(false);
-                            creatodo.getFrame().setVisible(true);
+                            gestisciToDo.getFrame().setVisible(true);
 
                         });
 
@@ -119,15 +129,19 @@ public class BachecaGUI {
         scadOggiButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<ToDo> listaToDoScadOggi = controller.getToDoScadenzaOggi();
-                if (listaToDoScadOggi!=null && !listaToDoScadOggi.isEmpty()){
-                    StringBuilder msg = new StringBuilder("ToDo in scadenza oggi: \n");
-                    for (ToDo todo : listaToDoScadOggi)
-                        msg.append(todo.getTitolo()).append("\n");
-                    JOptionPane.showMessageDialog(frame, msg);
+                try{
+                    ArrayList<ToDo> listaToDoScadOggi = controller.getToDoScadenzaOggi();
+                    if (listaToDoScadOggi!=null && !listaToDoScadOggi.isEmpty()){
+                        StringBuilder msg = new StringBuilder("ToDo in scadenza oggi: \n");
+                        for (ToDo todo : listaToDoScadOggi)
+                            msg.append(todo.getTitolo()).append("\n");
+                        JOptionPane.showMessageDialog(frame, msg);
+                    }
+                    else
+                        JOptionPane.showMessageDialog(frame, "Nessun ToDo in scadenza oggi");
+                }catch (Exception e1){
+                    JOptionPane.showMessageDialog(frame, "Non sono presenti ToDo nel sistema!");
                 }
-                else
-                    JOptionPane.showMessageDialog(frame, "Nessun ToDo in scadenza oggi");
             }
         });
 
@@ -173,6 +187,9 @@ public class BachecaGUI {
 
     }
 
+    /**
+     * Carica i ToDo.
+     */
     public void caricaToDo(){
         ArrayList<ToDo> listaToDo = controller.getListaToDo();
         todopanel.removeAll();
@@ -190,9 +207,9 @@ public class BachecaGUI {
                 controller.setTitoloToDoCorrente(titolo); // salva il titolo
 
                 frame.dispose();
-                CreaToDo creaToDo = new CreaToDo(frame, controller);
+                GestisciToDo gestisciToDo = new GestisciToDo(frame, controller);
                 frame.setVisible(false);
-                creaToDo.getFrame().setVisible(true);
+                gestisciToDo.getFrame().setVisible(true);
             });
 
             todopanel.add(btn);
@@ -203,7 +220,11 @@ public class BachecaGUI {
     }
 
 
-
+    /**
+     * restituisce il frame.
+     *
+     * @return il frame
+     */
     public JFrame getFrame() {
         return frame;
     }
