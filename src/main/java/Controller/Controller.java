@@ -11,12 +11,9 @@ import java.util.ArrayList;
  * La classe controller fa comunicare la GUI con il model.
  */
 public class Controller {
-    private ToDo todo;
     private Utente utente;
-    private Attivita attivita;
     private String titoloBacheca;
     private String titoloToDoCorrente;
-    private String descrizioneBacheca;
 
 
     /**
