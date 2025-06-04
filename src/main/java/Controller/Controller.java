@@ -23,7 +23,8 @@ public class Controller {
 
     }
 
-    private void creaUtente(String username, String password){
+    //prima era privato
+    public void creaUtente(String username, String password){
         utente = new Utente(username, password);
     }
 

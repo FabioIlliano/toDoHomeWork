@@ -18,8 +18,10 @@ public class Login {
     private JLabel passwordJL;
     private JPasswordField txtpassword;
     private JButton loginButton;
+    private JButton registerButton;
     private Home home;
     private static Controller controller;
+
 
     /**
      * il punto d'inizio dell applicazione.
@@ -28,22 +30,25 @@ public class Login {
      */
     public static void main(String[] args) {
         controller = new Controller();
-        frame = new JFrame("GUIFORM");
-        frame.setContentPane(new Login().MainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        //frame.setAlwaysOnTop(true);
-        frame.setVisible(true);
-        //frame.setResizable(false);
+        new Login();
     }
 
     /**
      * inizializza una nuova schermata di login.
      */
-    public Login()
-    {
+    public Login() {
+        frame = new JFrame("login");
+        frame.setContentPane(MainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        initListeners(); // Avvia listener
+    }
+
+    public void initListeners (){
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,7 +74,14 @@ public class Login {
 
         });
 
-
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Register register = new Register(frame, controller);
+                frame.setVisible(false);
+                register.getFrame().setVisible(true);
+            }
+        });
     }
 
     /**
@@ -81,3 +93,5 @@ public class Login {
         return frame;
     }
 }
+
+
