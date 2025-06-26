@@ -1,6 +1,6 @@
-package GUI;
+package gui;
 
-import Controller.Controller;
+import controller.Controller;
 import model.ToDo;
 
 import javax.swing.*;

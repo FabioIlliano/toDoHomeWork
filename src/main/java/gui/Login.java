@@ -1,6 +1,6 @@
-package GUI;
+package gui;
 
-import Controller.Controller;
+import controller.Controller;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  */
 public class Login {
 
-    static private JFrame frame;
+    private JFrame frame;
     private JPanel MainPanel;
     private JLabel usernameJL;
     private JTextField txtusername;
@@ -19,31 +19,23 @@ public class Login {
     private JPasswordField txtpassword;
     private JButton loginButton;
     private JButton registerButton;
+    private JPanel btnpanel;
     private Home home;
-    private static Controller controller;
+    private Controller controller;
 
-
-    /**
-     * il punto d'inizio dell applicazione.
-     *
-     * @param args gli input arguments
-     */
-    public static void main(String[] args) {
-        controller = new Controller();
-        new Login();
-    }
 
     /**
      * inizializza una nuova schermata di login.
      */
-    public Login() {
-        frame = new JFrame("login");
-        frame.setContentPane(MainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    public Login(JFrame frame, Controller controller) {
+        this.frame = new JFrame("login");
+        this.controller = controller;
+        this.frame.setContentPane(MainPanel);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.pack();
+        this.frame.setSize(800, 600);
+        this.frame.setLocationRelativeTo(null);
+        this.frame.setVisible(true);
 
         initListeners(); // Avvia listener
     }
@@ -82,6 +74,7 @@ public class Login {
                 register.getFrame().setVisible(true);
             }
         });
+
     }
 
     /**
@@ -89,7 +82,7 @@ public class Login {
      *
      * @return il frame
      */
-    public static JFrame getFrame() {
+    public JFrame getFrame() {
         return frame;
     }
 }

@@ -1,6 +1,6 @@
-package GUI;
+package gui;
 
-import Controller.Controller;
+import controller.Controller;
 import model.TitoloBacheca;
 
 import javax.swing.*;
@@ -39,6 +39,7 @@ public class Home {
     private JTextArea descrizioneU;
     private JTextArea descrizioneL;
     private JTextArea descrizioneTL;
+    private JButton logoutbtn;
 
     private Controller controller;
 
@@ -85,6 +86,7 @@ public class Home {
         this.initButtonNuovaBacheca();
         this.initELiminaBacheca();
         this.initEditButtonsListeners();
+        this.initLogOutbutton();
     }
 
     /**
@@ -260,6 +262,18 @@ public class Home {
         buttonEditU.addActionListener(editListener);
         buttonEditL.addActionListener(editListener);
         buttonEditTL.addActionListener(editListener);
+    }
+
+    public void initLogOutbutton(){
+        logoutbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //BISOGNA EFFETTUARE IL LOGOUT, NON CAMBIARE SOLO PAGINA
+                StartPage start = new StartPage();
+                frame.setVisible(false);
+                start.getFrame().setVisible(true);
+            }
+        });
     }
 
 

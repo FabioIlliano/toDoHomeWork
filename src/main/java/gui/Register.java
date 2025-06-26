@@ -1,6 +1,6 @@
-package GUI;
+package gui;
 
-import Controller.Controller;
+import controller.Controller;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,6 +22,9 @@ public class Register {
 
     private JButton registratiButton;
     private JButton loginButton;
+    private JPanel btnPanel;
+    private JPanel accediPanel;
+    private JPanel registratiPanel;
 
     private Controller controller;
 
@@ -56,7 +59,7 @@ public class Register {
                 {
                     if(psw.equals(psw2))
                     {
-                        controller.creaUtente(username, psw);  //e' privato il metodo nel controller(?)
+                        controller.creaUtente(username, psw);
                         Home home = new Home(frame, controller);
                         frame.setVisible(false);
                         home.getFrame().setVisible(true);
@@ -76,9 +79,9 @@ public class Register {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Login login = new Login();
+                Login login = new Login(frame, controller);
                 frame.setVisible(false);
-                Login.getFrame().setVisible(true);
+                login.getFrame().setVisible(true);
             }
         });
     }

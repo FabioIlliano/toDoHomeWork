@@ -1,6 +1,6 @@
-package GUI;
+package gui;
 
-import Controller.Controller;
+import controller.Controller;
 import model.TitoloBacheca;
 import model.Attivita;
 
@@ -51,8 +51,10 @@ public class GestisciToDo {
     private JScrollPane checklistJSP;
     private JLabel checklistJL;
     private JPanel checklistJP;
-    private JButton attivitaButton;
+    private JButton nuovaattivitaButton;
     private JPanel attivitaPanel;
+    private JPanel attibtnPanel;
+    private JButton eliminaAttButton;
     private JComboBox spostaJCB;
     private JPanel panelSposta;
     private Color c;
@@ -210,7 +212,7 @@ public class GestisciToDo {
             }
         });
 
-        attivitaButton.addActionListener(new ActionListener() {
+        nuovaattivitaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività:");
