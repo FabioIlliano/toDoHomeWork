@@ -20,6 +20,11 @@ public class Login {
     private JButton loginButton;
     private JButton registerButton;
     private JPanel btnpanel;
+    private JPanel headerPanel;
+    private JTextField txt1;
+    private JTextField txt2;
+    private JPanel loginPanel;
+    private JPanel subHeader;
     private Home home;
     private Controller controller;
 

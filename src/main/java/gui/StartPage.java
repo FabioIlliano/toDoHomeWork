@@ -3,6 +3,7 @@ package gui;
 import controller.Controller;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +33,10 @@ public class StartPage {
      */
     public static void main(String[] args) {
         controller = new Controller();
+        //imposto i JOptionPane
+        UIManager.put("OptionPane.background", new ColorUIResource(224, 224, 224));
+        UIManager.put("Panel.background", new ColorUIResource(224, 224, 224));
+        UIManager.put("OptionPane.messageForeground", new ColorUIResource(33, 33, 33));
         new StartPage();
     }
 

@@ -25,6 +25,10 @@ public class Register {
     private JPanel btnPanel;
     private JPanel accediPanel;
     private JPanel registratiPanel;
+    private JPanel header;
+    private JTextField txt1;
+    private JPanel subHeader;
+    private JTextField txt2;
 
     private Controller controller;
 
