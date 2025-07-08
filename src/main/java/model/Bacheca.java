@@ -75,8 +75,6 @@ public class Bacheca {
      */
     public void creaToDoGUI(String titoloToDo)
     {
-        /*ho creato un nuovo costruttore del ToDo perche alcune cose
-        non sono obbligatorie*/
         ToDo nuovoToDo = new ToDo(titoloToDo);
         listaToDo.add(nuovoToDo);
     }
@@ -98,14 +96,13 @@ public class Bacheca {
     /**
      * Elimina to do gui.
      *
-     * @param titoloToDo the titolo to do
      */
 //funzione per la GUI
-    public void eliminaToDoGUI(String titoloToDo) {
+    public void eliminaToDoGUI(int idToDo) {
         ToDo todoDaEliminare = null;
 
         for (ToDo t : listaToDo) {
-            if (titoloToDo.equals(t.getTitolo())) {
+            if (t.getIdToDo() == (idToDo)) {
                 todoDaEliminare = t;
                 break; // Interrompi appena trovato
             }
@@ -136,6 +133,13 @@ public class Bacheca {
     public ToDo getToDoTitolo(String titolo){
         for(ToDo todo : listaToDo)
             if(todo.getTitolo().equalsIgnoreCase(titolo))
+                return todo;
+        return null;
+    }
+
+    public ToDo getToDoId(int idToDo){
+        for(ToDo todo : listaToDo)
+            if(todo.getIdToDo() == idToDo)
                 return todo;
         return null;
     }

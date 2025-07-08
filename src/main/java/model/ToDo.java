@@ -4,12 +4,13 @@ import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
-import java.util.Scanner;
+
 
 /**
  * The type To do.
  */
 public class ToDo {
+    private int idToDo;
     private String titolo;
     private String descrizione;
     private String url;
@@ -17,44 +18,58 @@ public class ToDo {
     private ArrayList<Attivita> checklistAttivita;
     private ArrayList<Utente> listaUtentiCondivisione;
     private LocalDate dataScadenza; //YYYY-MM-DD
-    //Non so bene che tipo mettere
-    private Image immagine; //da capire il tipo
+    private Image immagine;
     private Color coloreSfondo;
-
-    /**
-     * Instantiates a new To do.
-     *
-     * @param titolo       the titolo
-     * @param descrizione  the descrizione
-     * @param url          the url
-     * @param dataScadenza the data scadenza
-     * @param immagine     the immagine
-     * @param coloreSfondo the colore sfondo
-     */
-//costruttore inutile
-    public ToDo(String titolo, String descrizione, String url, String dataScadenza, int immagine, Color coloreSfondo)
-    {
-        this.titolo = titolo;
-        this.descrizione = descrizione;
-        this.url = url;
-        stato = false;
-        this.dataScadenza = LocalDate.parse(dataScadenza);;
-        //this.immagine = immagine;
-        this.coloreSfondo = coloreSfondo;
-        this.checklistAttivita = new ArrayList<>();
-    }
-    //ricordiamoci che molte cose sono opzionali
-
+    private String imgPath;
 
     /**
      * Instantiates a new To do.
      *
      * @param titolo the titolo
      */
-//nuovo costruttore
+
     public ToDo(String titolo)
     {
         this.titolo = titolo;
+    }
+
+    public ToDo (String titolo, int idToDo){
+        this.idToDo = idToDo;
+        this.titolo = titolo;
+    }
+
+    public ToDo(){}
+
+    public int getIdToDo() {
+        return idToDo;
+    }
+
+    public void setIdToDo(int idToDo) {
+        this.idToDo = idToDo;
+    }
+
+    public void setChecklistAttivita(ArrayList<Attivita> checklistAttivita) {
+        this.checklistAttivita = checklistAttivita;
+    }
+
+    public ArrayList<Utente> getListaUtentiCondivisione() {
+        return listaUtentiCondivisione;
+    }
+
+    public void setListaUtentiCondivisione(ArrayList<Utente> listaUtentiCondivisione) {
+        this.listaUtentiCondivisione = listaUtentiCondivisione;
+    }
+
+    public void setDataScadenza(LocalDate dataScadenza) {
+        this.dataScadenza = dataScadenza;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 
     /**
@@ -92,15 +107,6 @@ public class ToDo {
     }
 
     /**
-     * Is stato boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isStato() {
-        return stato;
-    }
-
-    /**
      * Sets stato.
      *
      * @param stato the stato
@@ -130,7 +136,7 @@ public class ToDo {
     /**
      * Modifica stato.
      */
-    public void ModificaStato()
+    public void modificaStato()
     {
         this.stato = !stato;
     }
@@ -169,6 +175,10 @@ public class ToDo {
      * @throws Exception the exception
      */
     public void setDataScadenza(String dataScadenza) throws Exception{
+        if (dataScadenza==null || dataScadenza.trim().isEmpty()){
+            this.dataScadenza = null;
+            return;
+        }
         try{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             this.dataScadenza = LocalDate.parse(dataScadenza, formatter);
@@ -230,14 +240,15 @@ public class ToDo {
      * @param destinatario  the destinatario
      * @param titoloBacheca the titolo bacheca
      */
-//metodo che condivide un todo ad un altro utente
-    public void condividiToDo(Utente destinatario, String titoloBacheca)
+    public int condividiToDo(Utente destinatario, String titoloBacheca)
     {
         try{
             destinatario.getBacheca(titoloBacheca).aggiungiToDo(this);
             listaUtentiCondivisione.add(destinatario);
+            return 0;
         }catch (Exception e){
-            System.out.println("Condivisione non andata a buon fine");
+            e.printStackTrace();
+            return -1;
         }
 
     }
@@ -248,7 +259,6 @@ public class ToDo {
      * @param destinatario  the destinatario
      * @param titoloBacheca the titolo bacheca
      */
-//metodo che elimina la condivisione da un altro utente
     public void eliminaCondivisione(Utente destinatario, String titoloBacheca)
     {
         try{
@@ -263,31 +273,13 @@ public class ToDo {
 
     }
 
-    /**
-     * Aggiungi attivita.
-     */
-//metodo che crea e aggiunge attività all'arraylist di attività
-    public void aggiungiAttivita()
-    {
-        if (checklistAttivita==null)
-            checklistAttivita = new ArrayList<>();
-
-        Scanner in = new Scanner(System.in);
-        String nome;
-
-        System.out.print("Inserisci il nome della nuova attività: ");
-        nome = in.nextLine();
-        Attivita nuovaattivita = new Attivita(nome);
-        checklistAttivita.add(nuovaattivita);
-    }
 
     /**
      * Aggiunti attivita gui.
      *
      * @param titolo the titolo
      */
-    public void aggiuntiAttivitaGUI(String titolo)
-    {
+    public void aggiuntiAttivita(String titolo) {
         if (checklistAttivita==null)
             checklistAttivita = new ArrayList<>();
 
@@ -319,8 +311,17 @@ public class ToDo {
     {
         for (Attivita attivita : checklistAttivita)
         {
-            if (attivita.getNome().equals(nome))
+            if (attivita.getNome().equals(nome)) {
                 attivita.modificaStato();
+                return;
+            }
         }
+    }
+
+    public Attivita cercaAttivita(String nome){
+        for (Attivita a : checklistAttivita)
+            if (a.getNome().equals(nome))
+                return a;
+        return null;
     }
 }

@@ -1,8 +1,11 @@
 package controller;
 
+import dao.*;
+import implementazioniPostgresDAO.*;
 import model.*;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,9 +14,10 @@ import java.util.ArrayList;
  * La classe controller fa comunicare la GUI con il model.
  */
 public class Controller {
-    private Utente utente;
-    private String titoloBacheca;
+    private Utente utenteCorrente;
+    private String titoloBachecaCorrente;
     private String titoloToDoCorrente;
+    private int idToDoCorrente;
 
 
     /**
@@ -23,10 +27,35 @@ public class Controller {
 
     }
 
-    //prima era privato
-    public void creaUtente(String username, String password){
-        utente = new Utente(username, password);
+    public void logout(){
+        utenteCorrente = null;
+        titoloBachecaCorrente = null;
+        idToDoCorrente = -1;
     }
+
+
+    public int creaUtente(String username, String password){
+        try{
+            UtenteDAO u = new UtenteImplementazionePostgresDAO();
+            return u.inserisciutenteDB(username, password);
+        }catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public ArrayList<ToDo> getListaToDoLocale() {
+        return utenteCorrente.getBacheca(titoloBachecaCorrente).getListaToDo();
+    }
+
+    public int getIdToDoCorrente() {
+        return idToDoCorrente;
+    }
+
+    public void setIdToDoCorrente(int idToDoCorrente) {
+        this.idToDoCorrente = idToDoCorrente;
+    }
+
 
     /**
      * Login boolean.
@@ -36,10 +65,19 @@ public class Controller {
      * @return the boolean
      */
     public boolean login(String username, String password){
-        if (utente == null){
-            creaUtente("admin", "1234");
+        try{
+            UtenteDAO u = new UtenteImplementazionePostgresDAO();
+            int r = u.loginUtenteDB(username, password);
+            if (r==0){
+                utenteCorrente = new Utente(username, password);
+
+                return true;
+            }
+            else
+                return false;
+        }catch (Exception e){
+            return false;
         }
-        return utente.loginGUI(username, password);
     }
 
     /**
@@ -48,7 +86,7 @@ public class Controller {
      * @return the boolean
      */
     public boolean checkBacheche(){
-        return utente.contaBacheche();
+        return utenteCorrente.puoAggiungereBacheca();
     }
 
     /**
@@ -59,10 +97,30 @@ public class Controller {
      * @throws Exception l eccezione
      */
     public void creaBacheca (TitoloBacheca t, String d) throws Exception{
-        if (!checkBacheche())
+        if (!utenteCorrente.puoAggiungereBacheca())
+            throw new Exception("BACHECHE GIA CREATE!!");
 
-            return; //andrebbe gestito
-        utente.creaBachechaGUI(t, d);
+        if (utenteCorrente.getBacheca(t.toString())!=null)
+            throw new Exception("NOME BACHECHA GIA UTILIZZATO!!");
+
+        BachecaDAO b = new BachecaImplementazionePostgresDAO();
+        int r = b.creaBacheca(t, d, utenteCorrente.getUsername());
+        if (r!=0)
+            throw new Exception("Errore nella creazione");
+
+        utenteCorrente.creaBachecaGUI(t, d);
+
+    }
+
+    public void caricaBacheche () throws Exception{
+        UtenteDAO u = new UtenteImplementazionePostgresDAO();
+        ArrayList<Bacheca> a = u.getBachecheUtenteDB(utenteCorrente.getUsername());
+        if (a.isEmpty())
+            return;
+        utenteCorrente.pulisciBacheche();
+        for (Bacheca b : a)
+            utenteCorrente.caricaBacheca(b.getTitolo(), b.getDescrizione());
+
     }
 
     /**
@@ -70,20 +128,43 @@ public class Controller {
      *
      * @param titoloToDo il titolo del todo
      */
-    public void creaToDo(String titoloToDo)
+    public int creaToDo(String titoloToDo)
     {
-        utente.getBacheca(titoloBacheca).creaToDoGUI(titoloToDo);
+        try{
+            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+            int r = toDoDAO.creaToDo(titoloToDo, titoloBachecaCorrente, utenteCorrente.getUsername());
+            if (r!=-1)
+                utenteCorrente.getBacheca(titoloBachecaCorrente).creaToDoGUI(titoloToDo);
+            return r;
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public void aggiornaToDo() throws SQLException {
+        ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+        toDoDAO.aggiornaToDo(getToDo());
+    }
+
+    public ToDo getToDo (){
+        return utenteCorrente.getBacheca(titoloBachecaCorrente).getToDoId(idToDoCorrente);
     }
 
 
     /**
      * Elimina il todo.
      *
-     * @param t il titolo del todo
      */
-    public void eliminaToDo(String t)
+    public void eliminaToDo()
     {
-        utente.getBacheca(getTitoloBacheca()).eliminaToDoGUI(t);
+        try{
+            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+            toDoDAO.eliminaToDo(idToDoCorrente);
+            utenteCorrente.getBacheca(titoloBachecaCorrente).eliminaToDoGUI(idToDoCorrente);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -93,7 +174,7 @@ public class Controller {
      */
     public void cambiaTitoloToDo(String t)
     {
-        utente.getBacheca(getTitoloBacheca()).getToDoTitolo(getTitoloToDoCorrente()).setTitolo(t);
+        getToDo().setTitolo(t);
     }
 
     /**
@@ -102,7 +183,7 @@ public class Controller {
      * @param s la nuova descrizione
      */
     public void cambiaDescToDo(String s){
-        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setDescrizione(s);
+        getToDo().setDescrizione(s);
     }
 
     /**
@@ -111,7 +192,7 @@ public class Controller {
      * @param s la nuova descrizione
      */
     public void cambiaURLToDo(String s){
-        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setUrl(s);
+        getToDo().setUrl(s);
     }
 
     /**
@@ -122,10 +203,10 @@ public class Controller {
      */
     public boolean cambiaDataScadToDo(String s){
         try{
-
-            utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setDataScadenza(s);
+            getToDo().setDataScadenza(s);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -149,7 +230,7 @@ public class Controller {
      * @param c il colore del todo
      */
     public void cambiaBgColorToDo(Color c){
-        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setColoreSfondo(c);
+        getToDo().setColoreSfondo(c);
     }
 
     /**
@@ -158,7 +239,7 @@ public class Controller {
      * @return the color
      */
     public Color getColorBG(){
-        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getColoreSfondo();
+        return this.getToDo().getColoreSfondo();
     }
 
     /**
@@ -167,33 +248,34 @@ public class Controller {
      * @param nuova la nuova bacheca
      * @return un booleano
      */
-    public boolean spostaToDo(TitoloBacheca nuova)
-    {
-        return utente.spostaToDoGUI(titoloBacheca, nuova.toString(), titoloToDoCorrente);
+    public boolean spostaToDo(TitoloBacheca nuova) {
+        try{
+            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+            int r = toDoDAO.spostaToDo(idToDoCorrente, nuova.toString(), utenteCorrente.getUsername());
+            if (r==0)
+                utenteCorrente.spostaToDoGUI(titoloBachecaCorrente, nuova.toString(), getToDo());
+            return r==0;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
      * Ordina todo alfabeticamente.
      */
     public void ordinaToDoAlfabeticamente() {
-        //if (utente != null && titoloBacheca != null) {
-            Bacheca b = utente.getBacheca(titoloBacheca);
-            //if (b != null) {
-                b.ordinaToDoTitolo();
-            //} i controlli a che servono?
-        //}
+        Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
+        b.ordinaToDoTitolo();
     }
 
     /**
      * Ordina todo per scadenza.
      */
     public void ordinaToDoPerScadenza() {
-        //if (utente != null && titoloBacheca != null) {
-            Bacheca b = utente.getBacheca(titoloBacheca);
-            //if (b != null) {
-                b.ordinaToDoDataScad();
-            //} i controlli a che servono?
-        //}
+        Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
+        b.ordinaToDoDataScad();
     }
 
     /**
@@ -202,8 +284,8 @@ public class Controller {
      * @return l' arraylist
      */
     public ArrayList<ToDo> getToDoScadenzaOggi(){
-        if (utente.getBacheca(titoloBacheca).getListaToDo()!=null){
-            Bacheca b = utente.getBacheca(titoloBacheca);
+        if (utenteCorrente.getBacheca(titoloBachecaCorrente).getListaToDo()!=null){
+            Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
             return b.getToDoScadenzaOggi();
         }
         return null;
@@ -216,7 +298,7 @@ public class Controller {
      * @return l arraylist
      */
     public ArrayList<ToDo> getToDoScadenzaFissa(LocalDate data){
-        Bacheca b = utente.getBacheca(titoloBacheca);
+        Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
         return b.getToDoScadenzaFissata(data);
     }
 
@@ -226,7 +308,37 @@ public class Controller {
      * @return l arraylist
      */
     public ArrayList<ToDo> getListaToDo(){
-        return utente.getBacheca(titoloBacheca).getListaToDo();
+        try {
+            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+            ArrayList<ToDo> list = toDoDAO.caricaDatiToDo(titoloBachecaCorrente, utenteCorrente.getUsername());
+            list.addAll(toDoDAO.caricaDatiToDoCondivisi(titoloBachecaCorrente, utenteCorrente.getUsername()));
+            return list;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
+    }
+
+    public ArrayList<ToDo> getToDoScaduti(){
+        try {
+            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+            return toDoDAO.caricaDatiToDo(titoloBachecaCorrente, utenteCorrente.getUsername());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
+    }
+
+    public void setListToDo(ToDo t){
+        utenteCorrente.getBacheca(titoloBachecaCorrente).aggiungiToDo(t);
+    }
+
+    public void pulisciListaToDo(){
+        utenteCorrente.getBacheca(titoloBachecaCorrente).getListaToDo().clear();
     }
 
     /**
@@ -253,7 +365,7 @@ public class Controller {
      * @return l'utente
      */
     public Utente getUtente() {
-        return utente;
+        return utenteCorrente;
     }
 
     /**
@@ -262,7 +374,7 @@ public class Controller {
      * @return il titolo bacheca
      */
     public String getTitoloBacheca() {
-        return titoloBacheca;
+        return titoloBachecaCorrente;
     }
 
     /**
@@ -271,7 +383,7 @@ public class Controller {
      * @param b lo stato
      */
     public void setCompletoToDo(boolean b){
-        this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setStato(b);
+        getToDo().setStato(b);
     }
 
     /**
@@ -280,7 +392,7 @@ public class Controller {
      * @return lo stato del todo booleano
      */
     public boolean getCompletoToDo(){
-        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).isStato();
+        return getToDo().getStato();
     }
 
     /**
@@ -290,11 +402,11 @@ public class Controller {
      */
     public String getDataScadToDo(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate datascad = this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getDataScadenza();
+        LocalDate datascad = getToDo().getDataScadenza();
         if (datascad!=null)
             return datascad.format(formatter);
         else
-            return null;
+            return "";
     }
 
     /**
@@ -303,7 +415,11 @@ public class Controller {
      * @return una string ovvero la descrizione del ToDo
      */
     public String getDescrizioneToDo(){
-        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getDescrizione();
+        String s = getToDo().getDescrizione();
+        if (s!=null)
+            return s;
+        else
+            return "";
     }
 
     /**
@@ -312,7 +428,11 @@ public class Controller {
      * @return una string ovvero l'URL del ToDo
      */
     public String getUrlToDo(){
-        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getUrl();
+        String s = getToDo().getUrl();
+        if (s!=null)
+            return s;
+        else
+            return "";
     }
 
     /**
@@ -321,7 +441,7 @@ public class Controller {
      * @return un color ovvero il colore del ToDo
      */
     public Color getBGColorToDo(){
-        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getColoreSfondo();
+        return getToDo().getColoreSfondo();
     }
 
     /**
@@ -330,7 +450,7 @@ public class Controller {
      * @param titoloBacheca il titolo della bacheca
      */
     public void setTitoloBacheca(String titoloBacheca) {
-        this.titoloBacheca = titoloBacheca;
+        this.titoloBachecaCorrente = titoloBacheca;
     }
 
     /**
@@ -338,8 +458,9 @@ public class Controller {
      *
      * @param img l'immagine
      */
-    public void setIMGToDo(Image img){
-        this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setImmagine(img);
+    public void setIMGToDo(Image img, String path){
+        getToDo().setImmagine(img);
+        getToDo().setImgPath(path);
     }
 
     /**
@@ -348,7 +469,11 @@ public class Controller {
      * @return l'immagine del ToDo
      */
     public Image getIMGToDo(){
-        return this.utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getImmagine();
+        return getToDo().getImmagine();
+    }
+
+    public String getImgPath(){
+        return getToDo().getImgPath();
     }
 
     /**
@@ -358,10 +483,37 @@ public class Controller {
      * @return un booleano
      */
     public boolean checkBacheca (String nomeBacheca){
-        if (utente.getBacheca(nomeBacheca) == null)
+        if (utenteCorrente.getBacheca(nomeBacheca) == null)
             return false;
         else
             return true;
+    }
+
+    public boolean eliminaBacheca (TitoloBacheca titolo){
+        boolean b = utenteCorrente.eliminaBachecaGUI(titolo.toString());
+
+        try {
+            BachecaDAO bachecaDAO = new BachecaImplementazionePostgresDAO();
+            int r = bachecaDAO.eliminaBacheca(titolo, utenteCorrente.getUsername());
+            boolean b1 = r==0;
+            return (b && b1);
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
+    public boolean cambiaDescrizioneBacheca (TitoloBacheca titolo, String descrizione){
+        utenteCorrente.getBacheca(titolo.toString()).setDescrizione(descrizione);
+
+        try {
+            BachecaDAO bachecaDAO = new BachecaImplementazionePostgresDAO();
+            int r = bachecaDAO.aggiornaDescrizioneBacheca(titolo, descrizione, utenteCorrente.getUsername());
+            return r==0;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
 
     /**
@@ -371,7 +523,7 @@ public class Controller {
      * @return una string
      */
     public String getDescrizioneBacheca(String t){
-        return utente.getBacheca(t).getDescrizione();
+        return utenteCorrente.getBacheca(t).getDescrizione();
     }
 
     /**
@@ -381,7 +533,7 @@ public class Controller {
      * @return l'arrayList formato da tutti i ToDo che hanno quel nome;
      */
     public ArrayList<ToDo> cercaToDo(String titoloToDo){
-        return utente.getBacheca(titoloBacheca).cercaToDo(titoloToDo);
+        return utenteCorrente.getBacheca(titoloBachecaCorrente).cercaToDo(titoloToDo);
     }
 
     /**
@@ -390,7 +542,7 @@ public class Controller {
      * @return un booleaeno
      */
     public boolean noBacheca(){
-        if (utente.getBacheca(TitoloBacheca.LAVORO.toString())==null && utente.getBacheca(TitoloBacheca.TEMPO_LIBERO.toString())==null && utente.getBacheca(TitoloBacheca.UNIVERSITA.toString())==null )
+        if (utenteCorrente.getBacheca(TitoloBacheca.LAVORO.toString())==null && utenteCorrente.getBacheca(TitoloBacheca.TEMPO_LIBERO.toString())==null && utenteCorrente.getBacheca(TitoloBacheca.UNIVERSITA.toString())==null )
             return true;
         else
             return false;
@@ -401,9 +553,34 @@ public class Controller {
      *
      * @param titoloAttivita il titolo dell'attivita
      */
-    public void creaAttivita(String titoloAttivita)
+    public int creaAttivita(String titoloAttivita)
     {
-        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).aggiuntiAttivitaGUI(titoloAttivita);
+        try{
+            AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
+            int r = attivitaDAO.creaAttivita(idToDoCorrente, titoloAttivita);
+            if (r==0){
+                getToDo().aggiuntiAttivita(titoloAttivita);
+                return 0;
+            }
+            else
+                return -1;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+
+    }
+
+    public int eliminaAttivita(String nome){
+        try{
+            AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
+            return attivitaDAO.eliminaAttivita(nome, idToDoCorrente);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     /**
@@ -412,14 +589,25 @@ public class Controller {
      * @return l'arraylist
      */
     public ArrayList<Attivita> getListaAttivita(){
-        return utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).getChecklistAttivita();
+        try{
+            AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
+            return attivitaDAO.getAttivita(idToDoCorrente);
+        }
+        catch (Exception e){
+            return new ArrayList<>();
+        }
     }
 
-    /**
-     * Modifica lo stato di un attivita.
-     */
-    public void setStato(String nome){
-        utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).setStatoAttivita(nome);
+    public ArrayList<Attivita> getListaAttivitaLocale(){
+        return getToDo().getChecklistAttivita();
+    }
+
+    public void setListaAttivitaLocale(ArrayList<Attivita> lista){
+        getToDo().setChecklistAttivita(lista);
+    }
+
+    public void setStatoLocale(String nome){
+        getToDo().setStatoAttivita(nome);
     }
 
     /**
@@ -428,7 +616,62 @@ public class Controller {
      * @return un boolean
      */
     public boolean checkChecklist(){
-        return utente.getBacheca(titoloBacheca).getToDoTitolo(titoloToDoCorrente).checkChecklist();
+        return getToDo().checkChecklist();
     }
 
+    public void aggiornaChecklist(ArrayList<Attivita> checklist) throws SQLException{
+        AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
+        for (Attivita a : checklist)
+            attivitaDAO.setStato(a.isStato(), a.getNome(), idToDoCorrente);
+
+    }
+
+    public Attivita getAttivita(String nome){
+        return getToDo().cercaAttivita(nome);
+    }
+
+    public int condividiToDo(String utenteDest){
+        try{
+            CondividiToDoDAO condividiToDoDAO = new CondividiToDoImplementazionePostgresDAO();
+            return condividiToDoDAO.aggiungiCondivisione(utenteCorrente.getUsername(), utenteDest, idToDoCorrente);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int rimuoviCondivisione(String utenteDest){
+        try{
+            CondividiToDoDAO condividiToDoDAO = new CondividiToDoImplementazionePostgresDAO();
+            return condividiToDoDAO.rimuoviCondivisione(utenteCorrente.getUsername(), utenteDest, idToDoCorrente);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public ArrayList<String> getListaCondivisioni (){
+        try{
+            CondividiToDoDAO condividiToDoDAO = new CondividiToDoImplementazionePostgresDAO();
+            return condividiToDoDAO.getListaCondivisioni(idToDoCorrente);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean checkUtente(String utenteDest) {
+        try{
+            UtenteDAO utenteDAO = new UtenteImplementazionePostgresDAO();
+            int r = utenteDAO.getUtente(utenteDest);
+            return r == 0;
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

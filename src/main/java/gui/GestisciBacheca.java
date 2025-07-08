@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * Gestisci bacheca permette di creare e ordinare ToDo e modificare la descrizione
+ * Gestisci bacheca permette di creare e ordinare ToDo
  */
 public class GestisciBacheca {
     private JFrame frame;
@@ -22,7 +22,7 @@ public class GestisciBacheca {
     private JButton creaToDoButton;
     private JScrollPane todoScrollPanel;
     private JPanel buttonpanel;
-    private JPanel todopanel; //è sbagliato, andava fatto nel panel scrollabile non in un altro panel
+    private JPanel todopanel;
     private JButton tornaIndietroButton;
     private JButton ordinaButton;
     private JPanel ordinaPanel;
@@ -36,10 +36,9 @@ public class GestisciBacheca {
     /**
      * instanzia una nuova schermata della gestione della bacheca.
      *
-     * @param frame      il frame
      * @param controller il controller
      */
-    public GestisciBacheca(JFrame frame, Controller controller) {
+    public GestisciBacheca(Controller controller) {
         this.frame = new JFrame(controller.getTitoloBacheca());
         this.controller = controller;
         this.frame.setContentPane(mainpanel);
@@ -47,16 +46,18 @@ public class GestisciBacheca {
         this.frame.pack();
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
-        this.initListeners();
         this.frame.setVisible(true);
+        this.frame.setResizable(false);
+        this.initListeners();
         todopanel.setLayout(new BoxLayout(todopanel, BoxLayout.Y_AXIS));
-        caricaToDo();
+        caricaToDo(true);
     }
 
     /**
      * Questo metodo contiene tutti i listener degli oggetti grafici presenti in GestisciBacheca
      */
     public void initListeners (){
+
         creaToDoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -72,27 +73,15 @@ public class GestisciBacheca {
                     }
                     else
                     {
-                        controller.creaToDo(titolo);
-                        JButton btn = new JButton(titolo);
-                        btn.setAlignmentX(Component.LEFT_ALIGNMENT); // per l'allineamento corretto
-
-                        btn.addActionListener(e -> {
-                            controller.setTitoloToDoCorrente(btn.getText()); // salva il titolo
-                            frame.dispose(); // chiude la finestra attuale
-                            GestisciToDo gestisciToDo = new GestisciToDo(frame, controller);
-                            frame.setVisible(false);
-                            gestisciToDo.getFrame().setVisible(true);
-
-                        });
-
-                        todopanel.add(btn);           // aggiunta al pannello scrollabile
-                        todopanel.revalidate();       // aggiorna il layout
-                        todopanel.repaint();
+                        int id = controller.creaToDo(titolo);
+                        if (id!=-1){
+                            caricaToDo(false);
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "Errore nella creazione del ToDo.");
                     }
-                } catch (NullPointerException e) {
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!");
-                } catch (Exception e){
-
                 }
             }
         });
@@ -101,7 +90,7 @@ public class GestisciBacheca {
         tornaIndietroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Home home = new Home(frame, controller);
+                Home home = new Home(controller);
                 frame.setVisible(false);
                 home.getFrame().setVisible(true);
                 frame.dispose();
@@ -111,8 +100,6 @@ public class GestisciBacheca {
         ordinaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*controller.ordinaToDoAlfabeticamente();
-                caricaToDoEsistenti();*/ // ricarica la lista aggiornata
 
                 if (ordinaButton.getText().equals("ORDINA PER: TITOLO")) {
                     controller.ordinaToDoAlfabeticamente();
@@ -121,7 +108,7 @@ public class GestisciBacheca {
                     controller.ordinaToDoPerScadenza();
                     ordinaButton.setText("ORDINA PER: TITOLO");
                 }
-                caricaToDo();
+                aggiornaUI(new ArrayList<>());
             }
 
         });
@@ -132,15 +119,19 @@ public class GestisciBacheca {
                 try{
                     ArrayList<ToDo> listaToDoScadOggi = controller.getToDoScadenzaOggi();
                     if (listaToDoScadOggi!=null && !listaToDoScadOggi.isEmpty()){
-                        StringBuilder msg = new StringBuilder("ToDo in scadenza oggi: \n");
-                        for (ToDo todo : listaToDoScadOggi)
-                            msg.append(todo.getTitolo()).append("\n");
-                        JOptionPane.showMessageDialog(frame, msg);
+                        ArrayList<Integer> idEvidenziati = new ArrayList<>();
+                        for(ToDo t : listaToDoScadOggi)
+                            idEvidenziati.add(t.getIdToDo());
+                        aggiornaUI(idEvidenziati);
+                        JOptionPane.showMessageDialog(frame, "I TODO IN SCADENZA OGGI SONO STATI EVIDENZIATI");
                     }
-                    else
+                    else{
                         JOptionPane.showMessageDialog(frame, "Nessun ToDo in scadenza oggi");
+                        aggiornaUI(new ArrayList<>());
+                    }
                 }catch (Exception e1){
                     JOptionPane.showMessageDialog(frame, "Non sono presenti ToDo nel sistema!");
+                    aggiornaUI(new ArrayList<>());
                 }
             }
         });
@@ -156,15 +147,19 @@ public class GestisciBacheca {
                         String sData = data.format(formatter);
                         ArrayList<ToDo> listaToDoScadFissa = controller.getToDoScadenzaFissa(data);
                         if (listaToDoScadFissa!=null && !listaToDoScadFissa.isEmpty()){
-                            StringBuilder msg = new StringBuilder("ToDo in scadenza entro il "+sData+": \n");
-                            for (ToDo todo : listaToDoScadFissa)
-                                msg.append(todo.getTitolo()).append("\n");
-                            JOptionPane.showMessageDialog(frame, msg);
+                            ArrayList<Integer> idEvidenziati = new ArrayList<>();
+                            for(ToDo t : listaToDoScadFissa)
+                                idEvidenziati.add(t.getIdToDo());
+                            aggiornaUI(idEvidenziati);
+                            JOptionPane.showMessageDialog(frame, "I TODO IN SCADENZA entro "+sData +" SONO STATI EVIDENZIATI");
                         }
-                        else
+                        else{
                             JOptionPane.showMessageDialog(frame, "Nessun ToDo in scadenza entro "+sData);
+                            aggiornaUI(new ArrayList<>());
+                        }
                     }catch (Exception exception){
                         JOptionPane.showMessageDialog(frame, "FORMATO DATA NON VALIDO, FORMATO CORRETTO: dd-MM-yyyy");
+                        aggiornaUI(new ArrayList<>());
                     }
                 }
 
@@ -177,8 +172,22 @@ public class GestisciBacheca {
             public void actionPerformed(ActionEvent e) {
                 String s = JOptionPane.showInputDialog(frame, "INSERISCI IL TITOLO DEL TODO DA CERCARE");
                 if (s!=null){
-                    if (controller.cercaToDo(s)!=null && !controller.cercaToDo(s).isEmpty())
-                        JOptionPane.showMessageDialog(frame, "IL TODO È PRESENTE NEL SISTEMA");
+                    ArrayList<ToDo> lista = controller.cercaToDo(s);
+                    if (lista != null && !lista.isEmpty()){
+                        ArrayList<Integer> idEvidenziati = new ArrayList<>();
+                        for(ToDo t : lista)
+                            idEvidenziati.add(t.getIdToDo());
+
+                        aggiornaUI(idEvidenziati);
+
+                        if(lista.size()==1){
+                            JOptionPane.showMessageDialog(frame, "IL TODO è STATO EVIDENZIATO!");
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(frame, "I TODO SONO STATI EVIDENZIATI!");
+                        }
+
+                    }
                     else
                         JOptionPane.showMessageDialog(frame, "IL TODO NON È PRESENTE NEL SISTEMA");
                 }
@@ -187,36 +196,88 @@ public class GestisciBacheca {
 
     }
 
+    public ArrayList<ToDo> aggiornaUI(ArrayList<Integer> idEvidenziati){
+        ArrayList<ToDo> listaToDo = controller.getListaToDoLocale();
+        return initBottoni(listaToDo, idEvidenziati);
+
+    }
+
     /**
      * Carica i ToDo.
      */
-    public void caricaToDo(){
+    public void caricaToDo(boolean b){
+        controller.pulisciListaToDo();
         ArrayList<ToDo> listaToDo = controller.getListaToDo();
+        for (ToDo t : listaToDo)
+            controller.setListToDo(t);
+
+        ArrayList<ToDo> lista = aggiornaUI(new ArrayList<>());
+        if (b){
+            if (lista != null && !lista.isEmpty()){
+                String s = "|--";
+                for (ToDo t : lista)
+                    s = s + t.getTitolo() + "-";
+                s = s+ "-|";
+                JOptionPane.showMessageDialog(frame, "BENTORNATO, I SEGUENTI TODO, MOSTRATI IN ROSSO ED EVIDENZIATI, SONO SCADUTI: \n"+s, "TODO SCADUTI\n", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    public ArrayList<ToDo> initBottoni(ArrayList<ToDo> lista, ArrayList<Integer> idEvidenziati){
         todopanel.removeAll();
-
-
-        for (ToDo todo : listaToDo) {
-            String titolo = todo.getTitolo();
-
-            JButton btn = new JButton(titolo);
-            btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            btn.setBackground(todo.getColoreSfondo());
-
-            btn.addActionListener(e -> {
-                controller.setTitoloToDoCorrente(titolo); // salva il titolo
-
-                frame.dispose();
-                GestisciToDo gestisciToDo = new GestisciToDo(frame, controller);
-                frame.setVisible(false);
-                gestisciToDo.getFrame().setVisible(true);
-            });
-
+        ArrayList<ToDo> list = new ArrayList<>();
+        for (ToDo t : lista) {
+            boolean evidenziato;
+            evidenziato = idEvidenziati.contains(t.getIdToDo());
+            JButton btn = creaBottoneToDo(t, evidenziato);
+            if (btn.getClientProperty("scaduto")!=null && btn.getClientProperty("scaduto").equals(true))
+                list.add(t);
             todopanel.add(btn);
         }
-
         todopanel.revalidate();
         todopanel.repaint();
+        return list;
+    }
+
+    private JButton creaBottoneToDo(ToDo t, boolean evidenziato){
+        String titolo = t.getTitolo();
+        Color colore = t.getColoreSfondo();
+        int id = t.getIdToDo();
+
+        JButton btn = new JButton(titolo);
+        Dimension dim = new Dimension(200, 50);
+        btn.setMinimumSize(dim);
+        btn.setPreferredSize(dim);
+        btn.setMaximumSize(dim);
+        if (evidenziato){
+            btn.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+            btn.setForeground(Color.YELLOW);
+        }
+        else
+            btn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btn.setMargin(new Insets(10, 20, 10, 20));
+
+        if (t.getDataScadenza()!=null && t.getDataScadenza().isBefore(LocalDate.now())){
+            btn.setBackground(new Color(255, 0, 0));
+            btn.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+            btn.setForeground(Color.YELLOW);
+            btn.putClientProperty("scaduto", true);
+        }
+        else
+            btn.setBackground(colore);
+        btn.putClientProperty("idtodo", id);
+        btn.addActionListener(e -> {
+            controller.setIdToDoCorrente(id);
+            controller.setTitoloToDoCorrente(titolo);
+            frame.dispose();
+            GestisciToDo gestisciToDo = new GestisciToDo(controller);
+            frame.setVisible(false);
+            gestisciToDo.getFrame().setVisible(true);
+        });
+
+        return btn;
     }
 
 

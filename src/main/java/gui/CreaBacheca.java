@@ -1,11 +1,14 @@
 package gui;
 
 import controller.Controller;
+import dao.BachecaDAO;
+import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
 import model.TitoloBacheca;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * la classe bacheca permette di creare una bacheca avente un nome predefinito tra
@@ -33,10 +36,9 @@ public class CreaBacheca {
     /**
      * instanzia una nuova bacheca.
      *
-     * @param jframe     il jframe
      * @param controller il controller
      */
-    public CreaBacheca(JFrame jframe, Controller controller){
+    public CreaBacheca(Controller controller){
         this.frame = new JFrame("CreaBacheca");
         this.controller = controller;
         this.frame.setContentPane(creaBachecaPanel);
@@ -45,11 +47,8 @@ public class CreaBacheca {
         this.frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         this.frame.setAlwaysOnTop(true);
-        this.frame.setVisible(true);
-        comboBox1.addItem(TitoloBacheca.UNIVERSITA);
-        comboBox1.addItem(TitoloBacheca.LAVORO);
-        comboBox1.addItem(TitoloBacheca.TEMPO_LIBERO);
-
+        this.frame.setResizable(false);
+        initComboBox();
         initButtonListener();
     }
 
@@ -57,21 +56,24 @@ public class CreaBacheca {
      * Questo metodo contiene tutti i listener degli oggetti grafici presenti in CreaBacheca
      */
     public void initButtonListener(){
+
         buttonCreaBacheca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //bisogna effettuare i controlli sull'input
                 try{
-                    controller.creaBacheca(((TitoloBacheca) comboBox1.getSelectedItem()), textArea1.getText());
+                    String s = textArea1.getText();
+                    if (s.isEmpty())
+                        s = null;
+
+                    controller.creaBacheca(((TitoloBacheca) comboBox1.getSelectedItem()), s);
                     JOptionPane.showMessageDialog(frame, "Bacheca creata con successo!");
-                    frame.dispose(); // chiude la finestra attuale
-                    Home home = new Home(frame, controller);
+                    Home home = new Home(controller);
                     frame.setVisible(false);
                     home.getFrame().setVisible(true);
-                }catch (NullPointerException exception) {
-                    JOptionPane.showMessageDialog(frame, "SELEZIONA UN TITOLO!");
+                    frame.dispose();
                 }
                 catch (Exception exception){
+                    exception.printStackTrace();
                     JOptionPane.showMessageDialog(frame, exception.getMessage());
                 }
             }
@@ -80,11 +82,30 @@ public class CreaBacheca {
         tornaIndietroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Home home = new Home(frame, controller);
+                Home home = new Home(controller);
                 frame.setVisible(false);
                 home.getFrame().setVisible(true);
             }
         });
+    }
+
+    public void initComboBox(){
+        comboBox1.removeAllItems();
+        try{
+            BachecaDAO b = new BachecaImplementazionePostgresDAO();
+            ArrayList<String> a = b.getTitoliUtente(controller.getUtente().getUsername());
+            if (a.isEmpty())
+                throw new Exception();
+            TitoloBacheca[] listaTitoli = {TitoloBacheca.UNIVERSITA, TitoloBacheca.LAVORO, TitoloBacheca.TEMPO_LIBERO};
+            for (TitoloBacheca t : listaTitoli)
+                if (!a.contains(t.toString()))
+                    comboBox1.addItem(t);
+        }
+        catch (Exception e){
+            comboBox1.addItem(TitoloBacheca.UNIVERSITA);
+            comboBox1.addItem(TitoloBacheca.LAVORO);
+            comboBox1.addItem(TitoloBacheca.TEMPO_LIBERO);
+        }
     }
 
     /**

@@ -30,6 +30,10 @@ public class Attivita {
         this.stato = !stato;
     }
 
+    public void setStato(boolean stato){
+        this.stato = stato;
+    }
+
     /**
      * Gets nome.
      *

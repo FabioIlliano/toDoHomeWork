@@ -47,6 +47,7 @@ public class StartPage {
         frame.pack();
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         frame.setVisible(true);
 
         initListeners(); // Avvia listener
@@ -57,18 +58,20 @@ public class StartPage {
         lgbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Login login = new Login(frame, controller);
+                Login login = new Login(controller);
                 frame.setVisible(false);
                 login.getFrame().setVisible(true);
+                frame.dispose();
             }
         });
 
         rgbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Register register = new Register(frame, controller);
+                Register register = new Register(controller);
                 frame.setVisible(false);
                 register.getFrame().setVisible(true);
+                frame.dispose();
             }
         });
     }

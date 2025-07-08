@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -51,36 +52,42 @@ public class GestisciToDo {
     private JScrollPane checklistJSP;
     private JLabel checklistJL;
     private JPanel checklistJP;
-    private JButton nuovaattivitaButton;
+    private JButton nuovaAttivitaButton;
     private JPanel attivitaPanel;
     private JPanel attibtnPanel;
-    private JButton eliminaAttButton;
-    private JComboBox spostaJCB;
+    private JButton eliminaAttivitaButton;
+    private JPanel condividiPanel;
+    private JButton condividiBtn;
+    private JButton eliminaCondivisioneBtn;
+    private JButton mostraCondivisioneBtn;
+    private JButton resetImgBtn;
+    private JComboBox spostaJCB; //si può fare anche dinamica
     private JPanel panelSposta;
     private Color c;
+
+    private JComboBox<String> condividiJCB;
+    private JPanel panelCondivisione;
 
     private Controller controller;
 
     /**
      * instanzia una nuova schermata di gestione dei ToDo.
      *
-     * @param frame      il frame
      * @param controller il controller
      */
-    public GestisciToDo(JFrame frame, Controller controller) {
+    public GestisciToDo(Controller controller) {
         this.frame = new JFrame(controller.getTitoloToDoCorrente());
         this.controller = controller;
         this.frame.setContentPane(mainPanel);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
-        this.frame.setSize(800, 600);
+        this.frame.setSize(800, 800);
         this.frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         this.initListeners();
         this.initText();
-        this.frame.setVisible(true);
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
         this.attivitaPanel.setLayout(new BoxLayout(attivitaPanel, BoxLayout.Y_AXIS));
-        //spostaJCB.setSelectedItem(TitoloBacheca.valueOf(controller.getTitoloBacheca()));
         caricaAttivitaChecklist(); // <-- aggiorna la lista visivamente
     }
 
@@ -91,6 +98,7 @@ public class GestisciToDo {
         confermaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                boolean stato;
                 if (titoloTextField.getText().trim().isEmpty())
                     JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!");
                 else {
@@ -100,15 +108,32 @@ public class GestisciToDo {
                         boolean b = controller.cambiaDataScadToDo(dataScadTextField.getText());
                         if (!b)
                             JOptionPane.showMessageDialog(frame, "FORMATO DATA NON VALIDO, FORMATO CORRETTO: dd-MM-yyyy");
-                        else if (!controller.checkData(dataScadTextField.getText()))
+                        else if (!controller.checkData(dataScadTextField.getText())) {
                             JOptionPane.showMessageDialog(frame, "DATA PRECEDENTE AD OGGI!!");
+                            controller.cambiaDataScadToDo("");
+                        }
                     }
+                    else
+                        controller.cambiaDataScadToDo("");
+
                     controller.cambiaBgColorToDo(c);
                     controller.cambiaURLToDo(urlTextField.getText());
-                    initText();
+                    try{
+                        controller.aggiornaChecklist(controller.getListaAttivitaLocale());
+                        if (controller.checkChecklist())
+                            controller.getToDo().setStato(true);
+                        controller.aggiornaToDo();
+                        //funziona tutto correttamente ma si deve inserire un JOptionPane che avvisa che il todo viene completato in automatico.
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                        if (e1.getSQLState().equals("P0001")){
+                            JOptionPane.showMessageDialog(frame, "BISOGNA COMPLETARE TUTTE LE ATTIVITA PRIMA DI COMPLETARE IL TODO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                            imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource("/notCompleted64.png")));
+                        }
+                    }
+
                 }
             }
-
         });
 
 
@@ -125,9 +150,22 @@ public class GestisciToDo {
                         ImageIcon icon = new ImageIcon(file.getAbsolutePath());
                         Image img = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
                         imgJL.setIcon(new ImageIcon(img));
-                        controller.setIMGToDo(img);
+                        controller.setIMGToDo(img, file.getAbsolutePath());
                     }else
                         JOptionPane.showMessageDialog(frame, "SELEZIONE UN FILE IMMAGINE (PNG, JPG, JPEG, GIF)");
+                }
+            }
+        });
+
+        resetImgBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (controller.getIMGToDo()==null || controller.getImgPath()==null || controller.getImgPath().isEmpty())
+                    JOptionPane.showMessageDialog(frame, "IMMAGINE GIÀ INESISTENTE ");
+                else{
+                    controller.setIMGToDo(null, "");
+                    imgJL.setIcon(new ImageIcon(getClass().getResource("/no-image64.png")));
+                    JOptionPane.showMessageDialog(frame, "IMMAGINE RESETTATA");
                 }
             }
         });
@@ -135,29 +173,37 @@ public class GestisciToDo {
         imgJL.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //fare metodo che apre una nuova interfaccia e fa visualizzare la foto nella sua interezza
+                if (controller.getImgPath() == null || controller.getImgPath().isEmpty() || controller.getIMGToDo() == null){
+                    JOptionPane.showMessageDialog(frame, "NESSUN IMMAGINE NON ASSOCIATA A QUESTO TODO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                VisualizzaImg visualizzaImg = new VisualizzaImg(controller);
+                visualizzaImg.getFrame().setVisible(true);
+                frame.dispose();
             }
         });
 
         eliminaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int result = JOptionPane.showConfirmDialog(frame,"SEI SICURO DI VOLER ELIMINARE IL TODO?", "ELIMINA TODO", JOptionPane.OK_CANCEL_OPTION);
+                if (result==JOptionPane.OK_OPTION){
+                    controller.eliminaToDo();
+                    GestisciBacheca gestisciBacheca = new GestisciBacheca(controller);
+                    gestisciBacheca.getFrame().setVisible(true);
+                    frame.dispose();
+                }
 
-                controller.cambiaTitoloToDo(titoloTextField.getText());
-                controller.eliminaToDo(titoloTextField.getText());
-                GestisciBacheca gestisciBacheca = new GestisciBacheca(frame, controller);
-                frame.dispose();
-                frame.setVisible(false);
-                gestisciBacheca.getFrame().setVisible(true);
             }
         });
 
         indietroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GestisciBacheca b = new GestisciBacheca(frame, controller);
-                frame.setVisible(false);
+                GestisciBacheca b = new GestisciBacheca(controller);
                 b.getFrame().setVisible(true);
+                frame.dispose();
             }
         });
 
@@ -201,7 +247,7 @@ public class GestisciToDo {
                     boolean b = controller.spostaToDo(t);
                     if (b){
                         JOptionPane.showMessageDialog(frame, "TODO SPOSTATO");
-                        GestisciBacheca gestisciBacheca = new GestisciBacheca(frame, controller);
+                        GestisciBacheca gestisciBacheca = new GestisciBacheca(controller);
                         gestisciBacheca.getFrame().setVisible(true);
                         frame.dispose();
                     }
@@ -212,15 +258,114 @@ public class GestisciToDo {
             }
         });
 
-        nuovaattivitaButton.addActionListener(new ActionListener() {
+        nuovaAttivitaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività:");
                 if (nomeAttivita != null && !nomeAttivita.trim().isEmpty()) {
-                    controller.creaAttivita(nomeAttivita);
-
-                    caricaAttivitaChecklist(); // <-- aggiorna la lista visivamente
+                    if (controller.creaAttivita(nomeAttivita) == -1){
+                        JOptionPane.showMessageDialog(frame, "CREAZIONE NON ANDATA A BUON FINE", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    caricaAttivitaChecklist();
                 }
+            }
+        });
+
+        eliminaAttivitaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività da eliminare, se esiste verrà eliminata direttamente.", "ELIMINA", JOptionPane.QUESTION_MESSAGE);
+                if (nomeAttivita != null && !nomeAttivita.trim().isEmpty()) {
+                    if (controller.getAttivita(nomeAttivita)!=null){
+                        if (controller.eliminaAttivita(nomeAttivita) == 0) {
+                            JOptionPane.showMessageDialog(frame, "Attività eliminata correttamente", "ATTIVITA' ELIMINATA", JOptionPane.INFORMATION_MESSAGE);
+                            caricaAttivitaChecklist();
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "Attività non eliminata correttamente", "ATTIVITA' NON ELIMINATA", JOptionPane.INFORMATION_MESSAGE);
+
+                    }
+                    else
+                        JOptionPane.showMessageDialog(frame, "ATTIVITA INESISTENTE", "", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(frame, "INSERIRE UN TITOLO", "", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        condividiBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String utenteDest = JOptionPane.showInputDialog(frame, "INSERISCI L'USERNAME DELL'UTENTE CON CUI CONDIVIDERE IL TODO", "CONDIVIDI TODO", JOptionPane.QUESTION_MESSAGE);
+                if (controller.checkUtente(utenteDest)){
+                    int r = controller.condividiToDo(utenteDest);
+                    if (r==0)
+                        JOptionPane.showMessageDialog(frame, "TODO CONDIVISO CORRETTAMENTE", "CONDIVISIONE", JOptionPane.INFORMATION_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(frame, "TODO NON CONDIVISO CORRETTAMENTE", "CONDIVISIONE", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(frame, "UTENTE INESISTENTE!", "CONDIVISIONE", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        eliminaCondivisioneBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelCondivisione = new JPanel();
+                panelCondivisione.removeAll();
+                panelCondivisione.add(new JLabel("SELEZIONA L'UTENTE CON CUI RIMUOVERE LA CONDIVISIONE"));
+                ArrayList<String> listaUtenti = controller.getListaCondivisioni();
+                condividiJCB = new JComboBox<>();
+
+                for (String s : listaUtenti)
+                    condividiJCB.addItem(s);
+
+                if (listaUtenti.isEmpty()){
+                    JOptionPane.showMessageDialog(frame, "TODO NON CONDIVISO CON NESSUNO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (listaUtenti.contains(controller.getUtente().getUsername())){
+                    JOptionPane.showMessageDialog(frame, "QUESTO TODO È STATO CONDIVISO CON TE, NON PUOI RIMUOVERLO!", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+
+                panelCondivisione.add(condividiJCB);
+                int result = JOptionPane.showConfirmDialog(frame, panelCondivisione, "Scegli l'utente", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION){
+                    int r = controller.rimuoviCondivisione(condividiJCB.getSelectedItem().toString());
+                    if (r==0)
+                        JOptionPane.showMessageDialog(frame, "CONDIVISIONE RIMOSSA!");
+                    else
+                        JOptionPane.showMessageDialog(frame, "CONDIVISIONE NON RIMOSSA", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        mostraCondivisioneBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelCondivisione = new JPanel();
+                panelCondivisione.removeAll();
+                panelCondivisione.add(new JLabel("ECCO GLI UTENTI CHE HANNO ACCESSO AL TODO: "));
+                ArrayList<String> listaUtenti = controller.getListaCondivisioni();
+
+                if (listaUtenti.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "IL TODO NON È CONDIVISO CON UTENTI", "UTENTI", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                StringBuilder utenti = new StringBuilder("|--");
+
+                for (String s : listaUtenti)
+                    utenti.append(s).append("-");
+                utenti.append("-|");
+
+                panelCondivisione.add(new JLabel(utenti.toString()));
+                JOptionPane.showMessageDialog(frame, panelCondivisione, "UTENTI", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -230,21 +375,27 @@ public class GestisciToDo {
      * inizializza tutti i campi del ToDo.
      */
     public void initText(){
-        checklistJP.setLayout(new BoxLayout(checklistJP, BoxLayout.Y_AXIS)); // <-- AGGIUNGI QUESTO
+        checklistJP.setLayout(new BoxLayout(checklistJP, BoxLayout.Y_AXIS));
 
-        c = controller.getBGColorToDo();
+
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
         this.descTextField.setText(controller.getDescrizioneToDo());
         this.dataScadTextField.setText(controller.getDataScadToDo());
         this.urlTextField.setText(controller.getUrlToDo());
+
+        this.c = controller.getColorBG();
 
         if (controller.getCompletoToDo())
             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource("/completed64.png")));
         else
             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource("/notCompleted64.png")));
 
-        if (controller.getIMGToDo()!=null)
-            imgJL.setIcon(new ImageIcon(controller.getIMGToDo()));
+        Image imgRidimensionata;
+
+        if (controller.getIMGToDo()!=null){
+            imgRidimensionata = controller.getIMGToDo().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            imgJL.setIcon(new ImageIcon(imgRidimensionata));
+        }
         else
             imgJL.setIcon(new ImageIcon(getClass().getResource("/no-image64.png")));
 
@@ -268,33 +419,22 @@ public class GestisciToDo {
     private void caricaAttivitaChecklist() {
 
         ArrayList<Attivita> a = controller.getListaAttivita();
+        controller.setListaAttivitaLocale(a);
         attivitaPanel.removeAll();
 
         if(a==null || a.isEmpty())
-        {
             return;
-        }
 
         for (Attivita attivita : a) {
 
             JCheckBox checkBox = new JCheckBox(attivita.getNome());
+            checkBox.setSelected(attivita.isStato());
             checkBox.addItemListener(new ItemListener() {
             @Override
 
             public void itemStateChanged(ItemEvent e) {
-                if (checkBox.isSelected()) {
-                    controller.setStato(checkBox.getText());
-                    if (controller.checkChecklist())
-                        controller.setCompletoToDo(true);
-                } else {
-                    controller.setStato(checkBox.getText());
-                    if (!controller.checkChecklist())
-                        controller.setCompletoToDo(false);
-                }
-            }
-
-            });
-            //checkBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+                controller.setStatoLocale(attivita.getNome());
+            } });
 
             attivitaPanel.add(checkBox);
         }

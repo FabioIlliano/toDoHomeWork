@@ -8,6 +8,7 @@ import java.util.Scanner;
  */
 public class Utente
 {
+
     /**
      * The Username.
      */
@@ -66,11 +67,11 @@ public class Utente
     }
 
     /**
-     * Conta bacheche boolean.
+     * Restituisce true se si possono aggiungere Bacheche
      *
      * @return the boolean
      */
-    public boolean contaBacheche(){
+    public boolean puoAggiungereBacheca(){
         if (bachecheUtente.size()>=3)
             return false;
         else
@@ -145,17 +146,17 @@ public class Utente
      * @param descrizione the descrizione
      * @throws Exception the exception
      */
-    public void creaBachechaGUI (TitoloBacheca titolo, String descrizione) throws Exception{
-        if (!contaBacheche())
-            throw new Exception("BACHECHE GIA CREATE!!");
-
-        boolean cond0 = bachecheUtente.size() > 0 && titolo!=null && titolo.equals(bachecheUtente.get(0).getTitolo());
-        boolean cond1 = bachecheUtente.size() > 1 && titolo!=null && titolo.equals(bachecheUtente.get(1).getTitolo());
-        if (cond0 || cond1)
-            throw new Exception("NOME BACHECHA GIA UTILIZZATO!!");
-
+    public void creaBachecaGUI(TitoloBacheca titolo, String descrizione) throws Exception{
         Bacheca bacheca = new Bacheca(titolo, descrizione);
         bachecheUtente.add(bacheca);
+    }
+
+    public void caricaBacheca (TitoloBacheca titolo, String descrizione){
+        bachecheUtente.add(new Bacheca(titolo, descrizione));
+    }
+
+    public void pulisciBacheche (){
+        bachecheUtente.clear();
     }
 
     /*
@@ -221,6 +222,7 @@ public class Utente
         for (i=0;i<bachecheUtente.size();i++)
             if (titolo.equals(bachecheUtente.get(i).getTitolo().toString())){
                 bachecaDaEliminare = bachecheUtente.get(i);
+                break;
             }
         if (bachecaDaEliminare==null)
             return false;
@@ -236,7 +238,6 @@ public class Utente
      * @return the bacheca
      */
     public Bacheca getBacheca(String titolo){
-        //titolo = titolo.toUpperCase();
         for(Bacheca b : bachecheUtente)
         {
             if(b.getTitolo().toString().equalsIgnoreCase(titolo))
@@ -252,21 +253,14 @@ public class Utente
      *
      * @param vecchia    the vecchia
      * @param nuova      the nuova
-     * @param titoloToDo the titolo to do
      * @return the boolean
      */
-    public boolean spostaToDoGUI(String vecchia, String nuova, String titoloToDo)
+    public void spostaToDoGUI(String vecchia, String nuova, ToDo todo)
     {
         Bacheca v = getBacheca(vecchia);
         Bacheca n = getBacheca(nuova);
-        ToDo toDo = v.getToDoTitolo(titoloToDo);
-
-        v.getListaToDo().remove(toDo);
-        n.aggiungiToDo(toDo);
-        if (n.getToDoTitolo(titoloToDo)!=null)
-            return true;
-        else
-            return false;
+        v.getListaToDo().remove(todo);
+        n.aggiungiToDo(todo);
     }
 
     /**
@@ -298,5 +292,9 @@ public class Utente
         for (Bacheca B : bachecheUtente) {
             System.out.println(B.getTitolo());
         }
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

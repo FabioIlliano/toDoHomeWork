@@ -25,14 +25,13 @@ public class Login {
     private JTextField txt2;
     private JPanel loginPanel;
     private JPanel subHeader;
-    private Home home;
     private Controller controller;
 
 
     /**
      * inizializza una nuova schermata di login.
      */
-    public Login(JFrame frame, Controller controller) {
+    public Login(Controller controller) {
         this.frame = new JFrame("login");
         this.controller = controller;
         this.frame.setContentPane(MainPanel);
@@ -40,7 +39,7 @@ public class Login {
         this.frame.pack();
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
-        this.frame.setVisible(true);
+        frame.setResizable(false);
 
         initListeners(); // Avvia listener
     }
@@ -52,11 +51,15 @@ public class Login {
                 String username = txtusername.getText();
                 char[] pasw = txtpassword.getPassword();
                 String psw = new String(pasw);
+
                 if (!(username.isEmpty() || psw.isEmpty())){
+
                     if (controller.login(username, psw)){
-                        Home home = new Home(frame, controller);
+
+                        Home home = new Home(controller);
                         frame.setVisible(false);
                         home.getFrame().setVisible(true);
+                        frame.dispose();
                     }
                     else{
                         JOptionPane.showMessageDialog(frame, "CREDENZIALI ERRATE!!");
@@ -64,6 +67,8 @@ public class Login {
                 }
                 else{
                     JOptionPane.showMessageDialog(frame, "INSERIRE CORRETTAMENTE LE CREDENZIALI!!");
+                    txtusername.setText("");
+                    txtpassword.setText("");
                 }
 
 
@@ -74,9 +79,10 @@ public class Login {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Register register = new Register(frame, controller);
+                Register register = new Register(controller);
                 frame.setVisible(false);
                 register.getFrame().setVisible(true);
+                frame.dispose();
             }
         });
 

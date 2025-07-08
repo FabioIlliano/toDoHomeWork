@@ -127,6 +127,7 @@
             </constraints>
             <properties>
               <background color="-3086094"/>
+              <editable value="false"/>
               <font name="SansSerif" size="36" style="1"/>
               <foreground color="-16777216"/>
               <text value="BENVENUTO IN TODAY'S TODOS!!"/>
@@ -150,6 +151,7 @@
                 </constraints>
                 <properties>
                   <background color="-3086094"/>
+                  <editable value="false"/>
                   <font name="SansSerif" size="20" style="2"/>
                   <foreground color="-16777216"/>
                   <text value="  ORGANIZZA LE ATTIVITÀ, CONDIVIDI LE IDEE, RESTA PRODUTTIVO"/>

@@ -80,7 +80,7 @@ public class Main {
         admin.getBacheca(r).mostraTutti();
 
         System.out.println("Adesso Giuseppe ha modificato il ToDo");
-        Giuseppe.getBacheca(r).getToDoTitolo(s).ModificaStato();
+        Giuseppe.getBacheca(r).getToDoTitolo(s).modificaStato();
         Giuseppe.getBacheca(r).getToDoTitolo(s).setDescrizione("lo fa giuseppe");
         //System.out.println("STATO DEL TODO IN ADMIN: " + admin.getBacheca(r).getToDo(s).getStato() + "\nSTATO DEL TODO IN GIUSEPPE: " + Giuseppe.getBacheca(r).getToDo(s).getStato());
 

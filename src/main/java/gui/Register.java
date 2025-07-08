@@ -32,7 +32,7 @@ public class Register {
 
     private Controller controller;
 
-    public Register(JFrame frame, Controller controller) {
+    public Register(Controller controller) {
         this.frame = new JFrame("Registrazione");
         this.controller = controller;
 
@@ -41,7 +41,6 @@ public class Register {
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
         this.frame.setResizable(false);
-        this.frame.setVisible(true); // mostra registrazione
 
         this.initListeners();
     }
@@ -59,33 +58,42 @@ public class Register {
                 char[] pasw2 = passwordRipetuta.getPassword();
                 String psw2 = new String(pasw2);
 
-                if (!(username.isEmpty() || psw.isEmpty() || psw2.isEmpty()))
+                if(psw.contains(" ") || psw.length()<5 || username.contains(" ") || username.length()<5){
+                    JOptionPane.showMessageDialog(frame, "USERNAME E/0 PASSWORD NON CORRETTI! \n" +
+                            "USERNAME E PASSWORD DEVONO ESSERE DI ALMENO 5 CARATTERI E NON ACCETTANO SPAZI", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if(psw.equals(psw2))
                 {
-                    if(psw.equals(psw2))
-                    {
-                        controller.creaUtente(username, psw);
-                        Home home = new Home(frame, controller);
+                    int n = controller.creaUtente(username, psw);
+                    if (n==1)
+                        JOptionPane.showMessageDialog(frame, "USERNAME GIA UTILIZZATO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if (n==2)
+                        JOptionPane.showMessageDialog(frame, "ERRORE DI CONNESSIONE AL DATABASE", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if (n==-1)
+                        JOptionPane.showMessageDialog(frame, "ERRORE, RIPROVARE", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if (n==0){
+                        JOptionPane.showMessageDialog(frame, "UTENTE CREATO CORRETTAMENTE", "UTENTE REGISTRATO", JOptionPane.INFORMATION_MESSAGE);
+                        StartPage s = new StartPage();
                         frame.setVisible(false);
-                        home.getFrame().setVisible(true);
+                        s.getFrame().setVisible(true);
+                        frame.dispose();
                     }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(frame, "LE PASSWORD NON COINCIDONO!");
-                    }
+
                 }
                 else
-                {
-                    JOptionPane.showMessageDialog(frame, "INSERISCI LE CREDENZIALI!");
-                }
+                    JOptionPane.showMessageDialog(frame, "LE PASSWORD NON COINCIDONO!");
             }
         });
 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Login login = new Login(frame, controller);
+                Login login = new Login(controller);
                 frame.setVisible(false);
                 login.getFrame().setVisible(true);
+                frame.dispose();
             }
         });
     }
