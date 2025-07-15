@@ -6,8 +6,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Classe che rappresenta l'interfaccia grafica per la registrazione di un nuovo utente.
+ * Gestisce l'inserimento dell'username, delle password e la comunicazione con il {@code Controller}
+ * per la creazione dell'account.
+ */
 public class Register {
-    private JFrame frame;
+    private final JFrame frame;
 
     private JPanel mainPanel;
     private JPanel textPanel;
@@ -30,14 +35,21 @@ public class Register {
     private JPanel subHeader;
     private JTextField txt2;
 
-    private Controller controller;
+    private final Controller controller;
 
+    public static final String MSG_ERRORE = "ERRORE";
+
+    /**
+     * Costruttore che inizializza la finestra di registrazione e imposta i listener dei pulsanti.
+     *
+     * @param controller il controller utilizzato per gestire la logica applicativa
+     */
     public Register(Controller controller) {
         this.frame = new JFrame("Registrazione");
         this.controller = controller;
 
         this.frame.setContentPane(mainPanel);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
         this.frame.setResizable(false);
@@ -45,48 +57,19 @@ public class Register {
         this.initListeners();
     }
 
-    public void initListeners()
-    {
-        registratiButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                String username = usernameField.getText();
-                char[] pasw = passwordField.getPassword();
-                String psw = new String(pasw);
-                char[] pasw2 = passwordRipetuta.getPassword();
-                String psw2 = new String(pasw2);
+    /**
+     * Inizializza i listener dei pulsanti presenti nella schermata.
+     */
+    public void initListeners() {
+        initLoginButton();
+        initRegistratiButton();
+    }
 
-                if(psw.contains(" ") || psw.length()<5 || username.contains(" ") || username.length()<5){
-                    JOptionPane.showMessageDialog(frame, "USERNAME E/0 PASSWORD NON CORRETTI! \n" +
-                            "USERNAME E PASSWORD DEVONO ESSERE DI ALMENO 5 CARATTERI E NON ACCETTANO SPAZI", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if(psw.equals(psw2))
-                {
-                    int n = controller.creaUtente(username, psw);
-                    if (n==1)
-                        JOptionPane.showMessageDialog(frame, "USERNAME GIA UTILIZZATO", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                    if (n==2)
-                        JOptionPane.showMessageDialog(frame, "ERRORE DI CONNESSIONE AL DATABASE", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                    if (n==-1)
-                        JOptionPane.showMessageDialog(frame, "ERRORE, RIPROVARE", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                    if (n==0){
-                        JOptionPane.showMessageDialog(frame, "UTENTE CREATO CORRETTAMENTE", "UTENTE REGISTRATO", JOptionPane.INFORMATION_MESSAGE);
-                        StartPage s = new StartPage();
-                        frame.setVisible(false);
-                        s.getFrame().setVisible(true);
-                        frame.dispose();
-                    }
-
-                }
-                else
-                    JOptionPane.showMessageDialog(frame, "LE PASSWORD NON COINCIDONO!");
-            }
-        });
-
+    /**
+     * Inizializza il comportamento del pulsante di login.
+     * Quando premuto, apre la schermata di login e chiude quella attuale.
+     */
+    public void initLoginButton(){
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,10 +81,65 @@ public class Register {
         });
     }
 
+
     /**
-     * restituisce il frame.
+     * Inizializza il comportamento del pulsante di registrazione.
+     * Quando premuto, valida i dati inseriti, verifica che le due password coincidano
+     * e comunica con il controller per la creazione dell'utente.
+     * In base al risultato, mostra un messaggio di errore o conferma e reindirizza alla StartPage.
+     */
+    public void initRegistratiButton(){
+        registratiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                char[] pasw = passwordField.getPassword();
+                String psw = new String(pasw);
+                char[] pasw2 = passwordRipetuta.getPassword();
+                String psw2 = new String(pasw2);
+
+                if(psw.contains(" ") || psw.length()<5 || username.contains(" ") || username.length()<5){
+                    JOptionPane.showMessageDialog(frame, "USERNAME E/0 PASSWORD NON CORRETTI! \n" +
+                            "USERNAME E PASSWORD DEVONO ESSERE DI ALMENO 5 CARATTERI E NON ACCETTANO SPAZI", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (psw.equals(psw2)) {
+                    int n = controller.creaUtente(username, psw);
+
+                    switch (n) {
+                        case 1:
+                            JOptionPane.showMessageDialog(frame, "USERNAME GIA UTILIZZATO", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                            break;
+                        case 2:
+                            JOptionPane.showMessageDialog(frame, "ERRORE DI CONNESSIONE AL DATABASE", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                            break;
+                        case -1:
+                            JOptionPane.showMessageDialog(frame, "ERRORE, RIPROVARE", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                            break;
+                        case 0:
+                            JOptionPane.showMessageDialog(frame, "UTENTE CREATO CORRETTAMENTE", "UTENTE REGISTRATO", JOptionPane.INFORMATION_MESSAGE);
+                            StartPage s = new StartPage();
+                            frame.setVisible(false);
+                            s.getFrame().setVisible(true);
+                            frame.dispose();
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(frame, "ERRORE SCONOSCIUTO", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                            break;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "LE PASSWORD NON COINCIDONO!");
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Restituisce il frame principale della schermata iniziale.
      *
-     * @return il frame
+     * @return il {@code JFrame} della start page
      */
     public JFrame getFrame() {
         return frame;

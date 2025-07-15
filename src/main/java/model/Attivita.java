@@ -25,9 +25,9 @@ public class Attivita {
     /**
      * Modifica stato.
      */
-    public void modificaStato()
+    public void modificaStato(boolean b)
     {
-        this.stato = !stato;
+        this.stato = b;
     }
 
     public void setStato(boolean stato){

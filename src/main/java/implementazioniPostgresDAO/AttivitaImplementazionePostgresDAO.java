@@ -58,7 +58,7 @@ public class AttivitaImplementazionePostgresDAO implements AttivitaDAO {
     }
 
     @Override
-    public int setStato(boolean stato, String nome, int idToDo) {
+    public void setStato(boolean stato, String nome, int idToDo) {
         String query = "UPDATE attivita SET stato = ? WHERE nome = ? AND todo = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -66,15 +66,10 @@ public class AttivitaImplementazionePostgresDAO implements AttivitaDAO {
             stmt.setString(2, nome);
             stmt.setInt(3, idToDo);
 
-            int r = stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            if (r!=0)
-                return 0;
-            else
-                return -1;
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         }
     }
 

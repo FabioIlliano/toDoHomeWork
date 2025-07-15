@@ -7,12 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Login e' la schermata principale e permette all'utente di fare l'accesso con i propri dati.
+ * Login è la schermata principale e permette all'utente di fare l'accesso con i propri dati.
  */
 public class Login {
 
-    private JFrame frame;
-    private JPanel MainPanel;
+    private final JFrame frame;
+    private JPanel mainPanel;
     private JLabel usernameJL;
     private JTextField txtusername;
     private JLabel passwordJL;
@@ -25,26 +25,32 @@ public class Login {
     private JTextField txt2;
     private JPanel loginPanel;
     private JPanel subHeader;
-    private Controller controller;
+    private final Controller controller;
 
 
     /**
-     * inizializza una nuova schermata di login.
+     * Inizializza una nuova schermata di login.
+     *
+     * @param controller il controller utilizzato per la gestione della logica applicativa
      */
     public Login(Controller controller) {
         this.frame = new JFrame("login");
         this.controller = controller;
-        this.frame.setContentPane(MainPanel);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setContentPane(mainPanel);
+        this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.frame.pack();
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        initListeners(); // Avvia listener
+        initListeners();
     }
 
+    /**
+     * Inizializza i listener per i pulsanti di login e registrazione.
+     */
     public void initListeners (){
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

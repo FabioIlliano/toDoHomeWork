@@ -3,7 +3,6 @@ package gui;
 import controller.Controller;
 import dao.BachecaDAO;
 import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
-import model.Bacheca;
 import model.TitoloBacheca;
 
 import javax.swing.*;
@@ -16,9 +15,9 @@ import java.util.ArrayList;
  * Schermata principale, permette di visualizzare, creare ed eliminare le bacheche.
  */
 public class Home {
-    private JFrame frame;
+    private final JFrame frame;
 
-    private JPanel HomePanel;
+    private JPanel homePanel;
     private JPanel panel1;
     private JPanel panel3;
     private JPanel panel2;
@@ -49,9 +48,11 @@ public class Home {
 
     private JComboBox<TitoloBacheca> comboBox;
 
+    public static final String MSG_BACHECA_INESISTENTE = "BACHECA INESISTENTE!!";
+
 
     /**
-     * instanzia una nuova home
+     * Istanzia una nuova home
      *
      * @param controller il controller
      */
@@ -59,47 +60,61 @@ public class Home {
 
         this.frame = new JFrame("Home");
         this.controller = controller;
-        this.frame.setContentPane(HomePanel);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setContentPane(homePanel);
+        this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.frame.setLocationRelativeTo(null);
         this.frame.pack();
-        this.frame.setSize(800, 800);
+        this.frame.setSize(800, 850);
         this.frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         panelElimina = new JPanel();
         this.initListeners();
         this.initDatiUtente();
         this.initDescrizioni();
-
-        if (controller.checkBacheche())
-        {
-            panel1.setBackground(Color.red);
-            panel2.setBackground(Color.red);
-            panel3.setBackground(Color.red);
-        }
+        this.initColori();
     }
 
     /**
-     * Init listeners.
+     * Inizializza tutti i listener dei pulsanti presenti nella schermata.
      */
     public void initListeners (){
         this.initButtonNuovaBacheca();
         this.initELiminaBacheca();
         this.initEditButtonsListeners();
-        this.initLogOutbutton();
+        this.initLogOutButton();
     }
 
     /**
-     * Init button nuova bacheca.
+     * Imposta il colore dei pannelli in base alla presenza delle bacheche.
+     * Verde se presente, rosso se assente.
+     */
+    public void initColori(){
+        if (controller.checkBacheca(TitoloBacheca.UNIVERSITA.toString()))
+            panel1.setBackground(new Color(168,230,163));
+        else
+            panel1.setBackground(new Color(255,107,107));
+        if(controller.checkBacheca(TitoloBacheca.LAVORO.toString()))
+            panel2.setBackground(new Color(168,230,163));
+        else
+            panel2.setBackground(new Color(255,107,107));
+        if(controller.checkBacheca(TitoloBacheca.TEMPO_LIBERO.toString()))
+            panel3.setBackground(new Color(168,230,163));
+        else
+            panel3.setBackground(new Color(255,107,107));
+    }
+
+    /**
+     * Aggiunge un listener al pulsante "Nuova Bacheca" e ai pulsanti delle bacheche.
+     * Mostra un messaggio se tutte le bacheche sono già state create.
      */
     public void initButtonNuovaBacheca(){
         buttonNuovaBacheca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (controller.checkBacheche()){
-                    CreaBacheca creaBacheca = new CreaBacheca(controller);
-                    frame.setVisible(false);
-                    creaBacheca.getFrame().setVisible(true);
+                    CreaBacheca creaBacheca = new CreaBacheca(frame, controller);
+                    creaBacheca.setVisible(true);
+                    initColori();
                 }
                 else
                     JOptionPane.showMessageDialog(frame, "BACHECHE GIA CREATE!!");
@@ -117,7 +132,7 @@ public class Home {
                     frame.dispose();
                 }
                 else
-                    JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                    JOptionPane.showMessageDialog(frame, MSG_BACHECA_INESISTENTE);
 
             }
         };
@@ -128,7 +143,8 @@ public class Home {
     }
 
     /**
-     * Init elimina bacheca.
+     * Aggiunge il listener al pulsante per eliminare una bacheca.
+     * Mostra un menu di conferma prima dell'eliminazione.
      */
     public void initELiminaBacheca(){
         buttonEliminaBacheca.addActionListener(new ActionListener() {
@@ -142,7 +158,7 @@ public class Home {
                     int result = JOptionPane.showConfirmDialog(frame, panelElimina, "Scegli la bacheca", JOptionPane.OK_CANCEL_OPTION);
                     if (result == JOptionPane.OK_OPTION){
                         if (!controller.checkBacheca(comboBox.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!");
+                            JOptionPane.showMessageDialog(frame, MSG_BACHECA_INESISTENTE);
                             return;
                         }
                         int r = JOptionPane.showConfirmDialog(frame, "Sei sicuro di voler eliminare la bacheca\n"+
@@ -150,17 +166,23 @@ public class Home {
                         if (r == JOptionPane.OK_OPTION){
                             String s = comboBox.getSelectedItem().toString();
                             boolean b = controller.eliminaBacheca(TitoloBacheca.valueOf(s));
-                            if (b){
+                            if (b) {
                                 JOptionPane.showMessageDialog(frame, "BACHECA ELIMINATA!");
-                                if (s.equals(TitoloBacheca.UNIVERSITA.toString()))
-                                    descrizioneU.setText("");
-                                if(s.equals(TitoloBacheca.LAVORO.toString()))
-                                    descrizioneL.setText("");
-                                if(s.equals((TitoloBacheca.TEMPO_LIBERO.toString())))
-                                    descrizioneTL.setText("");
-                            }
-                            else
+                                switch (TitoloBacheca.valueOf(s)) {
+                                    case UNIVERSITA:
+                                        descrizioneU.setText("");
+                                        break;
+                                    case LAVORO:
+                                        descrizioneL.setText("");
+                                        break;
+                                    case TEMPO_LIBERO:
+                                        descrizioneTL.setText("");
+                                        break;
+                                }
+                                initColori();
+                            } else {
                                 JOptionPane.showMessageDialog(frame, "BACHECA NON ELIMINATA CORRETTAMENTE!");
+                            }
                         }
                     }
                 }
@@ -173,7 +195,7 @@ public class Home {
     }
 
     /**
-     * Init descrizioni.
+     * Carica e visualizza le descrizioni delle bacheche esistenti.
      */
     public void initDescrizioni (){
         if (controller.checkBacheca(TitoloBacheca.UNIVERSITA.toString())){
@@ -200,7 +222,8 @@ public class Home {
     }
 
     /**
-     * Init edit buttons listeners.
+     * Aggiunge i listener ai pulsanti per modificare le descrizioni.
+     * Ogni pulsante attiva la modifica della relativa descrizione.
      */
     public void initEditButtonsListeners(){
         ActionListener editListener = new ActionListener() {
@@ -211,65 +234,17 @@ public class Home {
 
                 switch (tipo){
                     case "UNIVERSITA":
-                        if (controller.checkBacheca(TitoloBacheca.UNIVERSITA.toString())){
-                            if (descrizioneU.isEditable()){
-                                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
-                                descrizioneU.setEditable(false);
-                                String s = descrizioneU.getText();
-                                if (s.trim().isEmpty())
-                                    s = null;
-                                controller.cambiaDescrizioneBacheca(TitoloBacheca.UNIVERSITA, s);
-                            }
-                            else{
-                                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
-                                descrizioneU.setEditable(true);
-                                descrizioneU.requestFocus();
-                            }
-                        }
-                        else
-                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        modificaDescrizioneBacheca(pulsante, descrizioneU, TitoloBacheca.UNIVERSITA);
                         break;
                     case "LAVORO":
-                        if (controller.checkBacheca(TitoloBacheca.LAVORO.toString())){
-                            if (descrizioneL.isEditable()){
-                                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
-                                descrizioneL.setEditable(false);
-                                String s = descrizioneL.getText();
-                                if (s.trim().isEmpty())
-                                    s = null;
-                                controller.cambiaDescrizioneBacheca(TitoloBacheca.LAVORO, s);
-                            }
-                            else{
-                                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
-                                descrizioneL.setEditable(true);
-                                descrizioneL.requestFocus();
-                            }
-                        }
-                        else
-                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        modificaDescrizioneBacheca(pulsante, descrizioneL, TitoloBacheca.LAVORO);
                         break;
                     case "TEMPO_LIBERO":
-                        if (controller.checkBacheca(TitoloBacheca.TEMPO_LIBERO.toString())){
-                            if (descrizioneTL.isEditable()){
-                                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
-                                descrizioneTL.setEditable(false);
-                                String s = descrizioneTL.getText();
-                                if (s.trim().isEmpty())
-                                    s = null;
-                                controller.cambiaDescrizioneBacheca(TitoloBacheca.TEMPO_LIBERO, s);
-                            }
-                            else{
-                                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
-                                descrizioneTL.setEditable(true);
-                                descrizioneTL.requestFocus();
-                            }
-                        }
-                        else
-                            JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        modificaDescrizioneBacheca(pulsante, descrizioneTL, TitoloBacheca.TEMPO_LIBERO);
                         break;
 
                     default:
-                        JOptionPane.showMessageDialog(frame, "BACHECA INESISTENTE!!");
+                        JOptionPane.showMessageDialog(frame, MSG_BACHECA_INESISTENTE);
                 }
 
             }
@@ -280,7 +255,40 @@ public class Home {
         buttonEditTL.addActionListener(editListener);
     }
 
-    public void initLogOutbutton(){
+    /**
+     * Gestisce la modifica della descrizione della bacheca.
+     * Cambia l'icona del pulsante e aggiorna il testo se necessario.
+     *
+     * @param pulsante    il pulsante premuto
+     * @param descrizione l'area di testo della descrizione
+     * @param tipo        il tipo di bacheca da modificare
+     */
+    public void modificaDescrizioneBacheca(JButton pulsante, JTextArea descrizione, TitoloBacheca tipo) {
+        if (controller.checkBacheca(tipo.toString())) {
+            if (descrizione.isEditable()) {
+                pulsante.setIcon(new ImageIcon(getClass().getResource("/edit64.png")));
+                descrizione.setEditable(false);
+                String s = descrizione.getText();
+                if (s.trim().isEmpty())
+                    s = null;
+                boolean b = controller.cambiaDescrizioneBacheca(tipo, s);
+                if (!b)
+                    JOptionPane.showMessageDialog(frame, "ERRORE NEL CAMBIAMENTO DELLA BACHECA", "ERRORE", JOptionPane.ERROR_MESSAGE);
+            } else {
+                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
+                descrizione.setEditable(true);
+                descrizione.requestFocus();
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, MSG_BACHECA_INESISTENTE);
+        }
+    }
+
+    /**
+     * Aggiunge il listener al pulsante di logout.
+     * Effettua il logout e torna alla schermata iniziale.
+     */
+    public void initLogOutButton(){
         logoutbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -292,14 +300,22 @@ public class Home {
         });
     }
 
+    /**
+     * Carica le bacheche dell'utente all'avvio della schermata.
+     * Mostra un messaggio d'errore in caso di problemi.
+     */
     public void initDatiUtente(){
         try{
             controller.caricaBacheche();
-        }catch (Exception e){
+        }catch (Exception _){
             JOptionPane.showMessageDialog(frame, "ERRORE NEL CARICAMENTO DEI DATI", "ERRORE", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    /**
+     * Inizializza la combo box con le bacheche dell’utente per l’eliminazione.
+     * Se fallisce, carica i titoli predefiniti.
+     */
     public void initComboBox(){
         comboBox = new JComboBox<>();
         try{
@@ -308,18 +324,17 @@ public class Home {
             for (String s : a)
                 comboBox.addItem(TitoloBacheca.valueOf(s));
         }
-        catch (Exception e){
+        catch (Exception _){
             comboBox.addItem(TitoloBacheca.UNIVERSITA);
             comboBox.addItem(TitoloBacheca.LAVORO);
             comboBox.addItem(TitoloBacheca.TEMPO_LIBERO);
         }
     }
 
-
     /**
-     * restituisce il frame.
+     * Restituisce il frame principale della schermata iniziale.
      *
-     * @return il frame
+     * @return il {@code JFrame} della start page
      */
     public JFrame getFrame() {
         return frame;

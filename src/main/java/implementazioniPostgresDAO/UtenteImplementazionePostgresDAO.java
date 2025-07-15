@@ -20,7 +20,7 @@ public class UtenteImplementazionePostgresDAO implements UtenteDAO {
 
     //rivedere TODO
     @Override
-    public int inserisciutenteDB (String username, String password){
+    public int inserisciUtenteDB (String username, String password){
         String query = "INSERT INTO utente VALUES (?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)){

@@ -18,9 +18,8 @@ public class ToDo {
     private ArrayList<Attivita> checklistAttivita;
     private ArrayList<Utente> listaUtentiCondivisione;
     private LocalDate dataScadenza; //YYYY-MM-DD
-    private Image immagine;
+    private byte[] immagine;
     private Color coloreSfondo;
-    private String imgPath;
 
     /**
      * Instantiates a new To do.
@@ -62,14 +61,6 @@ public class ToDo {
 
     public void setDataScadenza(LocalDate dataScadenza) {
         this.dataScadenza = dataScadenza;
-    }
-
-    public String getImgPath() {
-        return imgPath;
-    }
-
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
     }
 
     /**
@@ -115,22 +106,12 @@ public class ToDo {
         this.stato = stato;
     }
 
-    /**
-     * Gets immagine.
-     *
-     * @return the immagine
-     */
-    public Image getImmagine() {
+    public byte[] getImmagine() {
         return immagine;
     }
 
-    /**
-     * Set immagine.
-     *
-     * @param img the img
-     */
-    public void setImmagine(Image img){
-        this.immagine = img;
+    public void setImmagine(byte[] immagine) {
+        this.immagine = immagine;
     }
 
     /**
@@ -287,6 +268,15 @@ public class ToDo {
         checklistAttivita.add(nuovaattivita);
     }
 
+    public void rimuoviAttivita (String titoloAttivita){
+        for (Attivita a : checklistAttivita){
+            if (a.getNome().equals(titoloAttivita)){
+                checklistAttivita.remove(a);
+                return;
+            }
+        }
+    }
+
     /**
      * Gets checklist attivita.
      *
@@ -307,12 +297,12 @@ public class ToDo {
         return true;
     }
 
-    public void setStatoAttivita(String nome)
+    public void setStatoAttivita(String nome, boolean b)
     {
         for (Attivita attivita : checklistAttivita)
         {
             if (attivita.getNome().equals(nome)) {
-                attivita.modificaStato();
+                attivita.modificaStato(b);
                 return;
             }
         }

@@ -39,8 +39,7 @@ public class Utente
      *
      * @return the boolean
      */
-    public boolean login()
-    {
+    public boolean login() {
         String username;
         String password;
         Scanner in = new Scanner(System.in);
@@ -83,8 +82,7 @@ public class Utente
      *
      * @return the boolean
      */
-    public boolean creaBacheca()
-    {
+    public boolean creaBacheca() {
         if (bachecheUtente.size() >= 3)
         {
             System.out.println("Hai già creato le tue bacheche!");

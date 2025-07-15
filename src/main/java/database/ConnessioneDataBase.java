@@ -19,7 +19,7 @@ public class ConnessioneDataBase {
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(URL, NOME, PASSWORD);
         } catch (ClassNotFoundException e) {
-            System.out.println("Driver non trovato!");
+            e.printStackTrace();
             }
     }
 

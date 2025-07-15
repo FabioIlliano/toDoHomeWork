@@ -4,7 +4,10 @@ import dao.*;
 import implementazioniPostgresDAO.*;
 import model.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,48 +24,65 @@ public class Controller {
 
 
     /**
-     * instanzia un controller.
+     * Costruttore vuoto della classe Controller.
+     * Istanzia un controller.
      */
     public Controller(){
-
+        //il costruttore non ha bisogno di inizializzare nulla.
     }
 
+    /**
+     * Effettua un logout logico nel controller, resettando tutti i valori dell'utente.
+     */
     public void logout(){
         utenteCorrente = null;
         titoloBachecaCorrente = null;
         idToDoCorrente = -1;
     }
 
-
+    /**
+     * Crea un nuovo utente nel database con le credenziali specificate.
+     *
+     * @param username il nome utente da registrare
+     * @param password la password associata al nuovo utente
+     * @return l'ID dell'utente appena creato se l'inserimento ha successo,
+     *         altrimenti -1 in caso di errore
+     */
     public int creaUtente(String username, String password){
         try{
             UtenteDAO u = new UtenteImplementazionePostgresDAO();
-            return u.inserisciutenteDB(username, password);
+            return u.inserisciUtenteDB(username, password);
         }catch (Exception e){
             e.printStackTrace();
             return -1;
         }
     }
 
+    /**
+     * Restituisce la lista locale dei ToDo della bacheca corrente dell'utente.
+     *
+     * @return una lista di oggetti ToDo associati alla bacheca corrente
+     */
     public ArrayList<ToDo> getListaToDoLocale() {
         return utenteCorrente.getBacheca(titoloBachecaCorrente).getListaToDo();
     }
 
-    public int getIdToDoCorrente() {
-        return idToDoCorrente;
-    }
-
+    /**
+     * Imposta l'ID del ToDo corrente selezionato.
+     *
+     * @param idToDoCorrente l'identificatore intero da assegnare al ToDo corrente
+     */
     public void setIdToDoCorrente(int idToDoCorrente) {
         this.idToDoCorrente = idToDoCorrente;
     }
 
 
     /**
-     * Login boolean.
+     * Esegue il login dell'utente con le credenziali fornite.
      *
-     * @param username the username
-     * @param password the password
-     * @return the boolean
+     * @param username la username dell'utente
+     * @param password la password associata all'utente
+     * @return true se il login ha successo, false altrimenti
      */
     public boolean login(String username, String password){
         try{
@@ -75,7 +95,7 @@ public class Controller {
             }
             else
                 return false;
-        }catch (Exception e){
+        }catch (Exception _){
             return false;
         }
     }
@@ -83,7 +103,7 @@ public class Controller {
     /**
      * Controlla se tutte le bacheche esistono.
      *
-     * @return the boolean
+     * @return vero se si possono creare altre bacheche, falso altrimenti.
      */
     public boolean checkBacheche(){
         return utenteCorrente.puoAggiungereBacheca();
@@ -92,9 +112,9 @@ public class Controller {
     /**
      * Crea bacheca una nuova bacheca.
      *
-     * @param t il titolo
-     * @param d la descrizione
-     * @throws Exception l eccezione
+     * @param t il titolo della nuova bacheca, unico per l'utente
+     * @param d la descrizione della bacheca
+     * @throws Exception nel caso in cui la creazione non vada a buon fine.
      */
     public void creaBacheca (TitoloBacheca t, String d) throws Exception{
         if (!utenteCorrente.puoAggiungereBacheca())
@@ -112,6 +132,12 @@ public class Controller {
 
     }
 
+    /**
+     * Carica tutte le bacheche associate all'utente corrente dal database
+     * e le inserisce nella struttura dati locale dell'utente.
+     *
+     * @throws Exception se si verifica un errore durante l'accesso al database
+     */
     public void caricaBacheche () throws Exception{
         UtenteDAO u = new UtenteImplementazionePostgresDAO();
         ArrayList<Bacheca> a = u.getBachecheUtenteDB(utenteCorrente.getUsername());
@@ -124,9 +150,10 @@ public class Controller {
     }
 
     /**
-     * Crea un nuovo todo.
+     * Crea un nuovo ToDo nella bacheca corrente sia nel database che nella struttura dati locale.
      *
-     * @param titoloToDo il titolo del todo
+     * @param titoloToDo il titolo del ToDo da creare
+     * @return l'ID del ToDo appena creato se l'operazione va a buon fine, -1 in caso di errore
      */
     public int creaToDo(String titoloToDo)
     {
@@ -136,24 +163,66 @@ public class Controller {
             if (r!=-1)
                 utenteCorrente.getBacheca(titoloBachecaCorrente).creaToDoGUI(titoloToDo);
             return r;
-        }catch (Exception e){
+        }catch (Exception _){
             return -1;
         }
     }
 
+    /**
+     * Aggiorna nel database lo stato del ToDo corrente con le informazioni presenti localmente.
+     *
+     * @throws SQLException se si verifica un errore durante l'aggiornamento nel database
+     */
     public void aggiornaToDo() throws SQLException {
         ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
         toDoDAO.aggiornaToDo(getToDo());
     }
 
+    /**
+     * Recupera dal database l'istanza aggiornata del ToDo corrente.
+     *
+     * @return l'oggetto {@code ToDo} corrispondente all'ID corrente, oppure {@code null} in caso di errore durante l'accesso al database.
+     */
+    public ToDo getToDoDB() {
+        try{
+            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
+            return toDoDAO.getToDo(idToDoCorrente);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Aggiorna nella lista locale il ToDo corrente con la versione aggiornata dal database.
+     */
+    public void rimpiazzaToDoLocale(){
+        ArrayList<ToDo> lista = getListaToDoLocale();
+        for (int i = 0; i < lista.size(); i++){
+            ToDo t = lista.get(i);
+            if (t.getIdToDo()==idToDoCorrente){
+                ToDo todo = getToDoDB();
+                lista.set(i, todo);
+                ArrayList<Attivita> listaAtt = getListaAttivita();
+                setListaAttivitaLocale(listaAtt);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Restituisce il ToDo corrente selezionato nella bacheca corrente.
+     *
+     * @return l'oggetto {@code ToDo} corrispondente all'ID selezionato
+     */
     public ToDo getToDo (){
         return utenteCorrente.getBacheca(titoloBachecaCorrente).getToDoId(idToDoCorrente);
     }
 
 
     /**
-     * Elimina il todo.
-     *
+     * Elimina il todo sia dal database che dalla struttura locale.
      */
     public void eliminaToDo()
     {
@@ -168,9 +237,9 @@ public class Controller {
     }
 
     /**
-     * Cambia titolo del todo.
+     * Cambia il titolo del todo selezionato.
      *
-     * @param t the titolo
+     * @param t il nuovo titolo.
      */
     public void cambiaTitoloToDo(String t)
     {
@@ -178,28 +247,28 @@ public class Controller {
     }
 
     /**
-     * Cambia descrizione del todo.
+     * Cambia la descrizione del todo selezionato.
      *
-     * @param s la nuova descrizione
+     * @param s la nuova descrizione.
      */
     public void cambiaDescToDo(String s){
         getToDo().setDescrizione(s);
     }
 
     /**
-     * Cambia url del todo.
+     * Cambia l'URL del todo selezionato.
      *
-     * @param s la nuova descrizione
+     * @param s il nuovo URL.
      */
     public void cambiaURLToDo(String s){
         getToDo().setUrl(s);
     }
 
     /**
-     * Cambia data scadenza del todo.
+     * Cambia la data di scadenza del todo selezionato.
      *
-     * @param s la data di scadenza del ToDo
-     * @return un booleano
+     * @param s la nuova data di scadenza.
+     * @return {@code true} se l'operazione ha avuto successo, {@code false} in caso di eccezione.
      */
     public boolean cambiaDataScadToDo(String s){
         try{
@@ -212,10 +281,10 @@ public class Controller {
     }
 
     /**
-     * Controlla la data di scadenza del ToDo.
+     * Verifica se la data fornita non è antecedente a quella odierna.
      *
-     * @param s la data del todo
-     * @return un booleano
+     * @param s la data da controllare.
+     * @return {@code true} se la data è oggi o nel futuro, {@code false} se è nel passato
      */
     public boolean checkData(String s){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -225,28 +294,29 @@ public class Controller {
     }
 
     /**
-     * Cambia il colore del todo.
+     * Cambia il colore di sfondo del todo selezionato.
      *
-     * @param c il colore del todo
+     * @param c il nuovo colore di sfondo del todo corrente.
      */
     public void cambiaBgColorToDo(Color c){
         getToDo().setColoreSfondo(c);
     }
 
     /**
-     * prende il colore del todo
+     * Restituisce il colore di sfondo del ToDo selezionato.
      *
-     * @return the color
+     * @return un oggetto {@code Color} che rappresenta il colore di sfondo del ToDo corrente.
      */
     public Color getColorBG(){
         return this.getToDo().getColoreSfondo();
     }
 
     /**
-     * Sposta un todo tra una bacheca e l'altra
+     * Sposta il ToDo corrente in un'altra bacheca dell'utente.
+     * Questo metodo aggiorna la posizione del ToDo nel database e nella struttura dati locale.
      *
-     * @param nuova la nuova bacheca
-     * @return un booleano
+     * @param nuova il titolo della bacheca di destinazione
+     * @return {@code true} se lo spostamento è avvenuto con successo, {@code false} altrimenti.
      */
     public boolean spostaToDo(TitoloBacheca nuova) {
         try{
@@ -263,7 +333,7 @@ public class Controller {
     }
 
     /**
-     * Ordina todo alfabeticamente.
+     * Ordina i todo alfabeticamente solo nella struttura dati locale.
      */
     public void ordinaToDoAlfabeticamente() {
         Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
@@ -271,7 +341,8 @@ public class Controller {
     }
 
     /**
-     * Ordina todo per scadenza.
+     * Ordina i ToDo della bacheca corrente in base alla data di scadenza,
+     * dal più prossimo al più lontano, solo nella struttura dati locale.
      */
     public void ordinaToDoPerScadenza() {
         Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
@@ -279,23 +350,24 @@ public class Controller {
     }
 
     /**
-     * prende i todo che scadono nella data odierna
+     * Restituisce la lista dei ToDo della bacheca corrente che scadono oggi.
      *
-     * @return l' arraylist
+     * @return una lista di oggetti {@code ToDo} con data di scadenza uguale a quella odierna.
+     * Se non ci sono ToDo, restituisce una lista vuota.
      */
     public ArrayList<ToDo> getToDoScadenzaOggi(){
         if (utenteCorrente.getBacheca(titoloBachecaCorrente).getListaToDo()!=null){
             Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
             return b.getToDoScadenzaOggi();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     /**
-     * prende i todo che scadono in una data scelta
+     * Restituisce la lista di ToDo con scadenza fissata alla data specificata.
      *
-     * @param data la data
-     * @return l arraylist
+     * @param data la data di scadenza per filtrare i ToDo
+     * @return una lista di ToDo con scadenza fissata alla data specificata
      */
     public ArrayList<ToDo> getToDoScadenzaFissa(LocalDate data){
         Bacheca b = utenteCorrente.getBacheca(titoloBachecaCorrente);
@@ -303,9 +375,9 @@ public class Controller {
     }
 
     /**
-     * prende la lista dei ToDo
+     * Carica dal db e restituisce la lista di ToDo della bacheca corrente, inclusi quelli condivisi.
      *
-     * @return l arraylist
+     * @return una lista di ToDo della bacheca corrente, o una lista vuota in caso di errore.
      */
     public ArrayList<ToDo> getListaToDo(){
         try {
@@ -321,28 +393,24 @@ public class Controller {
 
     }
 
-    public ArrayList<ToDo> getToDoScaduti(){
-        try {
-            ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
-            return toDoDAO.caricaDatiToDo(titoloBachecaCorrente, utenteCorrente.getUsername());
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-
-    }
-
+    /**
+     * Aggiunge un ToDo alla lista dei ToDo della bacheca corrente.
+     *
+     * @param t il ToDo da aggiungere.
+     */
     public void setListToDo(ToDo t){
         utenteCorrente.getBacheca(titoloBachecaCorrente).aggiungiToDo(t);
     }
 
+    /**
+     * Pulisce la lista dei ToDo della bacheca corrente, rimuovendo tutti i ToDo.
+     */
     public void pulisciListaToDo(){
         utenteCorrente.getBacheca(titoloBachecaCorrente).getListaToDo().clear();
     }
 
     /**
-     * Gets titolo todo corrente.
+     * Restituisce il titolo del todo selezionato
      *
      * @return il titolo del todo corrente
      */
@@ -351,7 +419,7 @@ public class Controller {
     }
 
     /**
-     * modifica il titolo del todo corrente.
+     * Modifica il titolo del todo selezionato.
      *
      * @param t il nuovo titolo
      */
@@ -360,45 +428,45 @@ public class Controller {
     }
 
     /**
-     * prende l'utente.
+     * Restituisce l'utente corrente, ovvero l'utente collegato al sistema.
      *
-     * @return l'utente
+     * @return l'oggetto utente.
      */
     public Utente getUtente() {
         return utenteCorrente;
     }
 
     /**
-     * prende il titolo della bacheca.
+     * Restituisce il titolo della bacheca corrente.
      *
-     * @return il titolo bacheca
+     * @return il titolo della bacheca
      */
     public String getTitoloBacheca() {
         return titoloBachecaCorrente;
     }
 
     /**
-     * modifica lo tato del ToDo
+     * Modifica lo stato del todo
      *
-     * @param b lo stato
+     * @param b lo stato nuovo.
      */
     public void setCompletoToDo(boolean b){
         getToDo().setStato(b);
     }
 
     /**
-     * restituisce lo stato del todo
+     * Restituisce lo stato del todo selezionato
      *
-     * @return lo stato del todo booleano
+     * @return lo stato del todo corrente
      */
     public boolean getCompletoToDo(){
         return getToDo().getStato();
     }
 
     /**
-     * restituisce la data di scadenza del ToDo
+     * Restituisce la data di scadenza del ToDo selezionato
      *
-     * @return la data di scadenza
+     * @return la data di scadenza formattata, se assente restituisce stringa vuota.
      */
     public String getDataScadToDo(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -410,9 +478,9 @@ public class Controller {
     }
 
     /**
-     * restituisce la descrizione del ToDo.
+     * Restituisce la descrizione del ToDo selezionato.
      *
-     * @return una string ovvero la descrizione del ToDo
+     * @return la descrizione del ToDo corrente.
      */
     public String getDescrizioneToDo(){
         String s = getToDo().getDescrizione();
@@ -423,9 +491,9 @@ public class Controller {
     }
 
     /**
-     * restituisce l'URL.
+     * Restituisce l'URL del ToDo selezionato.
      *
-     * @return una string ovvero l'URL del ToDo
+     * @return 'URL del ToDo corrente.
      */
     public String getUrlToDo(){
         String s = getToDo().getUrl();
@@ -436,59 +504,66 @@ public class Controller {
     }
 
     /**
-     * restituisce il colore del ToDo
+     * Restituisce il colore del ToDo selezionato.
      *
-     * @return un color ovvero il colore del ToDo
+     * @return Il colore del ToDo corrente.
      */
     public Color getBGColorToDo(){
         return getToDo().getColoreSfondo();
     }
 
     /**
-     * Modifica il titolo della bacheca.
+     * Modifica il titolo della bacheca corrente.
      *
-     * @param titoloBacheca il titolo della bacheca
+     * @param titoloBacheca il titolo della bacheca.
      */
     public void setTitoloBacheca(String titoloBacheca) {
         this.titoloBachecaCorrente = titoloBacheca;
     }
 
     /**
-     * Modifica l'immagine del ToDo.
+     * Modifica l'immagine associata al ToDo corrente.
      *
-     * @param img l'immagine
+     * @param imageBytes array di byte che rappresenta l'immagine da assegnare al ToDo.
      */
-    public void setIMGToDo(Image img, String path){
-        getToDo().setImmagine(img);
-        getToDo().setImgPath(path);
+    public void setIMGToDo(byte[] imageBytes) {
+        getToDo().setImmagine(imageBytes);
     }
 
     /**
-     * restituisce l'immagine del ToDo.
+     * Restituisce l'immagine del ToDo corrente come oggetto {@link Image}.
      *
-     * @return l'immagine del ToDo
+     * @return l'immagine convertita da byte array a {@code Image}, oppure {@code null} se l'immagine non è presente
+     *         o se si verifica un errore durante la conversione.
      */
-    public Image getIMGToDo(){
-        return getToDo().getImmagine();
-    }
-
-    public String getImgPath(){
-        return getToDo().getImgPath();
+    public Image getIMGToDo() {
+        byte[] imgBytes = getToDo().getImmagine();
+        if (imgBytes == null) return null;
+        try {
+            InputStream is = new ByteArrayInputStream(imgBytes);
+            return ImageIO.read(is);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
-     * Controlla se la bacheca esiste.
+     * Controlla se esiste una bacheca con il nome specificato per l'utente corrente.
      *
-     * @param nomeBacheca il nome della bacheca
-     * @return un booleano
+     * @param nomeBacheca il nome della bacheca da verificare.
+     * @return true se la bacheca esiste, false altrimenti.
      */
     public boolean checkBacheca (String nomeBacheca){
-        if (utenteCorrente.getBacheca(nomeBacheca) == null)
-            return false;
-        else
-            return true;
+        return utenteCorrente.getBacheca(nomeBacheca) != null;
     }
 
+    /**
+     * Elimina una bacheca sia dal database che in locale per l'utente corrente.
+     *
+     * @param titolo il titolo della bacheca da eliminare
+     * @return true se l'eliminazione è avvenuta con successo, false altrimenti
+     */
     public boolean eliminaBacheca (TitoloBacheca titolo){
         boolean b = utenteCorrente.eliminaBachecaGUI(titolo.toString());
 
@@ -498,29 +573,36 @@ public class Controller {
             boolean b1 = r==0;
             return (b && b1);
         }
-        catch (Exception e){
+        catch (Exception _){
             return false;
         }
     }
 
+
+    /**
+     * Cambia la descrizione di una bacheca dell'utente corrente e aggiorna il database.
+     *
+     * @param titolo il titolo della bacheca da modificare
+     * @param descrizione la nuova descrizione da impostare
+     * @return true se l'aggiornamento nel database è andato a buon fine, false altrimenti
+     */
     public boolean cambiaDescrizioneBacheca (TitoloBacheca titolo, String descrizione){
         utenteCorrente.getBacheca(titolo.toString()).setDescrizione(descrizione);
-
         try {
             BachecaDAO bachecaDAO = new BachecaImplementazionePostgresDAO();
             int r = bachecaDAO.aggiornaDescrizioneBacheca(titolo, descrizione, utenteCorrente.getUsername());
             return r==0;
         }
-        catch (Exception e){
+        catch (Exception _){
             return false;
         }
     }
 
     /**
-     * restituisce la descrizione della bacheca.
+     * Restituisce la descrizione della bacheca.
      *
-     * @param t il titolo della bacheca
-     * @return una string
+     * @param t Il titolo della bacheca
+     * @return La descrizione
      */
     public String getDescrizioneBacheca(String t){
         return utenteCorrente.getBacheca(t).getDescrizione();
@@ -537,24 +619,23 @@ public class Controller {
     }
 
     /**
-     * restituisce true se nessuna bacheca esiste
+     * Controlla se l'utente corrente non ha nessuna delle bacheche predefinite: LAVORO, TEMPO_LIBERO, UNIVERSITA.
      *
-     * @return un booleaeno
+     * @return true se nessuna delle bacheche predefinite è presente, false altrimenti
      */
     public boolean noBacheca(){
-        if (utenteCorrente.getBacheca(TitoloBacheca.LAVORO.toString())==null && utenteCorrente.getBacheca(TitoloBacheca.TEMPO_LIBERO.toString())==null && utenteCorrente.getBacheca(TitoloBacheca.UNIVERSITA.toString())==null )
-            return true;
-        else
-            return false;
+        return utenteCorrente.getBacheca(TitoloBacheca.LAVORO.toString()) == null
+                && utenteCorrente.getBacheca(TitoloBacheca.TEMPO_LIBERO.toString()) == null
+                && utenteCorrente.getBacheca(TitoloBacheca.UNIVERSITA.toString()) == null;
     }
 
     /**
-     * Crea attivita.
+     * Crea una nuova attività associata al ToDo corrente.
      *
-     * @param titoloAttivita il titolo dell'attivita
+     * @param titoloAttivita il titolo della nuova attività da creare
+     * @return 0 se la creazione è andata a buon fine, -1 in caso di errore
      */
-    public int creaAttivita(String titoloAttivita)
-    {
+    public int creaAttivita(String titoloAttivita) {
         try{
             AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
             int r = attivitaDAO.creaAttivita(idToDoCorrente, titoloAttivita);
@@ -572,10 +653,21 @@ public class Controller {
 
     }
 
+    /**
+     * Elimina un'attività dal ToDo corrente sia in locale che sul database.
+     *
+     * @param nome il nome dell'attività da eliminare
+     * @return 0 se l'eliminazione ha avuto successo, -1 in caso di errore
+     */
     public int eliminaAttivita(String nome){
         try{
             AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
-            return attivitaDAO.eliminaAttivita(nome, idToDoCorrente);
+            if(attivitaDAO.eliminaAttivita(nome, idToDoCorrente) == 0) {
+                getToDo().rimuoviAttivita(nome);
+                return 0;
+            }
+            else
+                return -1;
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -584,41 +676,53 @@ public class Controller {
     }
 
     /**
-     * restituisce la lista attivita.
+     * Recupera la lista delle attività associate al ToDo corrente dal database.
      *
-     * @return l'arraylist
+     * @return lista di oggetti Attività; lista vuota in caso di errore
      */
     public ArrayList<Attivita> getListaAttivita(){
         try{
             AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
             return attivitaDAO.getAttivita(idToDoCorrente);
         }
-        catch (Exception e){
+        catch (Exception _){
             return new ArrayList<>();
         }
     }
 
+    /**
+     * Recupera la lista delle attività memorizzate in locale nel ToDo corrente.
+     *
+     * @return lista locale di oggetti Attività.
+     */
     public ArrayList<Attivita> getListaAttivitaLocale(){
         return getToDo().getChecklistAttivita();
     }
 
+    /**
+     * Imposta la lista locale delle attività nel ToDo corrente.
+     *
+     * @param lista lista di attività da impostare localmente
+     */
     public void setListaAttivitaLocale(ArrayList<Attivita> lista){
         getToDo().setChecklistAttivita(lista);
     }
 
-    public void setStatoLocale(String nome){
-        getToDo().setStatoAttivita(nome);
+    /**
+     * Imposta lo stato di una specifica attività nel ToDo corrente.
+     *
+     * @param nome nome dell'attività di cui modificare lo stato
+     */
+    public void setStatoLocale(String nome, boolean b){
+        getToDo().setStatoAttivita(nome, b);
     }
 
     /**
-     * restituisce true se tutti i ToDo sono completati.
+     * Aggiorna lo stato delle attività nella checklist nel database.
      *
-     * @return un boolean
+     * @param checklist lista di attività con gli stati aggiornati
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    public boolean checkChecklist(){
-        return getToDo().checkChecklist();
-    }
-
     public void aggiornaChecklist(ArrayList<Attivita> checklist) throws SQLException{
         AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
         for (Attivita a : checklist)
@@ -626,10 +730,22 @@ public class Controller {
 
     }
 
+    /**
+     * Recupera un'attività dal ToDo corrente in base al nome.
+     *
+     * @param nome nome dell'attività da cercare
+     * @return oggetto Attività se trovato, null altrimenti
+     */
     public Attivita getAttivita(String nome){
         return getToDo().cercaAttivita(nome);
     }
 
+    /**
+     * Condivide il ToDo corrente con un altro utente.
+     *
+     * @param utenteDest nome dell'utente destinatario della condivisione
+     * @return 0 se la condivisione è avvenuta con successo, -1 in caso di errore
+     */
     public int condividiToDo(String utenteDest){
         try{
             CondividiToDoDAO condividiToDoDAO = new CondividiToDoImplementazionePostgresDAO();
@@ -641,6 +757,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Rimuove la condivisione del ToDo corrente con un utente.
+     *
+     * @param utenteDest nome dell'utente destinatario da rimuovere dalla condivisione
+     * @return 0 se la rimozione ha avuto successo, -1 in caso di errore
+     */
     public int rimuoviCondivisione(String utenteDest){
         try{
             CondividiToDoDAO condividiToDoDAO = new CondividiToDoImplementazionePostgresDAO();
@@ -652,6 +774,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Restituisce la lista degli utenti con cui è condiviso il ToDo corrente.
+     *
+     * @return lista di nomi utenti destinatari della condivisione; lista vuota in caso di errore
+     */
     public ArrayList<String> getListaCondivisioni (){
         try{
             CondividiToDoDAO condividiToDoDAO = new CondividiToDoImplementazionePostgresDAO();
@@ -663,6 +790,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Verifica se un utente esiste nel sistema.
+     *
+     * @param utenteDest nome dell'utente da verificare
+     * @return true se l'utente esiste, false altrimenti
+     */
     public boolean checkUtente(String utenteDest) {
         try{
             UtenteDAO utenteDAO = new UtenteImplementazionePostgresDAO();
@@ -673,5 +806,23 @@ public class Controller {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean listeDiverse (ArrayList<Attivita> oldAttivita) {
+        if (oldAttivita.size()!=getListaAttivitaLocale().size())
+            return true; //in teoria non dovrebbe mai capitare
+
+        for (Attivita a1 : oldAttivita){
+            boolean trovato = false;
+            for (Attivita a2 : getListaAttivitaLocale()){
+                if (a1.getNome().equals(a2.getNome()) && a1.isStato() == a2.isStato() ){
+                    trovato = true;
+                    break;
+                }
+            }
+            if (!trovato)
+                return true;
+        }
+        return false;
     }
 }

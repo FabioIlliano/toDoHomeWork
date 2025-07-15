@@ -4,7 +4,6 @@ import dao.ToDoDAO;
 import database.ConnessioneDataBase;
 import model.ToDo;
 
-import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -36,6 +35,7 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
                     t.setDataScadenza((LocalDate) null);
                 else
                     t.setDataScadenza(r.getDate("datascadenza").toLocalDate());
+
                 t.setUrl(r.getString("url"));
 
                 String coloreStr = r.getString("coloresfondo");
@@ -43,17 +43,13 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
                 if (coloreStr != null && !coloreStr.isEmpty())
                     colore = Color.decode(coloreStr);
                 else
-                    colore = new Color(200, 200, 200);
+                    colore = new Color(102,102, 102);
                 t.setColoreSfondo(colore);
                 t.setStato(r.getBoolean("stato"));
-                String img = r.getString("immagine");
-                if (img == null)
-                    t.setImmagine(null);
-                else{
-                    ImageIcon image = new ImageIcon(img);
-                    t.setImmagine(image.getImage());
-                    t.setImgPath(img);
-                }
+
+                byte[] imgBytes = r.getBytes("immagine");
+                t.setImmagine(imgBytes);
+
                 list.add(t);
             }
             return list;
@@ -84,6 +80,7 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
                     t.setDataScadenza((LocalDate) null);
                 else
                     t.setDataScadenza(r.getDate("datascadenza").toLocalDate());
+
                 t.setUrl(r.getString("url"));
 
                 String coloreStr = r.getString("coloresfondo");
@@ -91,17 +88,13 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
                 if (coloreStr != null && !coloreStr.isEmpty())
                     colore = Color.decode(coloreStr);
                 else
-                    colore = new Color(200, 200, 200);
+                    colore = new Color(102,102, 102);
                 t.setColoreSfondo(colore);
                 t.setStato(r.getBoolean("stato"));
-                String img = r.getString("immagine");
-                if (img == null)
-                    t.setImmagine(null);
-                else{
-                    ImageIcon image = new ImageIcon(img);
-                    t.setImmagine(image.getImage());
-                    t.setImgPath(img);
-                }
+
+                byte[] imgBytes = r.getBytes("immagine");
+                t.setImmagine(imgBytes);
+
                 list.add(t);
             }
             return list;
@@ -166,10 +159,11 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
         stmt.setString(5, coloreString);
         stmt.setBoolean(6, t.getStato());
 
-        if (t.getImgPath()==null || t.getImgPath().trim().isEmpty())
-            stmt.setNull(7, Types.VARCHAR);
+        byte[] imgBytes = t.getImmagine();
+        if (imgBytes == null)
+            stmt.setNull(7, Types.BINARY);
         else
-            stmt.setString(7, t.getImgPath());
+            stmt.setBytes(7, imgBytes);
 
         stmt.setInt(8, t.getIdToDo());
 
@@ -208,5 +202,44 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
             e.printStackTrace();
             return-1;
         }
+    }
+
+    public ToDo getToDo(int idToDo) {
+        String query = "SELECT * FROM todo WHERE idToDo = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, idToDo);
+            ResultSet r = stmt.executeQuery();
+            if (r.next()) {
+                ToDo t = new ToDo();
+                t.setIdToDo(r.getInt("idtodo"));
+                t.setTitolo(r.getString("titolo"));
+                t.setDescrizione(r.getString("descrizione"));
+                if (r.getDate("datascadenza")==null)
+                    t.setDataScadenza((LocalDate) null);
+                else
+                    t.setDataScadenza(r.getDate("datascadenza").toLocalDate());
+                t.setUrl(r.getString("url"));
+
+                String coloreStr = r.getString("coloresfondo");
+                Color colore;
+                if (coloreStr != null && !coloreStr.isEmpty())
+                    colore = Color.decode(coloreStr);
+                else
+                    colore = new Color(102,102, 102);
+
+                t.setColoreSfondo(colore);
+
+                t.setStato(r.getBoolean("stato"));
+
+                byte[] imgBytes = r.getBytes("immagine");
+                t.setImmagine(imgBytes);
+
+                return t;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
