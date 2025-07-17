@@ -1,128 +1,221 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.GestisciToDo">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="10" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="535" height="784"/>
+      <xy x="20" y="20" width="884" height="944"/>
     </constraints>
     <properties>
       <background color="-3086094"/>
     </properties>
     <border type="none"/>
     <children>
-      <grid id="af802" binding="urlPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="e9935" binding="buttonpanel" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="100"/>
+            <preferred-size width="-1" height="100"/>
+            <maximum-size width="-1" height="100"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="20083" class="javax.swing.JLabel" binding="urlJL">
+          <component id="7823a" class="javax.swing.JButton" binding="confermaButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="URL"/>
-            </properties>
-          </component>
-          <component id="6df85" class="javax.swing.JTextField" binding="urlTextField">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
               </grid>
             </constraints>
             <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="24" style="0"/>
+              <foreground color="-16777216"/>
+              <opaque value="true"/>
+              <text value="CONFERMA TODO"/>
+            </properties>
+          </component>
+          <component id="e70d5" class="javax.swing.JButton" binding="indietroButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="24" style="0"/>
+              <foreground color="-16777216"/>
+              <text value="TORNA INDIETRO"/>
+            </properties>
+          </component>
+          <component id="d3fe7" class="javax.swing.JButton" binding="eliminaButton">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="24" style="0"/>
+              <foreground color="-16777216"/>
+              <text value="ELIMINA TODO"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="6c26a" binding="completatoPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="100"/>
+            <preferred-size width="-1" height="100"/>
+            <maximum-size width="-1" height="100"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="54cd" class="javax.swing.JButton" binding="setCompletoButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="24" style="0"/>
+              <foreground color="-16777216"/>
+              <opaque value="true"/>
+              <text value="COMPLETO!"/>
+            </properties>
+          </component>
+          <component id="65467" class="javax.swing.JButton" binding="spostaToDobutton">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="24" style="0"/>
+              <foreground color="-16777216"/>
+              <opaque value="true"/>
+              <text value="CAMBIA BACHECA"/>
+            </properties>
+          </component>
+          <component id="7208" class="javax.swing.JLabel" binding="imgCompletatoJL">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <icon value="notCompleted.png"/>
               <text value=""/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="e9935" binding="buttonpanel" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="deb48" binding="condividiPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="9" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="125"/>
+            <preferred-size width="-1" height="125"/>
+            <maximum-size width="-1" height="125"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
-          <grid id="17850" binding="btnPanel2" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
+          <component id="51762" class="javax.swing.JButton" binding="condividiBtn">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="e70d5" class="javax.swing.JButton" binding="indietroButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="TORNA INDIETRO"/>
-                </properties>
-              </component>
-              <component id="d3fe7" class="javax.swing.JButton" binding="eliminaButton">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="ELIMINA TODO"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="ed066" binding="btnPanel1" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="65467" class="javax.swing.JButton" binding="spostaToDobutton">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="SPOSTA TODO"/>
-                </properties>
-              </component>
-              <component id="7823a" class="javax.swing.JButton" binding="confermaButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="CONFERMA MODIFICHE TODO"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-        </children>
-      </grid>
-      <grid id="9fb8a" binding="titoloPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="d12b5" class="javax.swing.JLabel" binding="titoloJL">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Titolo:"/>
-            </properties>
-          </component>
-          <component id="210d4" class="javax.swing.JTextField" binding="titoloTextField">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
               </grid>
             </constraints>
             <properties>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <icon value="condividi.png"/>
+              <opaque value="false"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="bdf2" class="javax.swing.JButton" binding="mostraCondivisioneBtn">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="-1"/>
+                <preferred-size width="250" height="-1"/>
+                <maximum-size width="250" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <icon value="vediCondivisioni.png"/>
+              <opaque value="false"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="95684" class="javax.swing.JButton" binding="eliminaCondivisioneBtn">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <font name="SansSerif" size="24" style="0"/>
+              <foreground color="-16777216"/>
+              <icon value="eliminaCondividi.png"/>
+              <opaque value="false"/>
+              <text value=""/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="9fb8a" binding="titoloPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="75"/>
+            <preferred-size width="-1" height="75"/>
+            <maximum-size width="-1" height="75"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="210d4" class="javax.swing.JTextField" binding="titoloTextField">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="28" style="1"/>
+              <foreground color="-16777216"/>
+              <horizontalAlignment value="0"/>
+              <margin top="2" left="9" bottom="2" right="6"/>
               <text value=""/>
             </properties>
           </component>
@@ -131,9 +224,15 @@
       <grid id="103a6" binding="dataScadPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="50"/>
+            <preferred-size width="-1" height="50"/>
+            <maximum-size width="-1" height="50"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="d6c80" class="javax.swing.JLabel" binding="scadenzaJL">
@@ -141,6 +240,9 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-3086094"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
               <text value="Data Scadenza:"/>
             </properties>
           </component>
@@ -151,8 +253,51 @@
               </grid>
             </constraints>
             <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <text value=""/>
               <toolTipText value="FORMATO: DD-MM-YYYY"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="af802" binding="urlPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="50"/>
+            <preferred-size width="-1" height="50"/>
+            <maximum-size width="-1" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="20083" class="javax.swing.JLabel" binding="urlJL">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-3086094"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
+              <text value="URL"/>
+            </properties>
+          </component>
+          <component id="6df85" class="javax.swing.JTextField" binding="urlTextField">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <font name="SansSerif" size="14" style="0"/>
+              <foreground color="-16777216"/>
+              <text value=""/>
             </properties>
           </component>
         </children>
@@ -160,9 +305,15 @@
       <grid id="7b01c" binding="descPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="50"/>
+            <preferred-size width="-1" height="50"/>
+            <maximum-size width="-1" height="50"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="1c263" class="javax.swing.JLabel" binding="descrizioneJL">
@@ -170,38 +321,54 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-3086094"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
               <text value="Descrizone:"/>
             </properties>
           </component>
-          <component id="821b8" class="javax.swing.JTextField" binding="descTextField">
+          <scrollpane id="6a359" binding="descrizioneJSP">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="50"/>
+                <preferred-size width="-1" height="50"/>
+                <maximum-size width="-1" height="50"/>
               </grid>
             </constraints>
-            <properties/>
-          </component>
+            <properties>
+              <background color="-2101001"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="c4ac9" class="javax.swing.JTextArea" binding="descTextArea">
+                <constraints/>
+                <properties>
+                  <background color="-2101001"/>
+                  <font name="SansSerif" size="14" style="0"/>
+                  <foreground color="-16777216"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
-      <grid id="9b3fa" binding="imgPanel" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="9b3fa" binding="imgPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="125"/>
+            <preferred-size width="-1" height="125"/>
+            <maximum-size width="-1" height="125"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="97b36" class="javax.swing.JLabel" binding="imgJLtext">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Immagine:"/>
-            </properties>
-          </component>
           <component id="f5592" class="javax.swing.JLabel" binding="imgJL">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value=""/>
@@ -209,115 +376,54 @@
           </component>
           <component id="7ee55" class="javax.swing.JButton" binding="scegliIMGButton">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="125" height="-1"/>
+                <preferred-size width="125" height="-1"/>
+                <maximum-size width="125" height="-1"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="SCEGLI IMMAGINE MAX [800,600]"/>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <foreground color="-16777216"/>
+              <icon value="immagine.png"/>
+              <iconTextGap value="4"/>
+              <opaque value="false"/>
+              <text value=""/>
+              <toolTipText value="IMMAGINE MAX 800X600"/>
             </properties>
           </component>
           <component id="358e7" class="javax.swing.JButton" binding="resetImgBtn">
             <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="RESET IMMAGINE"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
-      <grid id="56dba" binding="bgColorPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="57cb2" class="javax.swing.JLabel" binding="bgColorJL">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Colore Sfondo"/>
-            </properties>
-          </component>
-          <component id="55e51" class="javax.swing.JButton" binding="bgColorButton">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="SCEGLI COLORE"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
-      <grid id="6c26a" binding="completatoPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="7208" class="javax.swing.JLabel" binding="imgCompletatoJL">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <icon value="notCompleted64.png"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="54cd" class="javax.swing.JButton" binding="setCompletoButton">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="SET COMPLETATO/NON"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
-      <grid id="e83f4" binding="checklistJP" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="a48b" class="javax.swing.JLabel" binding="checklistJL">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Checklist:"/>
-            </properties>
-          </component>
-          <scrollpane id="c338a" binding="checklistJSP">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <grid id="5f8d2" binding="attivitaPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints/>
-                <properties/>
-                <border type="none"/>
-                <children/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="100"/>
+                <preferred-size width="-1" height="100"/>
+                <maximum-size width="-1" height="100"/>
               </grid>
-            </children>
-          </scrollpane>
+            </constraints>
+            <properties>
+              <background color="-3086094"/>
+              <borderPainted value="false"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
+              <opaque value="false"/>
+              <text value="RESET"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="9af5a" binding="attibtnPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="150"/>
+            <preferred-size width="-1" height="150"/>
+            <maximum-size width="-1" height="150"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="172cf" class="javax.swing.JButton" binding="nuovaAttivitaButton">
@@ -325,7 +431,11 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="+"/>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <icon value="nuovaAtt.png"/>
+              <opaque value="false"/>
+              <text value=""/>
             </properties>
           </component>
           <component id="9855c" class="javax.swing.JButton" binding="eliminaAttivitaButton">
@@ -333,43 +443,120 @@
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="-"/>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <icon value="rimuoviAtti.png"/>
+              <opaque value="false"/>
+              <text value=""/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="deb48" binding="condividiPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="56dba" binding="bgColorPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="125"/>
+            <preferred-size width="-1" height="125"/>
+            <maximum-size width="-1" height="125"/>
+          </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="51762" class="javax.swing.JButton" binding="condividiBtn">
+          <component id="57cb2" class="javax.swing.JLabel" binding="bgColorJL">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="CONDIVIDI TODO"/>
+              <background color="-3086094"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
+              <text value="Colore Sfondo"/>
             </properties>
           </component>
-          <component id="95684" class="javax.swing.JButton" binding="eliminaCondivisioneBtn">
+          <component id="55e51" class="javax.swing.JButton" binding="bgColorButton">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="125" height="-1"/>
+                <preferred-size width="125" height="-1"/>
+                <maximum-size width="125" height="-1"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="ELIMINA CONDIVISI"/>
+              <background color="-2101001"/>
+              <borderPainted value="false"/>
+              <foreground color="-16777216"/>
+              <icon value="coloreSfondo.png"/>
+              <opaque value="false"/>
+              <text value=""/>
             </properties>
           </component>
-          <component id="bdf2" class="javax.swing.JButton" binding="mostraCondivisioneBtn">
+          <component id="3790e" class="javax.swing.JLabel" binding="bgColorGUI">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="50" height="50"/>
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="MOSTRA CONDIVISI"/>
+              <opaque value="true"/>
+              <text value=""/>
             </properties>
           </component>
+        </children>
+      </grid>
+      <grid id="e83f4" binding="checklistJP" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="150"/>
+            <preferred-size width="300" height="150"/>
+            <maximum-size width="300" height="150"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-3086094"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="a48b" class="javax.swing.JLabel" binding="checklistJL">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-3086094"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
+              <text value="Checklist Attività:"/>
+            </properties>
+          </component>
+          <scrollpane id="c338a" binding="checklistJSP">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-2101001"/>
+              <foreground color="-16777216"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <grid id="5f8d2" binding="attivitaPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties>
+                  <background color="-2101001"/>
+                  <font name="SansSerif" size="14" style="3"/>
+                  <foreground color="-16777216"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+            </children>
+          </scrollpane>
         </children>
       </grid>
     </children>

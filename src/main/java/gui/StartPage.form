@@ -93,6 +93,7 @@
                 </constraints>
                 <properties>
                   <background color="-3086094"/>
+                  <borderPainted value="false"/>
                   <enabled value="true"/>
                   <foreground color="-3086094"/>
                   <icon value="open-lock128.png"/>
@@ -106,7 +107,7 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-3086094"/>
+                  <background color="-2101001"/>
                   <editable value="false"/>
                   <enabled value="true"/>
                   <font name="SansSerif" size="20"/>
@@ -133,6 +134,7 @@
                 </constraints>
                 <properties>
                   <background color="-3086094"/>
+                  <borderPainted value="false"/>
                   <foreground color="-3086094"/>
                   <icon value="user128.png"/>
                   <text value=""/>
@@ -145,7 +147,7 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-3086094"/>
+                  <background color="-2101001"/>
                   <editable value="false"/>
                   <enabled value="true"/>
                   <font name="SansSerif" size="20"/>

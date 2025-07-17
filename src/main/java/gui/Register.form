@@ -28,7 +28,7 @@
             <properties>
               <background color="-3086094"/>
               <font name="SansSerif" size="16"/>
-              <foreground color="-13421773"/>
+              <foreground color="-16777216"/>
               <text value="Username:"/>
             </properties>
           </component>
@@ -51,7 +51,7 @@
             <properties>
               <background color="-3086094"/>
               <font name="SansSerif" size="16"/>
-              <foreground color="-13421773"/>
+              <foreground color="-16777216"/>
               <text value="Password:"/>
             </properties>
           </component>
@@ -64,7 +64,7 @@
             <properties>
               <background color="-3086094"/>
               <font name="SansSerif" size="16"/>
-              <foreground color="-13421773"/>
+              <foreground color="-16777216"/>
             </properties>
           </component>
           <component id="572f1" class="javax.swing.JLabel" binding="password2JLB">
@@ -74,7 +74,7 @@
             <properties>
               <background color="-3086094"/>
               <font name="SansSerif" size="16"/>
-              <foreground color="-13421773"/>
+              <foreground color="-16777216"/>
               <text value="Ripeti password:"/>
             </properties>
           </component>
@@ -87,7 +87,7 @@
             <properties>
               <background color="-3086094"/>
               <font name="SansSerif" size="16"/>
-              <foreground color="-13421773"/>
+              <foreground color="-16777216"/>
             </properties>
           </component>
         </children>
@@ -120,8 +120,9 @@
                 </constraints>
                 <properties>
                   <background color="-3086094"/>
+                  <borderPainted value="false"/>
                   <font name="SansSerif" size="20" style="3"/>
-                  <foreground color="-13421773"/>
+                  <foreground color="-16777216"/>
                   <text value="REGISTRATI"/>
                 </properties>
               </component>
@@ -144,8 +145,9 @@
                 </constraints>
                 <properties>
                   <background color="-3086094"/>
+                  <borderPainted value="false"/>
                   <font name="SansSerif" size="20" style="3"/>
-                  <foreground color="-13421773"/>
+                  <foreground color="-16777216"/>
                   <text value="HO BISOGNO DI ACCEDERE"/>
                 </properties>
               </component>
@@ -174,7 +176,7 @@
               <background color="-3086094"/>
               <editable value="false"/>
               <font name="SansSerif" size="36" style="1"/>
-              <foreground color="-13421773"/>
+              <foreground color="-16777216"/>
               <text value="BENVENUTO IN TODAY'S TODOS!!"/>
             </properties>
           </component>
@@ -199,7 +201,7 @@
                   <background color="-3086094"/>
                   <editable value="false"/>
                   <font name="SansSerif" size="20" style="2"/>
-                  <foreground color="-13421773"/>
+                  <foreground color="-16777216"/>
                   <text value="  ORGANIZZA LE ATTIVITÀ, CONDIVIDI LE IDEE, RESTA PRODUTTIVO"/>
                 </properties>
               </component>

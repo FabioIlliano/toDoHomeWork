@@ -19,10 +19,9 @@ public class GestisciToDo {
     private final JFrame frame;
     private JPanel mainPanel;
 
-    private JLabel titoloJL;
     private JTextField titoloTextField;
     private JLabel descrizioneJL;
-    private JTextField descTextField;
+    private JTextArea descTextArea;
     private JLabel scadenzaJL;
     private JTextField dataScadTextField;
     private JLabel urlJL;
@@ -33,13 +32,11 @@ public class GestisciToDo {
     private JPanel dataScadPanel;
     private JPanel descPanel;
     private JPanel buttonpanel;
-    private JPanel btnPanel2;
 
     private JButton eliminaButton;
     private JButton confermaButton;
     private JButton indietroButton;
     private JPanel imgPanel;
-    private JLabel imgJLtext;
     private JPanel bgColorPanel;
     private JLabel bgColorJL;
     private JButton setCompletoButton;
@@ -47,7 +44,6 @@ public class GestisciToDo {
     private JLabel imgCompletatoJL;
     private JLabel imgJL;
     private JButton bgColorButton;
-    private JPanel btnPanel1;
     private JButton spostaToDobutton;
     private JButton scegliIMGButton;
     private JScrollPane checklistJSP;
@@ -62,6 +58,9 @@ public class GestisciToDo {
     private JButton eliminaCondivisioneBtn;
     private JButton mostraCondivisioneBtn;
     private JButton resetImgBtn;
+    private JScrollPane descrizioneJSP;
+    private JLabel bgColorGUI;
+
     private JComboBox<TitoloBacheca> spostaJCB; //si può fare anche dinamica
     private JPanel panelSposta;
     private Color c;
@@ -71,9 +70,11 @@ public class GestisciToDo {
 
     private final Controller controller;
 
-    private static final String ICON_NOT_COMPLETED = "/notCompleted64.png";
-    private static final String ICON_COMPLETED = "/completed64.png";
+    private static final String ICON_NOT_COMPLETED = "/notCompleted.png";
+    private static final String ICON_COMPLETED = "/completed.png";
     private static final String CONDIVISIONE = "CONDIVISIONE";
+    private static final String COMPLETO = "COMPLETO!";
+    private static final String INCOMPLETO = "INCOMPLETO!";
 
     /**
      * Istanzia una nuova schermata di gestione dei ToDo.
@@ -86,12 +87,13 @@ public class GestisciToDo {
         this.frame.setContentPane(mainPanel);
         this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.frame.pack();
-        this.frame.setSize(800, 800);
+        this.frame.setSize(850, 900);
         this.frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         this.initListeners();
         this.initText();
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
+        bgColorGUI.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
         this.attivitaPanel.setLayout(new BoxLayout(attivitaPanel, BoxLayout.Y_AXIS));
         caricaAttivitaChecklist(true);
     }
@@ -126,21 +128,26 @@ public class GestisciToDo {
 
 
         this.titoloTextField.setText(controller.getTitoloToDoCorrente());
-        this.descTextField.setText(controller.getDescrizioneToDo());
+        this.descTextArea.setText(controller.getDescrizioneToDo());
         this.dataScadTextField.setText(controller.getDataScadToDo());
         this.urlTextField.setText(controller.getUrlToDo());
 
         this.c = controller.getColorBG();
+        bgColorGUI.setBackground(c);
 
-        if (controller.getCompletoToDo())
+        if (controller.getCompletoToDo()) {
             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_COMPLETED)));
-        else
+            setCompletoButton.setText(COMPLETO);
+        }
+        else {
             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
+            setCompletoButton.setText(INCOMPLETO);
+        }
 
         Image imgRidimensionata;
 
         if (controller.getIMGToDo()!=null){
-            imgRidimensionata = controller.getIMGToDo().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            imgRidimensionata = controller.getIMGToDo().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
             imgJL.setIcon(new ImageIcon(imgRidimensionata));
         }
         else
@@ -162,6 +169,7 @@ public class GestisciToDo {
 
     /**
      * Carica tutte le attività presenti in una Checklist.
+     * @param db se è vero carica i dati dal db, altrimenti dalla struttura dati locale
      */
     private void caricaAttivitaChecklist(boolean db) {
         ArrayList<Attivita> a;
@@ -175,7 +183,6 @@ public class GestisciToDo {
         attivitaPanel.removeAll();
 
         if(a==null || a.isEmpty()){
-            System.out.println("VUOTA");
             return;
         }
 
@@ -184,6 +191,9 @@ public class GestisciToDo {
 
             JCheckBox checkBox = new JCheckBox(attivita.getNome());
             checkBox.setSelected(attivita.isStato());
+            checkBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+            checkBox.setForeground(new Color(0, 0, 0));
+            checkBox.setBackground(new Color(223, 240, 247));
             checkBox.addItemListener(new ItemListener() {
                 @Override
 
@@ -213,8 +223,17 @@ public class GestisciToDo {
                     aggiornaCampiToDo();
                     try{
                         boolean stato = controller.getCompletoToDo();
-
                         aggiornaStatiAttivita();
+
+                        if (controller.creaAttivitaDB()!=0){
+                            JOptionPane.showMessageDialog(frame, "CREAZIONE ATTIVITA NON ANDATA BUON FINE", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        if (controller.eliminaAttivitaDB()!=0){
+                            JOptionPane.showMessageDialog(frame, "ELIMINAZIONE ATTIVITA NON ANDATA BUON FINE", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
 
                         controller.aggiornaToDo();
 
@@ -235,6 +254,7 @@ public class GestisciToDo {
                         if (e1.getSQLState().equals("P0001")){
                             JOptionPane.showMessageDialog(frame, "BISOGNA COMPLETARE TUTTE LE ATTIVITA PRIMA DI COMPLETARE IL TODO", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
                             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
+                            setCompletoButton.setText(INCOMPLETO);
                             controller.setCompletoToDo(false);
                         }
                     }
@@ -249,7 +269,7 @@ public class GestisciToDo {
      */
     private void aggiornaStatiAttivita() {
         for (Component comp : attivitaPanel.getComponents()) {
-            if (comp instanceof JCheckBox checkBox) {//if per sicurezza anche se nel panel ci sono solo checkbox
+            if (comp instanceof JCheckBox checkBox) {
                 controller.setStatoLocale(checkBox.getText(), checkBox.isSelected());
             }
         }
@@ -267,12 +287,14 @@ public class GestisciToDo {
                     "Il ToDo è stato automaticamente segnato come COMPLETATO.",
                     "Attenzione", JOptionPane.INFORMATION_MESSAGE);
             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_COMPLETED)));
+            setCompletoButton.setText(COMPLETO);
             controller.setCompletoToDo(true);
         } else {
             JOptionPane.showMessageDialog(frame,
                     "Il ToDo è stato automaticamente segnato come NON COMPLETATO.\nVerifica che tutte le attività siano corrette.",
                     "Attenzione", JOptionPane.INFORMATION_MESSAGE);
             imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
+            setCompletoButton.setText(INCOMPLETO);
             controller.setCompletoToDo(false);
         }
     }
@@ -283,7 +305,7 @@ public class GestisciToDo {
      */
     private void aggiornaCampiToDo() {
         controller.cambiaTitoloToDo(titoloTextField.getText());
-        controller.cambiaDescToDo(descTextField.getText());
+        controller.cambiaDescToDo(descTextArea.getText());
 
         String dataScad = dataScadTextField.getText();
         if (!dataScad.isEmpty()) {
@@ -297,6 +319,7 @@ public class GestisciToDo {
             controller.cambiaDataScadToDo("");
 
         controller.cambiaBgColorToDo(c);
+        bgColorGUI.setBackground(c);
         controller.cambiaURLToDo(urlTextField.getText());
     }
 
@@ -337,7 +360,7 @@ public class GestisciToDo {
                     String nomeFile = file.getName();
                     if (nomeFile.endsWith(".png") || nomeFile.endsWith(".jpg") || nomeFile.endsWith(".jpeg") || nomeFile.endsWith(".gif")){
                         ImageIcon icon = new ImageIcon(file.getAbsolutePath());
-                        Image img = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+                        Image img = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
                         imgJL.setIcon(new ImageIcon(img));
 
                         try {
@@ -417,8 +440,10 @@ public class GestisciToDo {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Color color = JColorChooser.showDialog(frame, "Scegli un colore", bgColorPanel.getBackground());
-                if (color!=null)
+                if (color!=null) {
                     c = color;
+                    bgColorGUI.setBackground(c);
+                }
                 else
                     c = controller.getBGColorToDo();
             }
@@ -435,10 +460,14 @@ public class GestisciToDo {
             public void actionPerformed(ActionEvent e) {
                 boolean b = controller.getCompletoToDo();
                 controller.setCompletoToDo(!b);
-                if (b)
+                if (b) {
                     imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
-                else
+                    setCompletoButton.setText(INCOMPLETO);
+                }
+                else {
                     imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_COMPLETED)));
+                    setCompletoButton.setText(COMPLETO);
+                }
             }
         });
     }
@@ -487,15 +516,15 @@ public class GestisciToDo {
             public void actionPerformed(ActionEvent e) {
                 String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività:");
                 if (nomeAttivita != null && !nomeAttivita.trim().isEmpty()) {
-                    if (controller.creaAttivita(nomeAttivita) == -1){
-                        JOptionPane.showMessageDialog(frame, "CREAZIONE NON ANDATA A BUON FINE", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
+                    controller.creaAttivitaLocale(nomeAttivita);
+                    controller.aggiungiAttIns(nomeAttivita);
+                    JOptionPane.showMessageDialog(frame, "Attività creata\nPremere 'Conferma ToDo' per confermare i dati e la creazione.", "ATTIVITA CREATA", JOptionPane.INFORMATION_MESSAGE);
                     aggiornaStatiAttivita();
+                    aggiornaCampiToDo();
                     caricaAttivitaChecklist(false);
-                    initText();
                 }
+                else
+                    JOptionPane.showMessageDialog(frame, "TITOLO NON VALIDO!!", "ERRORE", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
@@ -512,24 +541,12 @@ public class GestisciToDo {
                 String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività da eliminare, se esiste verrà eliminata direttamente.", "ELIMINA", JOptionPane.QUESTION_MESSAGE);
                 if (nomeAttivita != null && !nomeAttivita.trim().isEmpty()) {
                     if (controller.getAttivita(nomeAttivita)!=null){
+                        controller.eliminaAttivitaLocale(nomeAttivita);
+                        controller.aggiungiAttDel(nomeAttivita);
+                        JOptionPane.showMessageDialog(frame, "Attività eliminata\n Premere 'Conferma ToDo' per confermare i dati e l'eliminazione", "ATTIVITA' ELIMINATA", JOptionPane.INFORMATION_MESSAGE);
                         aggiornaStatiAttivita();
-                        ArrayList<Attivita> listaLocale = controller.getListaAttivitaLocale();;
-                        if (controller.eliminaAttivita(nomeAttivita) == 0) {
-                            JOptionPane.showMessageDialog(frame, "Attività eliminata correttamente", "ATTIVITA' ELIMINATA", JOptionPane.INFORMATION_MESSAGE);
-                            listaLocale.remove(controller.getAttivita(nomeAttivita));
-
-                            if (controller.listeDiverse(listaLocale)){
-                                controller.setListaAttivitaLocale(listaLocale);
-                                caricaAttivitaChecklist(false);
-                            }
-                            else
-                                caricaAttivitaChecklist(true);
-
-                            initText();
-                        }
-                        else
-                            JOptionPane.showMessageDialog(frame, "Attività non eliminata correttamente", "ATTIVITA' NON ELIMINATA", JOptionPane.INFORMATION_MESSAGE);
-
+                        aggiornaCampiToDo();
+                        caricaAttivitaChecklist(false);
                     }
                     else
                         JOptionPane.showMessageDialog(frame, "ATTIVITA INESISTENTE", "", JOptionPane.ERROR_MESSAGE);
@@ -597,7 +614,7 @@ public class GestisciToDo {
                 if (result == JOptionPane.OK_OPTION){
                     int r = controller.rimuoviCondivisione(condividiJCB.getSelectedItem().toString());
                     if (r==0)
-                        JOptionPane.showMessageDialog(frame, "CONDIVISIONE RIMOSSA!");
+                        JOptionPane.showMessageDialog(frame, "CONDIVISIONE RIMOSSA!", CONDIVISIONE, JOptionPane.INFORMATION_MESSAGE);
                     else
                         JOptionPane.showMessageDialog(frame, "CONDIVISIONE NON RIMOSSA", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
                 }

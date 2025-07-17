@@ -53,6 +53,8 @@ public class Register {
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
         this.frame.setResizable(false);
+        txt1.setBorder(null);
+        txt2.setBorder(null);
 
         this.initListeners();
     }

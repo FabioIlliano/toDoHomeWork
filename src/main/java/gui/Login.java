@@ -42,6 +42,8 @@ public class Login {
         this.frame.setSize(800, 600);
         this.frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+        txt1.setBorder(null);
+        txt2.setBorder(null);
 
         initListeners();
     }

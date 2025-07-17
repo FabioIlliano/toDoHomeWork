@@ -30,6 +30,7 @@
             </constraints>
             <properties>
               <background color="-3086094"/>
+              <borderPainted value="false"/>
               <font name="SansSerif" size="20" style="3"/>
               <foreground color="-16777216"/>
               <text value="HO BISOGNO DI REGISTRARMI"/>
@@ -41,6 +42,7 @@
             </constraints>
             <properties>
               <background color="-3086094"/>
+              <borderPainted value="false"/>
               <font name="SansSerif" size="20" style="3"/>
               <foreground color="-16777216"/>
               <text value="ACCEDI"/>

@@ -21,6 +21,10 @@ public class Controller {
     private String titoloBachecaCorrente;
     private String titoloToDoCorrente;
     private int idToDoCorrente;
+    private ArrayList<Attivita> listaAttIns;
+    private ArrayList<Attivita> listaAttDel;
+    boolean usatoIns;
+    boolean usatoDel;
 
 
     /**
@@ -219,7 +223,6 @@ public class Controller {
     public ToDo getToDo (){
         return utenteCorrente.getBacheca(titoloBachecaCorrente).getToDoId(idToDoCorrente);
     }
-
 
     /**
      * Elimina il todo sia dal database che dalla struttura locale.
@@ -538,7 +541,8 @@ public class Controller {
      */
     public Image getIMGToDo() {
         byte[] imgBytes = getToDo().getImmagine();
-        if (imgBytes == null) return null;
+        if (imgBytes == null)
+            return null;
         try {
             InputStream is = new ByteArrayInputStream(imgBytes);
             return ImageIO.read(is);
@@ -577,7 +581,6 @@ public class Controller {
             return false;
         }
     }
-
 
     /**
      * Cambia la descrizione di una bacheca dell'utente corrente e aggiorna il database.
@@ -630,49 +633,95 @@ public class Controller {
     }
 
     /**
-     * Crea una nuova attività associata al ToDo corrente.
+     * Crea una nuova attività in locale associata al ToDo corrente.
      *
      * @param titoloAttivita il titolo della nuova attività da creare
-     * @return 0 se la creazione è andata a buon fine, -1 in caso di errore
      */
-    public int creaAttivita(String titoloAttivita) {
-        try{
-            AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
-            int r = attivitaDAO.creaAttivita(idToDoCorrente, titoloAttivita);
-            if (r==0){
-                getToDo().aggiuntiAttivita(titoloAttivita);
-                return 0;
-            }
-            else
-                return -1;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return -1;
-        }
-
+    public void creaAttivitaLocale(String titoloAttivita) {
+        getToDo().aggiuntiAttivita(titoloAttivita);
     }
 
     /**
-     * Elimina un'attività dal ToDo corrente sia in locale che sul database.
+     * Crea nuove attività nel db associate al ToDo corrente.
+     *
+     * @return 0 se l'inserimento ha avuto successo, -1 in caso di errore
+     */
+    public int creaAttivitaDB(){
+        int rs = -1;
+
+        if (listaAttIns==null || !usatoIns)
+            return 0;
+
+        for (Attivita a : listaAttIns) {
+            try {
+                AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
+                rs = attivitaDAO.creaAttivita(idToDoCorrente, a.getNome());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -1;
+            }
+        }
+        usatoIns = false;
+        listaAttIns = null;
+        return rs;
+    }
+
+    /**
+     * Elimina un'attività dal ToDo corrente in locale.
      *
      * @param nome il nome dell'attività da eliminare
+     */
+    public void eliminaAttivitaLocale(String nome){
+        getToDo().rimuoviAttivita(nome);
+    }
+
+    /**
+     * Elimina le attività dal ToDo corrente dal database.
+     *
      * @return 0 se l'eliminazione ha avuto successo, -1 in caso di errore
      */
-    public int eliminaAttivita(String nome){
-        try{
-            AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
-            if(attivitaDAO.eliminaAttivita(nome, idToDoCorrente) == 0) {
-                getToDo().rimuoviAttivita(nome);
-                return 0;
-            }
-            else
+    public int eliminaAttivitaDB(){
+        int rs = -1;
+
+        if (listaAttDel==null || !usatoDel)
+            return 0;
+
+        for (Attivita a : listaAttDel) {
+            try {
+                AttivitaDAO attivitaDAO = new AttivitaImplementazionePostgresDAO();
+                rs = attivitaDAO.eliminaAttivita(a.getNome(), idToDoCorrente);
+            } catch (SQLException e) {
+                e.printStackTrace();
                 return -1;
+            }
         }
-        catch (SQLException e){
-            e.printStackTrace();
-            return -1;
-        }
+        usatoDel = false;
+        listaAttDel = null;
+        return rs;
+    }
+
+    /**
+     * Aggiunge un'attività all'array locale listaAttIns con le attività da creare che verrà poi sincronizzato col db.
+     * @param nome nome dell'attività da creare
+     */
+    public void aggiungiAttIns(String nome){
+        usatoIns = true;
+        if (listaAttIns == null)
+            listaAttIns = new ArrayList<>();
+        Attivita a = new Attivita(nome);
+        listaAttIns.add(a);
+    }
+
+    /**
+     * Aggiunge un'attività all'array locale listaAttDel con le attività da eliminare che verrà poi sincronizzato col db.
+     * @param nome nome dell'attività da eliminare
+     */
+    public void aggiungiAttDel(String nome){
+        usatoDel = true;
+        if (listaAttDel == null)
+            listaAttDel = new ArrayList<>();
+        Attivita a = new Attivita(nome);
+        listaAttDel.add(a);
     }
 
     /**
@@ -808,21 +857,4 @@ public class Controller {
         }
     }
 
-    public boolean listeDiverse (ArrayList<Attivita> oldAttivita) {
-        if (oldAttivita.size()!=getListaAttivitaLocale().size())
-            return true; //in teoria non dovrebbe mai capitare
-
-        for (Attivita a1 : oldAttivita){
-            boolean trovato = false;
-            for (Attivita a2 : getListaAttivitaLocale()){
-                if (a1.getNome().equals(a2.getNome()) && a1.isStato() == a2.isStato() ){
-                    trovato = true;
-                    break;
-                }
-            }
-            if (!trovato)
-                return true;
-        }
-        return false;
-    }
 }

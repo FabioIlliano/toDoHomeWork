@@ -58,6 +58,8 @@ public class StartPage {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
+        txt1.setBorder(null);
+        txt2.setBorder(null);
 
         initListeners();
     }
