@@ -15,9 +15,8 @@ public interface CondividiToDoDAO {
      * @param utenteDest il nome utente destinatario con cui condividere il ToDo.
      * @param idToDo l'identificativo del ToDo da condividere.
      * @return un intero indicante l'esito dell'operazione (0 buon fine, -1 errore).
-     * @throws SQLException se si verifica un errore durante l'accesso o la modifica al database.
      */
-    int aggiungiCondivisione(String utenteMitt, String utenteDest, int idToDo) throws SQLException;
+    int aggiungiCondivisione(String utenteMitt, String utenteDest, int idToDo);
 
     /**
      * Rimuove una condivisione di un ToDo tra un utente mittente e un utente destinatario.

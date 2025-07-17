@@ -11,6 +11,19 @@ import java.util.ArrayList;
 public interface ToDoDAO {
 
     /**
+     * Definizione costanti utilizzate nella classe di implementazione.
+     */
+    String ID = "idtodo";
+    String DESC = "descrizione";
+    String TITOLO = "titolo";
+    String BGCOLOR = "coloresfondo";
+    String STATO = "stato";
+    String DATASCAD = "datascadenza";
+    String IMG = "immagine";
+    String URL = "url";
+
+
+    /**
      * Carica la lista dei ToDo associati a una specifica bacheca e utente proprietario.
      *
      * @param bacheca il titolo della bacheca di appartenenza dei ToDo.

@@ -14,9 +14,9 @@ public class Login {
     private final JFrame frame;
     private JPanel mainPanel;
     private JLabel usernameJL;
-    private JTextField txtusername;
+    private JTextField txtUsername;
     private JLabel passwordJL;
-    private JPasswordField txtpassword;
+    private JPasswordField txtPassword;
     private JButton loginButton;
     private JButton registerButton;
     private JPanel btnpanel;
@@ -56,9 +56,9 @@ public class Login {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = txtusername.getText();
-                char[] pasw = txtpassword.getPassword();
-                String psw = new String(pasw);
+                String username = txtUsername.getText();
+                char[] psw1 = txtPassword.getPassword();
+                String psw = new String(psw1);
 
                 if (!(username.isEmpty() || psw.isEmpty())){
 
@@ -75,8 +75,8 @@ public class Login {
                 }
                 else{
                     JOptionPane.showMessageDialog(frame, "INSERIRE CORRETTAMENTE LE CREDENZIALI!!");
-                    txtusername.setText("");
-                    txtpassword.setText("");
+                    txtUsername.setText("");
+                    txtPassword.setText("");
                 }
 
 
@@ -97,7 +97,7 @@ public class Login {
     }
 
     /**
-     * restituisce il frame.
+     * Restituisce il frame.
      *
      * @return il frame
      */

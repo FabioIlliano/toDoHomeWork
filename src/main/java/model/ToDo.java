@@ -3,11 +3,11 @@ package model;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.time.LocalDate; //Libreria per la gestione delle date (in questo caso la data di scadenza del ToDo)
-
+import java.time.LocalDate;
 
 /**
- * The type To do.
+ * Rappresenta un elemento ToDo contenente titolo, descrizione, checklist di attività,
+ * data di scadenza, stato, colore di sfondo, immagine e link URL.
  */
 public class ToDo {
     private int idToDo;
@@ -16,144 +16,153 @@ public class ToDo {
     private String url;
     private boolean stato;
     private ArrayList<Attivita> checklistAttivita;
-    private ArrayList<Utente> listaUtentiCondivisione;
     private LocalDate dataScadenza; //YYYY-MM-DD
     private byte[] immagine;
     private Color coloreSfondo;
 
     /**
-     * Instantiates a new To do.
+     * Costruisce un ToDo con solo il titolo.
      *
-     * @param titolo the titolo
+     * @param titolo il titolo del ToDo
      */
-
-    public ToDo(String titolo)
-    {
+    public ToDo(String titolo) {
         this.titolo = titolo;
     }
 
-    public ToDo (String titolo, int idToDo){
-        this.idToDo = idToDo;
-        this.titolo = titolo;
-    }
-
+    /**
+     * Costruttore vuoto.
+     */
     public ToDo(){}
 
+    /**
+     * Restituisce l'ID del ToDo.
+     *
+     * @return l'identificativo del ToDo
+     */
     public int getIdToDo() {
         return idToDo;
     }
 
+    /**
+     * Imposta l'ID del ToDo.
+     *
+     * @param idToDo l'identificativo del ToDo
+     */
     public void setIdToDo(int idToDo) {
         this.idToDo = idToDo;
     }
 
+    /**
+     * Imposta la checklist delle attività.
+     *
+     * @param checklistAttivita la checklist da associare
+     */
     public void setChecklistAttivita(ArrayList<Attivita> checklistAttivita) {
         this.checklistAttivita = checklistAttivita;
     }
 
-    public ArrayList<Utente> getListaUtentiCondivisione() {
-        return listaUtentiCondivisione;
-    }
-
-    public void setListaUtentiCondivisione(ArrayList<Utente> listaUtentiCondivisione) {
-        this.listaUtentiCondivisione = listaUtentiCondivisione;
-    }
-
+    /**
+     * Imposta la data di scadenza.
+     *
+     * @param dataScadenza la data di scadenza
+     */
     public void setDataScadenza(LocalDate dataScadenza) {
         this.dataScadenza = dataScadenza;
     }
 
     /**
-     * Get titolo string.
+     * Restituisce il titolo del ToDo.
      *
-     * @return the string
+     * @return il titolo
      */
     public String getTitolo(){
         return titolo;
     }
 
     /**
-     * Get stato boolean.
+     * Restituisce lo stato di completamento del ToDo.
      *
-     * @return the boolean
+     * @return true se completato, false altrimenti
      */
     public boolean getStato(){return stato;}
 
     /**
-     * Gets descrizione.
+     * Restituisce la descrizione del ToDo.
      *
-     * @return the descrizione
+     * @return la descrizione
      */
     public String getDescrizione() {
         return descrizione;
     }
 
     /**
-     * Gets url.
+     * Restituisce l'URL associato.
      *
-     * @return the url
+     * @return l'URL
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     * Sets stato.
+     * Imposta lo stato di completamento del ToDo.
      *
-     * @param stato the stato
+     * @param stato true se completato, false altrimenti
      */
     public void setStato(boolean stato) {
         this.stato = stato;
     }
 
+    /**
+     * Restituisce l'immagine associata al ToDo.
+     *
+     * @return l'immagine in byte[]
+     */
     public byte[] getImmagine() {
         return immagine;
     }
 
+    /**
+     * Imposta l'immagine associata al ToDo.
+     *
+     * @param immagine l'immagine in byte[]
+     */
     public void setImmagine(byte[] immagine) {
         this.immagine = immagine;
     }
 
     /**
-     * Modifica stato.
-     */
-    public void modificaStato()
-    {
-        this.stato = !stato;
-    }
-
-    /**
-     * Sets titolo.
+     * Imposta il titolo del ToDo.
      *
-     * @param titolo the titolo
+     * @param titolo il nuovo titolo
      */
     public void setTitolo(String titolo) {
         this.titolo = titolo;
     }
 
     /**
-     * Sets descrizione.
+     * Imposta la descrizione del ToDo.
      *
-     * @param descrizione the descrizione
+     * @param descrizione la nuova descrizione
      */
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 
     /**
-     * Sets url.
+     * Imposta l'URL associato al ToDo.
      *
-     * @param url the url
+     * @param url l'URL
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     * Sets data scadenza.
+     * Imposta la data di scadenza da stringa nel formato "dd-MM-yyyy".
      *
-     * @param dataScadenza the data scadenza
-     * @throws Exception the exception
+     * @param dataScadenza la data come stringa
+     * @throws Exception se la stringa non è in formato valido
      */
     public void setDataScadenza(String dataScadenza) throws Exception{
         if (dataScadenza==null || dataScadenza.trim().isEmpty()){
@@ -169,96 +178,37 @@ public class ToDo {
 
     }
 
-
     /**
-     * Gets colore sfondo.
+     * Restituisce il colore di sfondo del ToDo.
      *
-     * @return the colore sfondo
+     * @return il colore di sfondo
      */
     public Color getColoreSfondo() {
         return coloreSfondo;
     }
 
     /**
-     * Sets colore sfondo.
+     * Imposta il colore di sfondo del ToDo.
      *
-     * @param coloreSfondo the colore sfondo
+     * @param coloreSfondo il colore da impostare
      */
     public void setColoreSfondo(Color coloreSfondo) {
         this.coloreSfondo = coloreSfondo;
     }
 
     /**
-     * Gets data scadenza.
+     * Restituisce la data di scadenza.
      *
-     * @return the data scadenza
+     * @return la data di scadenza
      */
     public LocalDate getDataScadenza() {
         return dataScadenza;
     }
 
-    @Override
-    public String toString()
-    {
-        String s;
-        if (stato)
-            s = "completato";
-        else
-            s = "non completato";
-
-        return "Titolo: " + titolo + "\n" +
-                "Descrizione: " + descrizione + "\n" +
-                "URL: " + url + "\n" +
-                "Stato: " + s + "\n" +
-                "DataScadenza: " + dataScadenza + "\n" +
-                "Immagine: " + immagine + "\n" +
-                "ColoreSfondo: " + coloreSfondo;
-    }
-
     /**
-     * Condividi to do.
+     * Aggiunge una nuova attività alla checklist dato il titolo
      *
-     * @param destinatario  the destinatario
-     * @param titoloBacheca the titolo bacheca
-     */
-    public int condividiToDo(Utente destinatario, String titoloBacheca)
-    {
-        try{
-            destinatario.getBacheca(titoloBacheca).aggiungiToDo(this);
-            listaUtentiCondivisione.add(destinatario);
-            return 0;
-        }catch (Exception e){
-            e.printStackTrace();
-            return -1;
-        }
-
-    }
-
-    /**
-     * Elimina condivisione.
-     *
-     * @param destinatario  the destinatario
-     * @param titoloBacheca the titolo bacheca
-     */
-    public void eliminaCondivisione(Utente destinatario, String titoloBacheca)
-    {
-        try{
-            destinatario.getBacheca(titoloBacheca).rimuoviToDo(this);
-            listaUtentiCondivisione.remove(destinatario);
-        }catch (NullPointerException e){
-            System.out.println("Non c'è nessun ToDo condiviso");
-        }
-        catch (Exception e){
-            System.out.println("Il todo richiesto non è stato trovato");
-        }
-
-    }
-
-
-    /**
-     * Aggiunti attivita gui.
-     *
-     * @param titolo the titolo
+     * @param titolo il titolo dell'attività
      */
     public void aggiuntiAttivita(String titolo) {
         if (checklistAttivita==null)
@@ -268,6 +218,11 @@ public class ToDo {
         checklistAttivita.add(nuovaattivita);
     }
 
+    /**
+     * Rimuove un'attività dalla checklist dato il titolo.
+     *
+     * @param titoloAttivita il nome dell'attività da rimuovere
+     */
     public void rimuoviAttivita (String titoloAttivita){
         for (Attivita a : checklistAttivita){
             if (a.getNome().equals(titoloAttivita)){
@@ -278,25 +233,20 @@ public class ToDo {
     }
 
     /**
-     * Gets checklist attivita.
+     * Restituisce la lista delle attività del ToDo.
      *
-     * @return the checklist attivita
+     * @return la checklist delle attività
      */
     public ArrayList<Attivita> getChecklistAttivita() {
         return checklistAttivita;
     }
 
-    public boolean checkChecklist()
-    {
-        for (Attivita attivita : checklistAttivita)
-        {
-            if (!attivita.isStato())
-                return false;
-
-        }
-        return true;
-    }
-
+    /**
+     * Modifica lo stato di una specifica attività.
+     *
+     * @param nome il nome dell'attività
+     * @param b    lo stato da impostare
+     */
     public void setStatoAttivita(String nome, boolean b)
     {
         for (Attivita attivita : checklistAttivita)
@@ -308,6 +258,12 @@ public class ToDo {
         }
     }
 
+    /**
+     * Cerca un'attività nella checklist dato il nome.
+     *
+     * @param nome il nome dell'attività
+     * @return l'attività trovata, oppure null
+     */
     public Attivita cercaAttivita(String nome){
         for (Attivita a : checklistAttivita)
             if (a.getNome().equals(nome))

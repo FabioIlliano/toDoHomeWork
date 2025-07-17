@@ -113,12 +113,6 @@ public class Register {
                         case 1:
                             JOptionPane.showMessageDialog(frame, "USERNAME GIA UTILIZZATO", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
                             break;
-                        case 2:
-                            JOptionPane.showMessageDialog(frame, "ERRORE DI CONNESSIONE AL DATABASE", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
-                            break;
-                        case -1:
-                            JOptionPane.showMessageDialog(frame, "ERRORE, RIPROVARE", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
-                            break;
                         case 0:
                             JOptionPane.showMessageDialog(frame, "UTENTE CREATO CORRETTAMENTE", "UTENTE REGISTRATO", JOptionPane.INFORMATION_MESSAGE);
                             StartPage s = new StartPage();
@@ -127,7 +121,7 @@ public class Register {
                             frame.dispose();
                             break;
                         default:
-                            JOptionPane.showMessageDialog(frame, "ERRORE SCONOSCIUTO", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "ERRORE, RIPROVARE", MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
                             break;
                     }
                 } else {

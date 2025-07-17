@@ -22,7 +22,7 @@ public class Home {
     private JPanel panel3;
     private JPanel panel2;
     private JPanel buttonPanel;
-    private JPanel panelElimina;
+    private final JPanel panelElimina;
 
     private JButton buttonU;
     private JScrollPane scrollU;
@@ -44,7 +44,7 @@ public class Home {
     private JTextArea descrizioneTL;
     private JButton logoutbtn;
 
-    private Controller controller;
+    private final Controller controller;
 
     private JComboBox<TitoloBacheca> comboBox;
 
@@ -164,25 +164,7 @@ public class Home {
                         int r = JOptionPane.showConfirmDialog(frame, "Sei sicuro di voler eliminare la bacheca\n"+
                                 "Eliminare una bacheca comporta l'eliminazione di tutti i suoi ToDo e questa azione non è reversibile.", "ELIMINA BACHECA", JOptionPane.OK_CANCEL_OPTION);
                         if (r == JOptionPane.OK_OPTION){
-                            String s = comboBox.getSelectedItem().toString();
-                            boolean b = controller.eliminaBacheca(TitoloBacheca.valueOf(s));
-                            if (b) {
-                                JOptionPane.showMessageDialog(frame, "BACHECA ELIMINATA!");
-                                switch (TitoloBacheca.valueOf(s)) {
-                                    case UNIVERSITA:
-                                        descrizioneU.setText("");
-                                        break;
-                                    case LAVORO:
-                                        descrizioneL.setText("");
-                                        break;
-                                    case TEMPO_LIBERO:
-                                        descrizioneTL.setText("");
-                                        break;
-                                }
-                                initColori();
-                            } else {
-                                JOptionPane.showMessageDialog(frame, "BACHECA NON ELIMINATA CORRETTAMENTE!");
-                            }
+                            eliminaBacheca();
                         }
                     }
                 }
@@ -192,6 +174,31 @@ public class Home {
             }
         });
 
+    }
+
+    /**
+     * Elimina la bacheca sia dal db che in locale dando un avviso grafico.
+     */
+    public void eliminaBacheca(){
+        String s = comboBox.getSelectedItem().toString();
+        boolean b = controller.eliminaBacheca(TitoloBacheca.valueOf(s));
+        if (b) {
+            JOptionPane.showMessageDialog(frame, "BACHECA ELIMINATA!");
+            switch (TitoloBacheca.valueOf(s)) {
+                case UNIVERSITA:
+                    descrizioneU.setText("");
+                    break;
+                case LAVORO:
+                    descrizioneL.setText("");
+                    break;
+                case TEMPO_LIBERO:
+                    descrizioneTL.setText("");
+                    break;
+            }
+            initColori();
+        } else {
+            JOptionPane.showMessageDialog(frame, "BACHECA NON ELIMINATA CORRETTAMENTE!");
+        }
     }
 
     /**
@@ -314,17 +321,15 @@ public class Home {
 
     /**
      * Inizializza la combo box con le bacheche dell’utente per l’eliminazione.
-     * Se fallisce, carica i titoli predefiniti.
      */
     public void initComboBox(){
         comboBox = new JComboBox<>();
-        try{
-            BachecaDAO b = new BachecaImplementazionePostgresDAO();
-            ArrayList<String> a = b.getTitoliUtente(controller.getUtente().getUsername());
-            for (String s : a)
+        ArrayList<String> list = controller.getTitoliUtente();
+        if (list!=null && !list.isEmpty()) {
+            for (String s : list)
                 comboBox.addItem(TitoloBacheca.valueOf(s));
         }
-        catch (Exception _){
+        else {
             comboBox.addItem(TitoloBacheca.UNIVERSITA);
             comboBox.addItem(TitoloBacheca.LAVORO);
             comboBox.addItem(TitoloBacheca.TEMPO_LIBERO);

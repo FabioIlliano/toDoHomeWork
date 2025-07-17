@@ -11,14 +11,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Implementazione DAO per la gestione degli utenti nel database PostgresSQL.
+ */
 public class UtenteImplementazionePostgresDAO implements UtenteDAO {
-    private Connection connection;
+    private final Connection connection;
 
+    /**
+     * Inizializza la connessione al database.
+     * @throws SQLException se la connessione fallisce
+     */
     public UtenteImplementazionePostgresDAO() throws SQLException {
         connection = ConnessioneDataBase.getInstance().getConnection();
     }
 
-    //rivedere TODO
+    /**
+     * Inserisce un nuovo utente nel database.
+     * @param username nome utente
+     * @param password password dell'utente
+     * @return 0 se inserimento riuscito, 1 se username già esistente, -1 in caso di errore
+     */
     @Override
     public int inserisciUtenteDB (String username, String password){
         String query = "INSERT INTO utente VALUES (?, ?)";
@@ -30,25 +42,27 @@ public class UtenteImplementazionePostgresDAO implements UtenteDAO {
             if (r>0)
                 return 0;
             else
-                return -1; //errore generico
+                return -1;
         }
         catch (SQLException e){
             if ("23505".equals(e.getSQLState())) {
                 // errore di chiave primaria non rispettata
                 e.printStackTrace();
                 return 1;
-            } else if ("08001".equals(e.getSQLState()) || "08006".equals(e.getSQLState())) {
-                // errore di connessione al DB
-                e.printStackTrace();
-                return 2;
             } else {
                 e.printStackTrace();
-                return -1; // errore generico
+                return -1;
             }
         }
 
     }
 
+    /**
+     * Effettua il login controllando username e password nel database.
+     * @param username nome utente
+     * @param password password dell'utente
+     * @return 0 se login corretto, -1 se login fallito o errore
+     */
     @Override
     public int loginUtenteDB (String username, String password){
         String query = "SELECT username FROM utente WHERE username = ? AND password = ?";
@@ -62,12 +76,16 @@ public class UtenteImplementazionePostgresDAO implements UtenteDAO {
             else
                 return -1;
         }
-        catch (SQLException e){
+        catch (SQLException _){
             return -1;
         }
     }
 
-    //metodo uguale a uno in bacheca
+    /**
+     * Restituisce la lista delle bacheche associate a un utente.
+     * @param username nome utente
+     * @return lista di oggetti Bacheca, o lista vuota in caso di errore
+     */
     @Override
     public ArrayList<Bacheca> getBachecheUtenteDB(String username) {
         String query = "SELECT titolo, descrizione FROM bacheca WHERE utente = ?";
@@ -82,11 +100,16 @@ public class UtenteImplementazionePostgresDAO implements UtenteDAO {
             }
             return b;
         }
-        catch (Exception e){
-            return new ArrayList<Bacheca>();
+        catch (Exception _){
+            return new ArrayList<>();
         }
     }
 
+    /**
+     * Controlla se un utente esiste nel database.
+     * @param username nome utente da cercare
+     * @return 0 se l'utente esiste, -1 se non esiste o errore
+     */
     @Override
     public int getUtente(String username) {
         String query = "SELECT 1 FROM utente WHERE username = ?";

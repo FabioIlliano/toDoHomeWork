@@ -1,6 +1,8 @@
 package gui;
 
 import controller.Controller;
+import dao.BachecaDAO;
+import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
 import model.TitoloBacheca;
 import model.Attivita;
 
@@ -154,17 +156,26 @@ public class GestisciToDo {
             imgJL.setIcon(new ImageIcon(getClass().getResource("/no-image64.png")));
 
         spostaJCB = new JComboBox<>();
-        if (controller.getTitoloBacheca().equals(TitoloBacheca.UNIVERSITA.toString())){
-            spostaJCB.addItem(TitoloBacheca.LAVORO);
-            spostaJCB.addItem(TitoloBacheca.TEMPO_LIBERO);
+        initJCB();
+    }
+
+    /**
+     * Inizializza la comboBox con i titoli delle bacheche disponibili
+     * per lo spostamento, escludendo il titolo della bacheca attuale.
+     */
+    public void initJCB(){
+        spostaJCB.removeAllItems();
+        ArrayList<String> list = controller.getTitoliUtente();
+        if (list!=null && !list.isEmpty()){
+            list.remove(controller.getTitoloBacheca());
         }
-        else if (controller.getTitoloBacheca().equals(TitoloBacheca.LAVORO.toString())){
-            spostaJCB.addItem(TitoloBacheca.UNIVERSITA);
-            spostaJCB.addItem(TitoloBacheca.TEMPO_LIBERO);
-        } else {
-            spostaJCB.addItem(TitoloBacheca.UNIVERSITA);
-            spostaJCB.addItem(TitoloBacheca.LAVORO);
+
+        if (list!=null && !list.isEmpty()) {
+            for (String s : list) {
+                spostaJCB.addItem(TitoloBacheca.valueOf(s));
+            }
         }
+
     }
 
     /**
@@ -210,57 +221,63 @@ public class GestisciToDo {
 
     /**
      * Inizializza il pulsante di conferma per salvare le modifiche al ToDo.
-     * Valida i dati inseriti, aggiorna i campi del ToDo e gestisce errori come formato data non valido
-     * o attività non completate.
+     * controlla che ci sia il titolo del todo e chiama salvaDati()
      */
     public void initConfermaBtn(){
         confermaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (titoloTextField.getText().trim().isEmpty())
-                    JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                else {
-                    aggiornaCampiToDo();
-                    try{
-                        boolean stato = controller.getCompletoToDo();
-                        aggiornaStatiAttivita();
-
-                        if (controller.creaAttivitaDB()!=0){
-                            JOptionPane.showMessageDialog(frame, "CREAZIONE ATTIVITA NON ANDATA BUON FINE", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-
-                        if (controller.eliminaAttivitaDB()!=0){
-                            JOptionPane.showMessageDialog(frame, "ELIMINAZIONE ATTIVITA NON ANDATA BUON FINE", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-
-                        controller.aggiornaToDo();
-
-                        controller.aggiornaChecklist(controller.getListaAttivitaLocale());
-
-                        controller.rimpiazzaToDoLocale();
-
-                        boolean statoDopo = controller.getCompletoToDo();
-
-                        initText();
-                        caricaAttivitaChecklist(true);
-
-                        if (stato!=statoDopo){
-                            mostraMessaggioCambioStato(statoDopo);
-                        }
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                        if (e1.getSQLState().equals("P0001")){
-                            JOptionPane.showMessageDialog(frame, "BISOGNA COMPLETARE TUTTE LE ATTIVITA PRIMA DI COMPLETARE IL TODO", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
-                            imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
-                            setCompletoButton.setText(INCOMPLETO);
-                            controller.setCompletoToDo(false);
-                        }
-                    }
-                }
+                    JOptionPane.showMessageDialog(frame, "TITOLO OBBLIGATORIO!", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                else
+                    salvaDati();
             }
         });
+    }
+
+    /**
+     * Salva sia i dati del todo che le attività sia in locale che sul db
+     * Se necessario crea o elimina attività dal db per sincronizzarsi con i dati in locale.
+     */
+    public void salvaDati(){
+        aggiornaCampiToDo();
+        try{
+            boolean stato = controller.getCompletoToDo();
+            aggiornaStatiAttivita();
+
+            if (controller.creaAttivitaDB()!=0){
+                JOptionPane.showMessageDialog(frame, "CREAZIONE ATTIVITA NON ANDATA BUON FINE", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (controller.eliminaAttivitaDB()!=0){
+                JOptionPane.showMessageDialog(frame, "ELIMINAZIONE ATTIVITA NON ANDATA BUON FINE", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            controller.aggiornaToDo();
+
+            controller.aggiornaChecklist(controller.getListaAttivitaLocale());
+
+            controller.rimpiazzaToDoLocale();
+
+            boolean statoDopo = controller.getCompletoToDo();
+
+            initText();
+            caricaAttivitaChecklist(true);
+
+            if (stato!=statoDopo){
+                mostraMessaggioCambioStato(statoDopo);
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            if (e1.getSQLState().equals("P0001")){
+                JOptionPane.showMessageDialog(frame, "BISOGNA COMPLETARE TUTTE LE ATTIVITA PRIMA DI COMPLETARE IL TODO", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
+                setCompletoButton.setText(INCOMPLETO);
+                controller.setCompletoToDo(false);
+            }
+        }
     }
 
     /**
@@ -524,7 +541,7 @@ public class GestisciToDo {
                     caricaAttivitaChecklist(false);
                 }
                 else
-                    JOptionPane.showMessageDialog(frame, "TITOLO NON VALIDO!!", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "TITOLO NON VALIDO!!", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
             }
         });
     }

@@ -1,20 +1,11 @@
 package model;
 
 /**
- * The enum Titolo bacheca.
+ * Tipo enumerativo che rappresenta i titoli possibili per una bacheca.
  */
 public enum TitoloBacheca
 {
-    /**
-     * Universita titolo bacheca.
-     */
     UNIVERSITA,
-    /**
-     * Lavoro titolo bacheca.
-     */
     LAVORO,
-    /**
-     * Tempo libero titolo bacheca.
-     */
     TEMPO_LIBERO
 }

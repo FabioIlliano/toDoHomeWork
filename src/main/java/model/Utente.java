@@ -1,225 +1,74 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
- * The type Utente.
+ * Rappresenta un utente che può effettuare l'accesso e interagire con il sistema
  */
-public class Utente
-{
-
-    /**
-     * The Username.
-     */
+public class Utente {
     String username;
-    /**
-     * The Password.
-     */
     String password;
-    /**
-     * The Bacheche utente.
-     */
-    ArrayList<Bacheca> bachecheUtente= new ArrayList<Bacheca>();
+    ArrayList<Bacheca> bachecheUtente= new ArrayList<>();
 
     /**
-     * Instantiates a new Utente.
+     * Costruisce un nuovo utente con username e password.
      *
-     * @param username the username
-     * @param password the password
+     * @param username nome utente
+     * @param password password dell'utente
      */
-    public Utente(String username, String password)
-    {
+    public Utente(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
     /**
-     * Login boolean.
+     * Verifica se l'utente può aggiungere una nuova bacheca.
      *
-     * @return the boolean
-     */
-    public boolean login() {
-        String username;
-        String password;
-        Scanner in = new Scanner(System.in);
-
-
-        System.out.print("Username: ");
-        username = in.nextLine();
-        System.out.print("Password: ");
-        password = in.nextLine();
-
-        return username.equals(this.username) && password.equals(this.password);
-    }
-
-    /**
-     * Login gui boolean.
-     *
-     * @param username the username
-     * @param password the password
-     * @return the boolean
-     */
-    public boolean loginGUI(String username, String password)
-    {
-        return username.equals(this.username) && password.equals(this.password);
-    }
-
-    /**
-     * Restituisce true se si possono aggiungere Bacheche
-     *
-     * @return the boolean
+     * @return true se il numero di bacheche è minore di 3, false altrimenti
      */
     public boolean puoAggiungereBacheca(){
-        if (bachecheUtente.size()>=3)
-            return false;
-        else
-            return true;
+        return bachecheUtente.size() < 3;
     }
 
     /**
-     * Crea bacheca boolean.
+     * Crea e aggiunge una nuova bacheca all'elenco delle bacheche dell'utente.
      *
-     * @return the boolean
+     * @param titolo il titolo della bacheca
+     * @param descrizione la descrizione della bacheca
      */
-    public boolean creaBacheca() {
-        if (bachecheUtente.size() >= 3)
-        {
-            System.out.println("Hai già creato le tue bacheche!");
-            return false;
-        }
-
-        Scanner in = new Scanner(System.in);
-        TitoloBacheca titolo = null; //conterrà il titolo scelto dall'utente preso da una classe enumerativa
-        String descrizione;
-
-        boolean cond0, cond1, cond2, cond3;
-        do {
-            int i = 1;
-            System.out.println("Scegli il titolo della bacheca tra:");
-            for (TitoloBacheca titoli : TitoloBacheca.values()) {
-                System.out.println(i + ")" + titoli.toString());
-                i++;
-            }
-            int scelta = in.nextInt();
-            switch (scelta) {
-                case 1:
-                    titolo = titolo.UNIVERSITA;
-                    break;
-                case 2:
-                    titolo = titolo.LAVORO;
-                    break;
-                case 3:
-                    titolo = titolo.TEMPO_LIBERO;
-                    break;
-            }
-            in.nextLine(); /*questo perche in.nextInt() legge il numero ma non consuma anche il carattere "a capo" che
-            viene letto dal successivo nextline (che sarebbe stato quello per inserire la descrizione, e in parole povere
-            la descrizione risultava vuota.*/
-
-            cond0 = bachecheUtente.size() > 0 && titolo!=null && titolo.equals(bachecheUtente.get(0).getTitolo());
-            cond1 = bachecheUtente.size() > 1 && titolo!=null && titolo.equals(bachecheUtente.get(1).getTitolo());
-            cond3 = scelta <1 || scelta >3;
-            if (cond3)
-                System.out.println("Inserire un numero valido");
-            else if (cond0 || cond1)
-                System.out.println("Questa bacheca già esiste!");
-
-        } while ( cond3|| cond0 || cond1);
-        //controlla sia che il titolo sia corretto sia che non esista una bacheca con quel titolo
-
-        System.out.print("Inserisci descrizione della bacheca:\n");
-        descrizione = in.nextLine();
-        Bacheca bacheca = new Bacheca(titolo, descrizione);
-
-        bachecheUtente.add(bacheca);
-
-        return true;
-    }
-
-    /**
-     * Crea bachecha gui.
-     *
-     * @param titolo      the titolo
-     * @param descrizione the descrizione
-     * @throws Exception the exception
-     */
-    public void creaBachecaGUI(TitoloBacheca titolo, String descrizione) throws Exception{
+    public void creaBacheca(TitoloBacheca titolo, String descrizione){
         Bacheca bacheca = new Bacheca(titolo, descrizione);
         bachecheUtente.add(bacheca);
     }
 
-    public void caricaBacheca (TitoloBacheca titolo, String descrizione){
+    /**
+     * Carica una bacheca già esistente nell'elenco delle bacheche dell'utente.
+     *
+     * @param titolo il titolo della bacheca
+     * @param descrizione la descrizione della bacheca
+     */
+    public void caricaBacheca(TitoloBacheca titolo, String descrizione){
         bachecheUtente.add(new Bacheca(titolo, descrizione));
     }
 
-    public void pulisciBacheche (){
+    /**
+     * Rimuove tutte le bacheche dall'elenco.
+     */
+    public void pulisciBacheche(){
         bachecheUtente.clear();
     }
 
-    /*
-    metodo che stampa la bacheca in base al nome, usato in debug
-
-    public void printBacheca (String titolo){
-        for (int i=0;i< bachecheUtente.size();i++){
-            if (titolo.equals(bachecheUtente.get(i).getTitolo().toString())){
-                System.out.println(bachecheUtente.get(i).getTitolo());
-                System.out.println(bachecheUtente.get(i).getDescrizione());
-                return;
-            }
-        }
-        System.out.println("La bacheca "+titolo+" non è presente nel sistema");
-    }
-    */
-
     /**
-     * Elimina bacheca.
+     * Elimina una bacheca dall'elenco delle bacheche dell'utente
      *
-     * @param titolo the titolo
+     * @param titolo il titolo della bacheca da eliminare
+     * @return true se la bacheca è stata trovata e rimossa, false altrimenti
      */
-    public void eliminaBacheca (String titolo){
+    public boolean eliminaBacheca(String titolo){
         Bacheca bachecaDaEliminare = null;
-        int i;
-        for (i=0;i<bachecheUtente.size();i++)
-            if (titolo.equals(bachecheUtente.get(i).getTitolo().toString())){
-                bachecaDaEliminare = bachecheUtente.get(i);
-        }
-        if (bachecaDaEliminare==null)
-            return;
-
-        Scanner in = new Scanner(System.in);
-        int scelta;
-        System.out.println("Sei sicuro di voler eliminare la bacheca "+bachecaDaEliminare.getTitolo()+"?\n" +
-                "Eliminare una bacheca comporta l'eliminazione di tutti i suoi ToDo e questa azione non è reversibile.\n" +
-                "Inserire 1 per confermare l'eliminazione, 0 per annullare l'eliminazione della bacheca "+bachecaDaEliminare.getTitolo());
-        do{
-            scelta = in.nextInt();
-            if (scelta==1){
-                boolean b = bachecheUtente.remove(bachecaDaEliminare);
-                if (b)
-                    System.out.println("La bacheca è stata eliminata correttamente");
-                else
-                    System.out.println("La bacheca non è stata eliminata correttamente");
-            } else if (scelta==0)
-                System.out.println("Operazione annullata, la bacheca non è stata eliminato");
-            else
-                System.out.println("Effettuare una scelta");
-        }while (scelta!=0 && scelta!= 1);
-
-    }
-
-    /**
-     * Elimina bacheca gui boolean.
-     *
-     * @param titolo the titolo
-     * @return the boolean
-     */
-    public boolean eliminaBachecaGUI(String titolo){
-        Bacheca bachecaDaEliminare = null;
-        int i;
-        for (i=0;i<bachecheUtente.size();i++)
-            if (titolo.equals(bachecheUtente.get(i).getTitolo().toString())){
-                bachecaDaEliminare = bachecheUtente.get(i);
+        for (Bacheca b : bachecheUtente)
+            if (titolo.equals(b.getTitolo().toString())){
+                bachecaDaEliminare = b;
                 break;
             }
         if (bachecaDaEliminare==null)
@@ -228,12 +77,11 @@ public class Utente
         return (bachecheUtente.remove(bachecaDaEliminare));
     }
 
-
     /**
-     * Get bacheca bacheca.
+     * Restituisce la bacheca con il titolo specificato.
      *
-     * @param titolo the titolo
-     * @return the bacheca
+     * @param titolo il titolo della bacheca da cercare
+     * @return la bacheca corrispondente o null se non trovata
      */
     public Bacheca getBacheca(String titolo){
         for(Bacheca b : bachecheUtente)
@@ -247,13 +95,13 @@ public class Utente
     }
 
     /**
-     * Sposta to do gui boolean.
+     * Sposta un ToDo da una bacheca all'altra.
      *
-     * @param vecchia    the vecchia
-     * @param nuova      the nuova
-     * @return the boolean
+     * @param vecchia titolo della bacheca di origine
+     * @param nuova titolo della bacheca di destinazione
+     * @param todo il ToDo da spostare
      */
-    public void spostaToDoGUI(String vecchia, String nuova, ToDo todo)
+    public void spostaToDo(String vecchia, String nuova, ToDo todo)
     {
         Bacheca v = getBacheca(vecchia);
         Bacheca n = getBacheca(nuova);
@@ -262,36 +110,10 @@ public class Utente
     }
 
     /**
-     * Sposta to do.
+     * Restituisce lo username dell'utente.
      *
-     * @param bachecaNuova   the bacheca nuova
-     * @param bachecaVecchia the bacheca vecchia
-     * @param nomeToDo       the nome to do
+     * @return lo username
      */
-//metodo che sposta un todo tra una bacheca e un altra
-    public void spostaToDo (Bacheca bachecaNuova, Bacheca bachecaVecchia, String nomeToDo){
-        try{
-            ToDo toDoNuovo = bachecaVecchia.getToDoTitolo(nomeToDo);
-            bachecaVecchia.getListaToDo().remove(toDoNuovo);
-            bachecaNuova.aggiungiToDo(toDoNuovo);
-        }catch (Exception e){
-            System.out.println("Errore nello spostamento del todo");
-        }
-
-    }
-
-    /**
-     * Mostra bacheche.
-     */
-//metodo per debug
-    public void mostraBacheche()
-    {
-        System.out.println("le tue bacheche sono: ");
-        for (Bacheca B : bachecheUtente) {
-            System.out.println(B.getTitolo());
-        }
-    }
-
     public String getUsername() {
         return username;
     }

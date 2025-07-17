@@ -4,7 +4,6 @@ import controller.Controller;
 import dao.BachecaDAO;
 import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
 import model.TitoloBacheca;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,12 +24,12 @@ public class CreaBacheca extends JDialog{
     private JPanel descPanel;
     private JButton buttonCreaBacheca;
     private JPanel buttonPanel;
-    private JLabel combolabel;
-    private JLabel desclabel;
+    private JLabel comboLabel;
+    private JLabel descLabel;
     private JTextArea textArea1;
     private JScrollPane scrollPane;
     private JButton tornaIndietroButton;
-    private final Controller controller;
+    private final transient Controller controller;
 
 
     /**
@@ -91,25 +90,18 @@ public class CreaBacheca extends JDialog{
     }
 
     /**
-     * Inizializza la comboBox con i titoli disponibili per la creazione della bacheca,
-     * confrontando il db per mostrare solo i titoli effettivamente disponibili.
+     * Inizializza la comboBox con i titoli delle bacheche
+     * confrontando il db per la disponibilità.
      */
     public void initComboBox(){
         comboBox1.removeAllItems();
-        try{
-            BachecaDAO b = new BachecaImplementazionePostgresDAO();
-            ArrayList<String> a = b.getTitoliUtente(controller.getUtente().getUsername());
-            if (a.isEmpty())
-                throw new Exception("Lista vuota");
-            TitoloBacheca[] listaTitoli = {TitoloBacheca.UNIVERSITA, TitoloBacheca.LAVORO, TitoloBacheca.TEMPO_LIBERO};
-            for (TitoloBacheca t : listaTitoli)
-                if (!a.contains(t.toString()))
-                    comboBox1.addItem(t);
-        }
-        catch (Exception _){
-            comboBox1.addItem(TitoloBacheca.UNIVERSITA);
-            comboBox1.addItem(TitoloBacheca.LAVORO);
-            comboBox1.addItem(TitoloBacheca.TEMPO_LIBERO);
+        ArrayList<String> lista = controller.getTitoliUtente();
+        comboBox1.addItem(TitoloBacheca.UNIVERSITA);
+        comboBox1.addItem(TitoloBacheca.LAVORO);
+        comboBox1.addItem(TitoloBacheca.TEMPO_LIBERO);
+        if (lista != null && !lista.isEmpty()){
+            for (String s : lista)
+                comboBox1.removeItem(TitoloBacheca.valueOf(s));
         }
     }
 

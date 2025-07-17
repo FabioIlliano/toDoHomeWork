@@ -132,7 +132,7 @@ public class Controller {
         if (r!=0)
             throw new Exception("Errore nella creazione");
 
-        utenteCorrente.creaBachecaGUI(t, d);
+        utenteCorrente.creaBacheca(t, d);
 
     }
 
@@ -140,9 +140,9 @@ public class Controller {
      * Carica tutte le bacheche associate all'utente corrente dal database
      * e le inserisce nella struttura dati locale dell'utente.
      *
-     * @throws Exception se si verifica un errore durante l'accesso al database
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    public void caricaBacheche () throws Exception{
+    public void caricaBacheche() throws SQLException{
         UtenteDAO u = new UtenteImplementazionePostgresDAO();
         ArrayList<Bacheca> a = u.getBachecheUtenteDB(utenteCorrente.getUsername());
         if (a.isEmpty())
@@ -151,6 +151,21 @@ public class Controller {
         for (Bacheca b : a)
             utenteCorrente.caricaBacheca(b.getTitolo(), b.getDescrizione());
 
+    }
+
+    /**
+     * Recupera i titoli delle bacheche associate all'utente attuale.
+     *
+     * @return una lista di stringhe contenente i titoli delle bacheche dell'utente; in caso di errore restituisce una lista vuota.
+     */
+    public ArrayList<String> getTitoliUtente(){
+        try{
+            BachecaDAO b = new BachecaImplementazionePostgresDAO();
+            return b.getTitoliUtente(utenteCorrente.getUsername());
+        }
+        catch (SQLException _){
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -165,7 +180,7 @@ public class Controller {
             ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
             int r = toDoDAO.creaToDo(titoloToDo, titoloBachecaCorrente, utenteCorrente.getUsername());
             if (r!=-1)
-                utenteCorrente.getBacheca(titoloBachecaCorrente).creaToDoGUI(titoloToDo);
+                utenteCorrente.getBacheca(titoloBachecaCorrente).creaToDo(titoloToDo);
             return r;
         }catch (Exception _){
             return -1;
@@ -232,7 +247,7 @@ public class Controller {
         try{
             ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
             toDoDAO.eliminaToDo(idToDoCorrente);
-            utenteCorrente.getBacheca(titoloBachecaCorrente).eliminaToDoGUI(idToDoCorrente);
+            utenteCorrente.getBacheca(titoloBachecaCorrente).eliminaToDo(idToDoCorrente);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -326,7 +341,7 @@ public class Controller {
             ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
             int r = toDoDAO.spostaToDo(idToDoCorrente, nuova.toString(), utenteCorrente.getUsername());
             if (r==0)
-                utenteCorrente.spostaToDoGUI(titoloBachecaCorrente, nuova.toString(), getToDo());
+                utenteCorrente.spostaToDo(titoloBachecaCorrente, nuova.toString(), getToDo());
             return r==0;
         }
         catch (Exception e){
@@ -569,7 +584,7 @@ public class Controller {
      * @return true se l'eliminazione è avvenuta con successo, false altrimenti
      */
     public boolean eliminaBacheca (TitoloBacheca titolo){
-        boolean b = utenteCorrente.eliminaBachecaGUI(titolo.toString());
+        boolean b = utenteCorrente.eliminaBacheca(titolo.toString());
 
         try {
             BachecaDAO bachecaDAO = new BachecaImplementazionePostgresDAO();

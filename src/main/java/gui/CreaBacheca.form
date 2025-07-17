@@ -29,7 +29,7 @@
               <foreground color="-1"/>
             </properties>
           </component>
-          <component id="6dd3c" class="javax.swing.JLabel" binding="combolabel">
+          <component id="6dd3c" class="javax.swing.JLabel" binding="comboLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -51,7 +51,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="79b25" class="javax.swing.JLabel" binding="desclabel">
+          <component id="79b25" class="javax.swing.JLabel" binding="descLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="200" height="-1"/>
