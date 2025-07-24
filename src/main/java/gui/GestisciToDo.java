@@ -114,7 +114,7 @@ public class GestisciToDo {
         this.initSpostaToDoBtn();
         this.initNuovaAttivitaBtn();
         this.initEliminaAttivitaBtn();
-        this.initCondividiAttivitaBtn();
+        this.initCondividiToDoBtn();
         this.initEliminaCondivisioneBtn();
         this.initMostraCondivisioniBtn();
 
@@ -597,7 +597,7 @@ public class GestisciToDo {
      * Inizializza il listener del pulsante "Condividi".
      * Condivide il ToDo con un altro utente specificato.
      */
-    public void initCondividiAttivitaBtn(){
+    public void initCondividiToDoBtn(){
         condividiBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
