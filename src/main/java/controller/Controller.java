@@ -191,10 +191,12 @@ public class Controller {
      * Aggiorna nel database lo stato del ToDo corrente con le informazioni presenti localmente.
      *
      * @throws SQLException se si verifica un errore durante l'aggiornamento nel database
+     *
+     * @return un intero indicante l'esito dell'operazione, 0 se riuscita, -1 altrimenti
      */
-    public void aggiornaToDo() throws SQLException {
+    public int aggiornaToDo() throws SQLException {
         ToDoDAO toDoDAO = new ToDoImplementazionePostgresDAO();
-        toDoDAO.aggiornaToDo(getToDo());
+        return (toDoDAO.aggiornaToDo(getToDo()));
     }
 
     /**

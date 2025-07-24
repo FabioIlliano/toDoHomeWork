@@ -1,8 +1,6 @@
 package gui;
 
 import controller.Controller;
-import dao.BachecaDAO;
-import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
 import model.TitoloBacheca;
 import javax.swing.*;
 import java.awt.event.ActionEvent;

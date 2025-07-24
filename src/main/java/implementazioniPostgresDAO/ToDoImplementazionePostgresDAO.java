@@ -110,9 +110,11 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
      * Aggiorna i dati di un ToDo esistente.
      *
      * @param t oggetto ToDo contenente i dati aggiornati.
+     *
+     * @return 0 se aggiornamento riuscito, -1 altrimenti.
      */
     @Override
-    public void aggiornaToDo(ToDo t){
+    public int aggiornaToDo(ToDo t){
         String query = "UPDATE todo SET titolo = ?, descrizione = ?, datascadenza = ?, url = ?, coloresfondo = ?, stato = ?, immagine = ? WHERE idtodo = ?";
 
         try(PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -148,10 +150,15 @@ public class ToDoImplementazionePostgresDAO implements ToDoDAO {
 
             stmt.setInt(8, t.getIdToDo());
 
-            stmt.executeUpdate();
+            int r = stmt.executeUpdate();
+            if (r!=0)
+                return 0;
+            else
+                return -1;
         }
         catch (SQLException e){
             e.printStackTrace();
+            return -1;
         }
     }
 

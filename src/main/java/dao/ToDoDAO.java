@@ -56,8 +56,9 @@ public interface ToDoDAO {
      *
      * @param t l’oggetto ToDo con i dati aggiornati.
      * @throws SQLException se si verifica un errore durante l’aggiornamento nel database.
+     * @return un intero indicante l'esito dell'operazione (0 buon fine, -1 errore)
      */
-    void aggiornaToDo(ToDo t) throws SQLException;
+    int aggiornaToDo(ToDo t) throws SQLException;
 
     /**
      * Elimina un ToDo dato il suo identificativo.

@@ -1,8 +1,6 @@
 package gui;
 
 import controller.Controller;
-import dao.BachecaDAO;
-import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
 import model.TitoloBacheca;
 import model.Attivita;
 
@@ -255,7 +253,9 @@ public class GestisciToDo {
                 return;
             }
 
-            controller.aggiornaToDo();
+            int r = controller.aggiornaToDo();
+            if (r==0)
+                JOptionPane.showMessageDialog(frame, "TODO MODIFICATO CORRETTAMENTE", "CONFERMA DATI", JOptionPane.INFORMATION_MESSAGE);
 
             controller.aggiornaChecklist(controller.getListaAttivitaLocale());
 
@@ -272,11 +272,13 @@ public class GestisciToDo {
         } catch (SQLException e1) {
             e1.printStackTrace();
             if (e1.getSQLState().equals("P0001")){
-                JOptionPane.showMessageDialog(frame, "BISOGNA COMPLETARE TUTTE LE ATTIVITA PRIMA DI COMPLETARE IL TODO", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e1.getMessage(), Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
                 imgCompletatoJL.setIcon(new ImageIcon(getClass().getResource(ICON_NOT_COMPLETED)));
                 setCompletoButton.setText(INCOMPLETO);
                 controller.setCompletoToDo(false);
             }
+            else
+                JOptionPane.showMessageDialog(frame, e1.getMessage(), Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -337,7 +339,15 @@ public class GestisciToDo {
 
         controller.cambiaBgColorToDo(c);
         bgColorGUI.setBackground(c);
-        controller.cambiaURLToDo(urlTextField.getText());
+
+        if (!urlTextField.getText().isEmpty()) {
+            if (!(urlTextField.getText().startsWith("http")))
+                JOptionPane.showMessageDialog(frame, "FORMATO URL NON VALIDO, FORMATO CORRETTO: 'http/https ...'");
+            else
+                controller.cambiaURLToDo(urlTextField.getText());
+        }
+        else
+            controller.cambiaURLToDo("");
     }
 
     /**
@@ -497,10 +507,15 @@ public class GestisciToDo {
         spostaToDobutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (spostaJCB.getItemCount()==0){
+                    JOptionPane.showMessageDialog(frame, "NON ESISTONO BACHECHE IN CUI SPOSTARE IL TODO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 panelSposta = new JPanel();
                 panelSposta.removeAll();
                 panelSposta.add(new JLabel("Seleziona la bacheca in cui spostare il TODO"));
                 panelSposta.add(spostaJCB);
+
                 int result = JOptionPane.showConfirmDialog(frame, panelSposta, "Scegli la bacheca", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.OK_OPTION){
                     if (!controller.checkBacheca(spostaJCB.getSelectedItem().toString())){
@@ -533,6 +548,10 @@ public class GestisciToDo {
             public void actionPerformed(ActionEvent e) {
                 String nomeAttivita = JOptionPane.showInputDialog(frame, "Inserisci il nome dell'attività:");
                 if (nomeAttivita != null && !nomeAttivita.trim().isEmpty()) {
+                    if (controller.getAttivita(nomeAttivita)!=null){
+                        JOptionPane.showMessageDialog(frame, "Nome già utilizzato, sceglierne un altro!", Register.MSG_ERRORE, JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     controller.creaAttivitaLocale(nomeAttivita);
                     controller.aggiungiAttIns(nomeAttivita);
                     JOptionPane.showMessageDialog(frame, "Attività creata\nPremere 'Conferma ToDo' per confermare i dati e la creazione.", "ATTIVITA CREATA", JOptionPane.INFORMATION_MESSAGE);
@@ -582,6 +601,10 @@ public class GestisciToDo {
         condividiBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (controller.getToDo()==null){
+                    JOptionPane.showMessageDialog(frame, "QUESTO TODO È STATO CONDIVISO CON TE, NON PUOI RICONDIVIDERLO!!");
+                    return;
+                }
                 String utenteDest = JOptionPane.showInputDialog(frame, "INSERISCI L'USERNAME DELL'UTENTE CON CUI CONDIVIDERE IL TODO", "CONDIVIDI TODO", JOptionPane.QUESTION_MESSAGE);
                 if (utenteDest == null)
                     return;
@@ -589,13 +612,26 @@ public class GestisciToDo {
                     int r = controller.condividiToDo(utenteDest);
                     if (r==0)
                         JOptionPane.showMessageDialog(frame, "TODO CONDIVISO CORRETTAMENTE", CONDIVISIONE, JOptionPane.INFORMATION_MESSAGE);
-                    else
-                        JOptionPane.showMessageDialog(frame, "TODO NON CONDIVISO CORRETTAMENTE", CONDIVISIONE, JOptionPane.ERROR_MESSAGE);
+                    else{
+                        stampaMessCondivisione(utenteDest);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(frame, "UTENTE INESISTENTE!", CONDIVISIONE, JOptionPane.ERROR_MESSAGE);
             }
         });
+    }
+
+    /**
+     * Stampa i messaggi di errore nel caso in cui la condivisione non sia andata a buon fine
+     */
+    public void stampaMessCondivisione(String utenteDest){
+        if (controller.getCompletoToDo())
+            JOptionPane.showMessageDialog(frame, "NON SI PUO' CONDIVIERE UN TODO GIA' COMPLETO!", CONDIVISIONE, JOptionPane.ERROR_MESSAGE);
+        else if (controller.getUtente().getUsername().equals(utenteDest))
+            JOptionPane.showMessageDialog(frame, "NON PUOI CONDIVIDERE IL TODO CON TE STESSO");
+            else
+                JOptionPane.showMessageDialog(frame, "TODO NON CONDIVISO CORRETTAMENTE", CONDIVISIONE, JOptionPane.ERROR_MESSAGE);
     }
 
     /**

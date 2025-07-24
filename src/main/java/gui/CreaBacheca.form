@@ -26,7 +26,8 @@
             </constraints>
             <properties>
               <background color="-2101001"/>
-              <foreground color="-1"/>
+              <font name="SansSerif" size="16" style="0"/>
+              <foreground color="-16777216"/>
             </properties>
           </component>
           <component id="6dd3c" class="javax.swing.JLabel" binding="comboLabel">
@@ -75,8 +76,9 @@
                 <constraints/>
                 <properties>
                   <background color="-2101001"/>
-                  <caretColor color="-1"/>
-                  <foreground color="-1"/>
+                  <caretColor color="-16777216"/>
+                  <font name="SansSerif" size="16" style="0"/>
+                  <foreground color="-16777216"/>
                 </properties>
               </component>
             </children>

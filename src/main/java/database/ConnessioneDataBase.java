@@ -15,12 +15,7 @@ public class ConnessioneDataBase {
     private static final String DRIVER = "org.postgresql.Driver";
 
     private ConnessioneDataBase() throws SQLException {
-        try {
-            Class.forName(DRIVER);
-            connection = DriverManager.getConnection(URL, NOME, PASSWORD);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            }
+        connection = DriverManager.getConnection(URL, NOME, PASSWORD);
     }
 
     public static ConnessioneDataBase getInstance() throws SQLException {

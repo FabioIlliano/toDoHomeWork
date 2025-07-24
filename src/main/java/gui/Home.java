@@ -1,8 +1,6 @@
 package gui;
 
 import controller.Controller;
-import dao.BachecaDAO;
-import implementazioniPostgresDAO.BachecaImplementazionePostgresDAO;
 import model.TitoloBacheca;
 
 import javax.swing.*;
@@ -282,7 +280,7 @@ public class Home {
                 if (!b)
                     JOptionPane.showMessageDialog(frame, "ERRORE NEL CAMBIAMENTO DELLA BACHECA", "ERRORE", JOptionPane.ERROR_MESSAGE);
             } else {
-                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon-64.png")));
+                pulsante.setIcon(new ImageIcon(getClass().getResource("/save-icon64.png")));
                 descrizione.setEditable(true);
                 descrizione.requestFocus();
             }
